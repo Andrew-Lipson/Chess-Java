@@ -1,12 +1,15 @@
 package Code;
 
+import Code.pieces.*;
+import Code.pieces.Queen;
 import javafx.scene.Group;
 import javafx.scene.paint.Color;
 
-public class Board {
+public class Board extends Group {
 
     private Square[][] ranks = new Square[8][];
     private Group root = new Group();
+    private Piece piece = new Queen(true);
 
     public Board() {
         for (int rank = 0; rank < 8; rank++) {
@@ -23,10 +26,16 @@ public class Board {
             ranks[rank] = files;
         }
     }
+
+    public void addPiece(Piece piece, Integer rank, Integer file){
+        ranks[rank][file].addPiece(piece);
+    }
+
+
     private void updateRoot(){
         for (int rank = 0; rank < 8; rank++){
             for (int file = 0; file < 8; file++){
-                root.getChildren().add(ranks[rank][file].getRectangle());
+                root.getChildren().add(ranks[rank][file]);
             }
         }
     }
