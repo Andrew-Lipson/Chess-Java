@@ -1,4 +1,4 @@
-package Code.pieces;
+package Model.pieces;
 
 public class Knight extends Piece{
 

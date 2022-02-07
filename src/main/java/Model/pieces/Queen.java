@@ -1,6 +1,4 @@
-package Code.pieces;
-
-import javafx.scene.image.Image;
+package Model.pieces;
 
 public class Queen extends Piece{
 
