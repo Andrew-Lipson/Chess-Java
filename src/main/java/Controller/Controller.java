@@ -4,7 +4,6 @@ package Controller;
 import Model.*;
 import View.BoardSquaresView;
 import View.MainView;
-import View.SquareView;
 import javafx.event.EventHandler;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
@@ -23,8 +22,7 @@ public class Controller {
     private void addOnClick(BoardSquaresView boardSquaresView){
         for (int file = 0; file < 8; file++) {
             for (int rank = 0; rank < 8; rank++){
-                SquareView squareView = boardSquaresView.getSquareView(file,rank);
-                ImageView imageView = squareView.getImageview();
+                ImageView imageView = boardSquaresView.getSquareView(file,rank).getImageview();
                 imageView.setPickOnBounds(true);
                 int finalFile = file;
                 int finalRank = rank;
@@ -40,8 +38,13 @@ public class Controller {
     }
 
     public void pieceClicked(Integer file, Integer rank){
+        Boolean isWhite = board.getBoardSquares().getSquare(file, rank).getPiece().getIsWhite();
         board.getBoardSquares().getSquare(file, rank).removePiece();
         mainview.getBoardSquaresView().getSquareView(file,rank).removePiece();
+        for (Integer[] moves:Moves.knight(file, rank, isWhite)) {
+            System.out.println("" + moves[0].toString() +" "+ moves[1].toString());
+        }
+
 
     }
 

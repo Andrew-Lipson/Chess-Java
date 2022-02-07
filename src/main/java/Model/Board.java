@@ -14,26 +14,26 @@ public class Board{
         createPieces(blackPieces, false);
     }
 
-    private void createPieces( Piece[] pieces, Boolean white){
-        int rank = white?6:1;
+    private void createPieces( Piece[] pieces, Boolean isWhite){
+        int rank = isWhite?6:1;
         for(int i = 0;i<8;i++){
-            pieces[i] = new Pawn(white);
+            pieces[i] = new Piece(isWhite, PieceType.Pawn);
             addPiece(pieces[i],rank,i );
         }
 
-        rank = white?7:0;
+        rank = isWhite?7:0;
 
         for(int i = 8;i<16;i+=7) {
-            pieces[i] = new Rook(white);
+            pieces[i] = new Piece(isWhite, PieceType.Rook);
         }
         for(int i = 9;i<16;i+=5) {
-            pieces[i] = new Knight(white);
+            pieces[i] = new Piece(isWhite, PieceType.Knight);
         }
         for(int i = 10;i<16;i+=3) {
-            pieces[i] = new Bishop(white);
+            pieces[i] = new Piece(isWhite, PieceType.Bishop);
         }
-        pieces[11] = new Queen(white);
-        pieces[12] = new King(white);
+        pieces[11] = new Piece(isWhite, PieceType.Queen);
+        pieces[12] = new Piece(isWhite, PieceType.King);
 
         for(int i = 8;i<16;i++) {
             addPiece(pieces[i],rank,i-8);

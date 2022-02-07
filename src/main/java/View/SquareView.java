@@ -1,16 +1,11 @@
 package View;
 
-import Model.Board;
-import Model.BoardSquares;
 import Model.pieces.Piece;
-import javafx.event.EventHandler;
 import javafx.scene.Group;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
-import javafx.scene.input.MouseEvent;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
-import Controller.*;
 
 public class SquareView extends Group {
 
@@ -58,7 +53,7 @@ public class SquareView extends Group {
 
     public String getPNGString(Piece piece){
         String output = piece.getPieceType() + "-";
-        if(piece.getWhite()){
+        if(piece.getIsWhite()){
             output+="White";
         }
         else{

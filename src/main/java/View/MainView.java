@@ -6,6 +6,8 @@ import javafx.scene.Group;
 import javafx.scene.Scene;
 import javafx.scene.image.Image;
 import javafx.scene.paint.Color;
+import javafx.scene.text.Font;
+import javafx.scene.text.Text;
 import javafx.stage.Stage;
 
 public class MainView {
@@ -31,12 +33,37 @@ public class MainView {
         Image icon = new Image("chess-icon.png");
         stage.getIcons().add(icon);
         stage.setTitle("Window");
-        stage.setWidth(680);
-        stage.setHeight(700);
+        stage.setWidth(730);
+        stage.setHeight(750);
         stage.setResizable(true);
+
+        for (int i = 0; i < 8; i++) {
+            rankNumbers(root,i);
+            fileNumbers(root,i);
+        }
+
+
 
         stage.setScene(scene);
         stage.show();
+    }
+
+    private void rankNumbers(Group root, Integer rank){
+        Text text = new Text();
+        text.setText(rank.toString());
+        text.setX(660);
+        text.setY(65+80*rank);
+        text.setFont(Font.font(50));
+        root.getChildren().add(text);
+    }
+
+    private void fileNumbers(Group root, Integer file){
+        Text text = new Text();
+        text.setText(file.toString());
+        text.setX(40+80*file);
+        text.setY(700);
+        text.setFont(Font.font(50));
+        root.getChildren().add(text);
     }
 
     public void renderBoard(){
