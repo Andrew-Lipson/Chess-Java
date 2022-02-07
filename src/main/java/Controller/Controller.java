@@ -14,7 +14,7 @@ public class Controller implements ClickController {
     MainView mainview;
 
     public Controller(Board board){
-git add
+
     }
 
     public void pieceClicked(Piece piece){
