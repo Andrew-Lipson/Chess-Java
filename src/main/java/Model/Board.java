@@ -7,7 +7,6 @@ public class Board{
     private BoardSquares boardSquares;
     private Piece[] whitePieces = new Piece[16];
     private Piece[] blackPieces = new Piece[16];
-    //private Group root = new Group();
 
     public Board() {
         boardSquares = new BoardSquares();

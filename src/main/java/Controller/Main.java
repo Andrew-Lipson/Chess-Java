@@ -1,7 +1,8 @@
-package View;
+package Controller;
 
 import Controller.Controller;
 import Model.Board;
+import View.MainView;
 import javafx.application.Application;
 import javafx.scene.Group;
 import javafx.scene.Scene;
@@ -17,20 +18,12 @@ public class Main extends Application {
 //        FXMLLoader fxmlLoader = new FXMLLoader(HelloApplication.class.getResource("hello-view.fxml"));
 //        Parent root = FXMLLoader.load(getClass().getResource("hello-view.fxml"));
 
-        Board board = new Board();
+        Board board = new Board(); // Start up Model
 
-        Group root = new Group();
-        MainView mainView = new MainView(board, root);
-        Scene scene = new Scene(root, Color.BROWN);
-        Image icon = new Image("chess-icon.png");
-        stage.getIcons().add(icon);
-        stage.setTitle("Window");
-        stage.setWidth(680);
-        stage.setHeight(700);
-        stage.setResizable(true);
+        MainView mainView = new MainView(board, stage); // Start up View
 
-        stage.setScene(scene);
-        stage.show();
+        Controller controller = new Controller(board, mainView); // Start up Controller
+
     }
 
     public static void main(String[] args) {

@@ -1,11 +1,9 @@
 package Model.pieces;
 
 import Model.Square;
-import javafx.scene.image.ImageView;
 
 
 public abstract class Piece {
-    private ImageView imageview;
     private Boolean white;
     private Integer file;
     private Integer rank;
@@ -16,13 +14,12 @@ public abstract class Piece {
 
         this.white = white;
         this.pieceType = this.getClass().getSimpleName();
-
     }
 
 
-    public void addPosition(Square position){
-        this.file = position.getFile();
-        this.rank = position.getRank();
+    public void addPosition(Square square){
+        this.file = square.getFile();
+        this.rank = square.getRank();
     }
 
     public Integer getFile() {

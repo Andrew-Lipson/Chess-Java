@@ -1,5 +1,7 @@
 package View;
 
+import Model.Board;
+import Model.BoardSquares;
 import Model.pieces.Piece;
 import javafx.event.EventHandler;
 import javafx.scene.Group;
@@ -15,7 +17,7 @@ public class SquareView extends Group {
     private final double xCoordinate;
     private final double yCoordinate;
     private ImageView imageview = new ImageView();
-    private ClickController clickController;
+    private Piece piece = null;
 
 
     public SquareView(int rank, int file){
@@ -44,16 +46,9 @@ public class SquareView extends Group {
     }
 
     public void addPiece(Piece piece){
+        this.piece = piece;
         Image image = new Image(getPNGString(piece));
         this.imageview.setImage(image);
-        this.imageview.setPickOnBounds(true);
-        this.imageview.setOnMouseClicked(new EventHandler<MouseEvent>() {
-                 @Override
-                 public void handle(MouseEvent mouseEvent) {
-                     clickController.pieceClicked(piece);
-                 }
-             }
-        );
         getChildren().add(imageview);
     }
 
@@ -73,5 +68,11 @@ public class SquareView extends Group {
         return output;
     }
 
+    private Piece getPiece(){
+        return piece;
+    }
 
+    public ImageView getImageview() {
+        return imageview;
+    }
 }
