@@ -24,7 +24,7 @@ public class Square {
 
     public void addPiece(Piece piece){
         this.piece = piece;
-        this.piece.addPosition(this);
+        this.piece.addPosition(this.file,this.rank);
     }
 
     public void removePiece(){

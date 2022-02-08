@@ -1,13 +1,9 @@
 package Controller;
 
-import Controller.Controller;
 import Model.Board;
+import Observer.Observer;
 import View.MainView;
 import javafx.application.Application;
-import javafx.scene.Group;
-import javafx.scene.Scene;
-import javafx.scene.image.Image;
-import javafx.scene.paint.Color;
 import javafx.stage.Stage;
 
 import java.io.IOException;
@@ -18,9 +14,10 @@ public class Main extends Application {
 //        FXMLLoader fxmlLoader = new FXMLLoader(HelloApplication.class.getResource("hello-view.fxml"));
 //        Parent root = FXMLLoader.load(getClass().getResource("hello-view.fxml"));
 
-        Board board = new Board(); // Start up Model
+//        Observer observer = new ViewObserver(); // Start up the observer
+        Observer mainView = new MainView(stage); // Start up View
 
-        MainView mainView = new MainView(board, stage); // Start up View
+        Board board = new Board(mainView); // Start up Model
 
         Controller controller = new Controller(board, mainView); // Start up Controller
 

@@ -1,6 +1,5 @@
 package Model.pieces;
 
-import Model.Square;
 
 public class Piece {
     private Boolean isWhite;
@@ -16,9 +15,9 @@ public class Piece {
     }
 
 
-    public void addPosition(Square square){
-        this.file = square.getFile();
-        this.rank = square.getRank();
+    public void addPosition(Integer file, Integer rank){
+        this.file = file;
+        this.rank = rank;
     }
 
     public Integer getFile() {
@@ -29,8 +28,8 @@ public class Piece {
         return rank;
     }
 
-    public String getPieceType() {
-        return pieceType.toString();
+    public PieceType getPieceType() {
+        return pieceType;
     }
 
     public Boolean getIsWhite() {
@@ -40,5 +39,6 @@ public class Piece {
     public Boolean isKing(){
         return false;
     }
+
 
 }

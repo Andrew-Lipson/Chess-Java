@@ -12,10 +12,10 @@ public class SquareView extends Group {
     private final double xCoordinate;
     private final double yCoordinate;
     private ImageView imageview = new ImageView();
-    private Piece piece = null;
+//    private Piece piece = null;
 
 
-    public SquareView(int rank, int file){
+    public SquareView(int file, int rank){
         double heightWidth = 80;
 
         this.xCoordinate = (10 + heightWidth * file);
@@ -41,18 +41,19 @@ public class SquareView extends Group {
     }
 
     public void addPiece(Piece piece){
-        this.piece = piece;
+        //this.piece = piece;
         Image image = new Image(getPNGString(piece));
         this.imageview.setImage(image);
         getChildren().add(imageview);
     }
 
     public void removePiece(){
+        //this.piece = null;
         getChildren().remove(this.imageview);
     }
 
     public String getPNGString(Piece piece){
-        String output = piece.getPieceType() + "-";
+        String output = piece.getPieceType().toString() + "-";
         if(piece.getIsWhite()){
             output+="White";
         }
@@ -63,9 +64,9 @@ public class SquareView extends Group {
         return output;
     }
 
-    private Piece getPiece(){
-        return piece;
-    }
+//    private Piece getPiece(){
+//        return piece;
+//    }
 
     public ImageView getImageview() {
         return imageview;

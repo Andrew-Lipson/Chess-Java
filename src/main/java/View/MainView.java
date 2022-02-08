@@ -2,6 +2,7 @@ package View;
 
 import Model.*;
 import Model.pieces.Piece;
+import Observer.Observer;
 import javafx.scene.Group;
 import javafx.scene.Scene;
 import javafx.scene.image.Image;
@@ -10,9 +11,9 @@ import javafx.scene.text.Font;
 import javafx.scene.text.Text;
 import javafx.stage.Stage;
 
-public class MainView {
+public class MainView implements Observer{
 
-    private final Board board;
+    //private final Board board;
     private BoardSquares boardSquares;
     private BoardSquaresView boardSquaresView;
     private final Group root = new Group();
@@ -21,10 +22,15 @@ public class MainView {
 //    private PieceView[] whitePiecesView = new PieceView[16];
 //    private PieceView[] blackPiecesView = new PieceView[16];
 
-    public MainView(Board board, Stage stage){
-        this.board = board;
-        this.boardSquares = this.board.getBoardSquares();
+    public MainView(Stage stage){
+        //this.board = board;
         startUpStage(stage);
+    }
+
+    public void setUpMainView(BoardSquares boardSquares, Piece [] whitePieces, Piece [] blackPieces){
+        this.boardSquares = boardSquares;
+        this.whitePieces = whitePieces;
+        this.blackPieces = blackPieces;
         renderBoard();
     }
 
@@ -68,8 +74,6 @@ public class MainView {
 
     public void renderBoard(){
         
-        this.whitePieces = this.board.getWhitePieces();
-        this.blackPieces = this.board.getBlackPieces();
         this.boardSquaresView = new BoardSquaresView();
 
         for (Piece piece: this.whitePieces) {
@@ -91,5 +95,11 @@ public class MainView {
 
     public BoardSquaresView getBoardSquaresView() {
         return boardSquaresView;
+    }
+
+    @Override
+    public void update(Integer previousFile, Integer previousRank, Piece piece) {
+        this.boardSquaresView.getSquareView(previousFile, previousRank).removePiece();
+        this.boardSquaresView.getSquareView(piece.getFile(), piece.getRank()).addPiece(piece);
     }
 }
