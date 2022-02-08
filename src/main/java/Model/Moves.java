@@ -68,8 +68,8 @@ public class Moves {
     }
 
     public static ArrayList<Integer[]> queen(Integer file, Integer rank, Boolean isWhite) {
-        ArrayList<Integer[]> possibleMoves = diagnal(rank, file, isWhite);
-        possibleMoves.addAll(straight(rank, file, isWhite));
+        ArrayList<Integer[]> possibleMoves = diagnal(file, rank, isWhite);
+        possibleMoves.addAll(straight(file, rank, isWhite));
         return possibleMoves;
     }
     public static ArrayList<Integer[]> knight(Integer file, Integer rank, Boolean isWhite) {
