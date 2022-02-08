@@ -2,6 +2,7 @@ package Controller;
 
 
 import Model.*;
+import Model.pieces.Piece;
 import Model.pieces.PieceType;
 import Observer.Observer;
 import View.BoardSquaresView;
@@ -9,13 +10,17 @@ import View.MainView;
 import javafx.event.EventHandler;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
+import javafx.scene.shape.Circle;
 
 import java.util.ArrayList;
+
+import static java.util.Objects.isNull;
 
 public class Controller {
 
     Board board;
     MainView mainview;
+    Piece piece = null;
 
     public Controller(Board board, Observer mainview){
         this.board = board;
@@ -28,32 +33,69 @@ public class Controller {
     private void addOnClick(BoardSquaresView boardSquaresView){
         for (int rank = 0; rank < 8; rank++) {
             for (int file = 0; file < 8; file++){
-                ImageView imageView = boardSquaresView.getSquareView(file,rank).getImageview();
-                imageView.setPickOnBounds(true);
                 int finalFile = file;
                 int finalRank = rank;
-                imageView.setOnMouseClicked(new EventHandler<MouseEvent>() {
-                     @Override
-                     public void handle(MouseEvent mouseEvent) {
-                         pieceClicked(finalFile, finalRank);
-                     }
-                 }
-                );
+                ImageView imageView = boardSquaresView.getSquareView(file,rank).getImageview();
+                addOnClickPieces(finalFile,finalRank,imageView);
+                Circle circle = boardSquaresView.getSquareView(file,rank).getCircle();
+                addOnClickCircles(finalFile,finalRank,circle);
+
             }
         }
     }
+    
+    public void addOnClickPieces(Integer file, Integer rank, ImageView imageView){
+        imageView.setPickOnBounds(true);
+        imageView.setOnMouseClicked(new EventHandler<MouseEvent>() {
+                                        @Override
+                                        public void handle(MouseEvent mouseEvent) {
+                                            pieceClicked(file, rank);
+                                        }
+                                    }
+        );
+    }
+
+    public void addOnClickCircles(Integer file, Integer rank, Circle circle){
+        circle.setPickOnBounds(true);
+        circle.setOnMouseClicked(new EventHandler<MouseEvent>() {
+                                        @Override
+                                        public void handle(MouseEvent mouseEvent) {
+                                            circleClicked(file, rank );
+                                        }
+                                    }
+        );
+    }
+
 
     public void pieceClicked(Integer file, Integer rank){
-        Boolean isWhite = board.getBoardSquares().getSquare(file, rank).getPiece().getIsWhite();
-        if (board.getWhitesTurn() == isWhite) {
-            PieceType pieceType = board.getBoardSquares().getSquare(file, rank).getPiece().getPieceType();
-            for (Integer[] moves:Moves.chooseMove(file, rank, isWhite, board, pieceType)) {
-                System.out.println("" + moves[0].toString() +" "+ moves[1].toString());
+        if (piece == board.getBoardSquares().getSquare(file, rank).getPiece()) {
+            mainview.removeCircles();
+            this.piece = null;
+        }
+        else{
+            if(!isNull(piece)){
+                mainview.removeCircles();
             }
-            ArrayList<Integer[]> moves = Moves.chooseMove(file, rank, isWhite, board, pieceType);
+            this.piece = board.getBoardSquares().getSquare(file, rank).getPiece();
+            Boolean isWhite = this.piece.getIsWhite();
+            if (board.getWhitesTurn() == isWhite) {
+                PieceType pieceType = board.getBoardSquares().getSquare(file, rank).getPiece().getPieceType();
+                for (Integer[] moves : Moves.chooseMove(file, rank, isWhite, board, pieceType)) {
+                    System.out.println("" + moves[0].toString() + " " + moves[1].toString());
+                }
+                ArrayList<Integer[]> moves = Moves.chooseMove(file, rank, isWhite, board, pieceType);
 
-            board.movePieces(file,rank,moves.get(0)[0],moves.get(0)[1]);
+                mainview.addMoveOptions(Moves.chooseMove(file, rank, isWhite, board, pieceType));
+                //
+            }
         }
     }
+
+    public void circleClicked(Integer file, Integer rank){
+        System.out.println(file.toString() + " "  + rank.toString());
+        board.movePieces(piece.getFile(),piece.getRank(),file,rank);
+        this.piece = null;
+    }
+
 
 }

@@ -5,6 +5,7 @@ import javafx.scene.Group;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.paint.Color;
+import javafx.scene.shape.Circle;
 import javafx.scene.shape.Rectangle;
 
 public class SquareView extends Group {
@@ -12,6 +13,7 @@ public class SquareView extends Group {
     private final double xCoordinate;
     private final double yCoordinate;
     private ImageView imageview = new ImageView();
+    private Circle circle = new Circle();
 //    private Piece piece = null;
 
 
@@ -38,6 +40,7 @@ public class SquareView extends Group {
         this.imageview.setFitWidth(heightWidth);
 
         getChildren().add(rectangle);
+        setCircle();
     }
 
     public void addPiece(Piece piece){
@@ -72,4 +75,26 @@ public class SquareView extends Group {
     public ImageView getImageview() {
         return imageview;
     }
+
+    public void setCircle(){
+        circle.setRadius(20);
+        circle.setCenterX(xCoordinate+40);
+        circle.setCenterY(yCoordinate+40);
+        circle.setFill(Color.DARKBLUE);
+        circle.setOpacity(0.5);
+    }
+
+    public Circle getCircle() {
+        return circle;
+    }
+
+    public void addCircle(){
+        this.getChildren().add(circle);
+    }
+
+    public void removeCircle(){
+        this.getChildren().remove(circle);
+    }
+
 }
+

@@ -7,9 +7,12 @@ import javafx.scene.Group;
 import javafx.scene.Scene;
 import javafx.scene.image.Image;
 import javafx.scene.paint.Color;
+import javafx.scene.shape.Circle;
 import javafx.scene.text.Font;
 import javafx.scene.text.Text;
 import javafx.stage.Stage;
+
+import java.util.ArrayList;
 
 public class MainView implements Observer{
 
@@ -19,6 +22,7 @@ public class MainView implements Observer{
     private final Group root = new Group();
     private Piece[] whitePieces;
     private Piece[] blackPieces;
+    private ArrayList<SquareView> circlesActivated = new ArrayList<SquareView>();
 //    private PieceView[] whitePiecesView = new PieceView[16];
 //    private PieceView[] blackPiecesView = new PieceView[16];
 
@@ -99,7 +103,23 @@ public class MainView implements Observer{
 
     @Override
     public void update(Integer previousFile, Integer previousRank, Piece piece) {
+        removeCircles();
+        this.circlesActivated.clear();
         this.boardSquaresView.getSquareView(previousFile, previousRank).removePiece();
         this.boardSquaresView.getSquareView(piece.getFile(), piece.getRank()).addPiece(piece);
+    }
+
+    public void addMoveOptions(ArrayList<Integer[]> possibleMoves){
+        for (Integer[] moves:possibleMoves){
+            SquareView squareView = boardSquaresView.getSquareView(moves[0],moves[1]);
+            squareView.addCircle();
+            circlesActivated.add(squareView);
+        }
+    }
+
+    public void removeCircles(){
+        for (SquareView squareview:this.circlesActivated) {
+            squareview.removeCircle();
+        }
     }
 }

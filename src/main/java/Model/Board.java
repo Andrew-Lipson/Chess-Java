@@ -78,7 +78,9 @@ public class Board{
 
     public void movePieces(Integer fileMoveFrom, Integer rankMoveFrom, Integer fileMoveTo, Integer rankMoveTo){
         Piece piece = boardSquares.getSquare(fileMoveFrom,rankMoveFrom).getPiece();
-        checkForEnPassant(fileMoveFrom, rankMoveFrom, fileMoveTo, rankMoveTo, piece);
+        if(checkForEnPassant(fileMoveFrom, rankMoveFrom, fileMoveTo, rankMoveTo, piece)){
+            return;
+        }
         disableEnPassant();
 
         if(piece.getPieceType() == PieceType.Pawn && abs(rankMoveFrom-rankMoveTo)==2){
