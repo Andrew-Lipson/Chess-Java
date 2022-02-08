@@ -44,6 +44,7 @@ public class SquareView extends Group {
         //this.piece = piece;
         Image image = new Image(getPNGString(piece));
         this.imageview.setImage(image);
+        getChildren().remove(imageview);
         getChildren().add(imageview);
     }
 

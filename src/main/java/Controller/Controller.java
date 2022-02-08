@@ -47,10 +47,10 @@ public class Controller {
         Boolean isWhite = board.getBoardSquares().getSquare(file, rank).getPiece().getIsWhite();
         if (board.getWhitesTurn() == isWhite) {
             PieceType pieceType = board.getBoardSquares().getSquare(file, rank).getPiece().getPieceType();
-            for (Integer[] moves:Moves.chooseMove(file, rank, isWhite,pieceType)) {
+            for (Integer[] moves:Moves.chooseMove(file, rank, isWhite, board, pieceType)) {
                 System.out.println("" + moves[0].toString() +" "+ moves[1].toString());
             }
-            ArrayList<Integer[]> moves = Moves.chooseMove(file, rank, isWhite,pieceType);
+            ArrayList<Integer[]> moves = Moves.chooseMove(file, rank, isWhite, board, pieceType);
 
             board.movePieces(file,rank,moves.get(0)[0],moves.get(0)[1]);
         }
