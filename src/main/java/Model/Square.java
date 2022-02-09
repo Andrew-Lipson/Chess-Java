@@ -32,6 +32,17 @@ public class Square {
     }
 
     public Piece getPiece() {
-        return piece;
+        return this.piece;
+    }
+
+    public void checkForPromotion(Piece piece){
+        if(piece.getPieceType()!=PieceType.Pawn){
+            return;
+        }
+        Integer rank=piece.getIsWhite()?0:7;
+        if(this.rank!=rank){
+            return;
+        }
+        piece.pawnPromotion(PieceType.Queen);
     }
 }

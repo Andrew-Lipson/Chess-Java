@@ -1,6 +1,5 @@
 package Model;
 
-import Model.pieces.Pawn;
 import Model.pieces.Piece;
 import Model.pieces.PieceType;
 
@@ -170,9 +169,9 @@ public class Moves {
                 }
             }
         }
-        Pawn pawn = (Pawn) board.getBoardSquares().getSquare(file,rank).getPiece();
-        if(!isNull(pawn.getEnPassantAvailableToTakeFile())){
-            possibleMoves.add(new Integer[]{pawn.getEnPassantAvailableToTakeFile(), rank + movementDirection});
+        piece = board.getBoardSquares().getSquare(file,rank).getPiece();
+        if(!isNull(piece.getEnPassantAvailableToTakeFile())){
+            possibleMoves.add(new Integer[]{piece.getEnPassantAvailableToTakeFile(), rank + movementDirection});
         }
         return possibleMoves;
     }

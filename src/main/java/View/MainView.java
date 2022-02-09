@@ -3,16 +3,25 @@ package View;
 import Model.*;
 import Model.pieces.Piece;
 import Observer.Observer;
+import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
 import javafx.scene.Group;
+import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.image.Image;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Circle;
 import javafx.scene.text.Font;
 import javafx.scene.text.Text;
+import javafx.stage.Modality;
 import javafx.stage.Stage;
 
+import java.io.IOException;
+import java.nio.charset.Charset;
 import java.util.ArrayList;
+import java.util.Objects;
+
+import static java.util.Objects.isNull;
 
 public class MainView implements Observer{
 
@@ -20,14 +29,14 @@ public class MainView implements Observer{
     private BoardSquares boardSquares;
     private BoardSquaresView boardSquaresView;
     private final Group root = new Group();
-    private Piece[] whitePieces;
-    private Piece[] blackPieces;
+    private Piece[] whitePieces, blackPieces;
     private ArrayList<SquareView> circlesActivated = new ArrayList<SquareView>();
 //    private PieceView[] whitePiecesView = new PieceView[16];
 //    private PieceView[] blackPiecesView = new PieceView[16];
 
-    public MainView(Stage stage){
+    public MainView(Stage stage) throws IOException {
         //this.board = board;
+
         startUpStage(stage);
     }
 
@@ -42,10 +51,10 @@ public class MainView implements Observer{
         Scene scene = new Scene(root, Color.BROWN);
         Image icon = new Image("chess-icon.png");
         stage.getIcons().add(icon);
-        stage.setTitle("Window");
+        stage.setTitle("CHESS");
         stage.setWidth(730);
         stage.setHeight(750);
-        stage.setResizable(true);
+        stage.setResizable(false);
 
         for (int i = 0; i < 8; i++) {
             rankNumbers(root,i);

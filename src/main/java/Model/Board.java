@@ -3,6 +3,7 @@ package Model;
 import Model.pieces.*;
 import Observer.Observer;
 
+import java.io.IOException;
 import java.util.ArrayList;
 
 import static java.lang.Math.abs;
@@ -15,20 +16,20 @@ public class Board{
     private Piece[] blackPieces = new Piece[16];
     private Boolean whitesTurn;
     private Observer _observer;
-    private ArrayList<Pawn> enPassantAvailablePieces = new ArrayList<>();
+    private ArrayList<Piece> enPassantAvailablePieces = new ArrayList<Piece>();
 
-    public Board(Observer injected) {
+    public Board(Observer observer) {
         boardSquares = new BoardSquares();
         createPieces(whitePieces, true);
         createPieces(blackPieces, false);
-        this._observer = injected;
+        this._observer = observer;
         whitesTurn = true;
     }
 
     private void createPieces( Piece[] pieces, Boolean isWhite){
         int rank = isWhite?6:1;
         for(int i = 0;i<8;i++){
-            pieces[i] = new Pawn(isWhite, PieceType.Pawn);
+            pieces[i] = new Piece(isWhite, PieceType.Pawn);
             addPiece(pieces[i], i, rank);
         }
 
@@ -88,6 +89,7 @@ public class Board{
         }
         boardSquares.getSquare(fileMoveFrom,rankMoveFrom).removePiece();
         boardSquares.getSquare(fileMoveTo,rankMoveTo).addPiece(piece);
+        boardSquares.getSquare(fileMoveTo,rankMoveTo).checkForPromotion(piece);
         nextTurn();
         _observer.update(fileMoveFrom, rankMoveFrom, piece);
     }
@@ -99,9 +101,8 @@ public class Board{
             if (tempFile >= 0 && tempFile < 8){
                 Piece piece = this.boardSquares.getSquare(tempFile,rank).getPiece();
                 if(!isNull(piece) && piece.getPieceType()==PieceType.Pawn && piece.getIsWhite() != isWhite){
-                    Pawn pawn = (Pawn) piece;
-                    pawn.setEnPassantAvailableToTakeFile(file);
-                    enPassantAvailablePieces.add(pawn);
+                    piece.setEnPassantAvailableToTakeFile(file);
+                    enPassantAvailablePieces.add(piece);
                 }
             }
         }
@@ -109,9 +110,8 @@ public class Board{
 
     private Boolean checkForEnPassant(Integer fileMoveFrom, Integer rankMoveFrom, Integer fileMoveTo, Integer rankMoveTo, Piece piece){
         if (piece.getPieceType() == PieceType.Pawn){
-            Pawn pawn = (Pawn) piece;
-            if(enPassantAvailablePieces.contains(pawn)){
-                if(pawn.getEnPassantAvailableToTakeFile()==fileMoveTo){
+            if(enPassantAvailablePieces.contains(piece)){
+                if(piece.getEnPassantAvailableToTakeFile()==fileMoveTo){
                     boardSquares.getSquare(fileMoveFrom,rankMoveFrom).removePiece();
                     boardSquares.getSquare(fileMoveTo,rankMoveFrom).removePiece();
                     boardSquares.getSquare(fileMoveTo,rankMoveTo).addPiece(piece);
@@ -127,8 +127,8 @@ public class Board{
     }
 
     private void disableEnPassant(){
-        for (Pawn pawn:enPassantAvailablePieces) {
-            pawn.setEnPassantAvailableToTakeFile(null);
+        for (Piece piece:enPassantAvailablePieces) {
+            piece.setEnPassantAvailableToTakeFile(null);
         }
         enPassantAvailablePieces.clear();
     }

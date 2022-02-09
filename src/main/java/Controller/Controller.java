@@ -12,6 +12,7 @@ import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.shape.Circle;
 
+import java.io.IOException;
 import java.util.ArrayList;
 
 import static java.util.Objects.isNull;
@@ -60,7 +61,7 @@ public class Controller {
         circle.setOnMouseClicked(new EventHandler<MouseEvent>() {
                                         @Override
                                         public void handle(MouseEvent mouseEvent) {
-                                            circleClicked(file, rank );
+                                                circleClicked(file, rank );
                                         }
                                     }
         );
@@ -80,19 +81,14 @@ public class Controller {
             Boolean isWhite = this.piece.getIsWhite();
             if (board.getWhitesTurn() == isWhite) {
                 PieceType pieceType = board.getBoardSquares().getSquare(file, rank).getPiece().getPieceType();
-                for (Integer[] moves : Moves.chooseMove(file, rank, isWhite, board, pieceType)) {
-                    System.out.println("" + moves[0].toString() + " " + moves[1].toString());
-                }
                 ArrayList<Integer[]> moves = Moves.chooseMove(file, rank, isWhite, board, pieceType);
 
-                mainview.addMoveOptions(Moves.chooseMove(file, rank, isWhite, board, pieceType));
-                //
+                mainview.addMoveOptions(moves);
             }
         }
     }
 
     public void circleClicked(Integer file, Integer rank){
-        System.out.println(file.toString() + " "  + rank.toString());
         board.movePieces(piece.getFile(),piece.getRank(),file,rank);
         this.piece = null;
     }

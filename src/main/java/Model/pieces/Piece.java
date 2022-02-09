@@ -6,7 +6,7 @@ public class Piece {
     private Integer file;
     private Integer rank;
     private PieceType pieceType;
-
+    private Integer enPassantAvailableToTakeFile = null;
 
     public Piece(Boolean isWhite, PieceType pieceType){
 
@@ -40,5 +40,15 @@ public class Piece {
         return false;
     }
 
+    public void setEnPassantAvailableToTakeFile(Integer file){
+        this.enPassantAvailableToTakeFile = file;
+    }
 
+    public Integer getEnPassantAvailableToTakeFile(){
+        return enPassantAvailableToTakeFile;
+    }
+
+    public void pawnPromotion(PieceType pieceType){
+        this.pieceType = pieceType;
+    }
 }
