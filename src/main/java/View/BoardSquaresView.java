@@ -12,6 +12,7 @@ public class BoardSquaresView {
         }
     }
 
+    // Return a SquareView from the specific File and Rank
     public SquareView getSquareView(Integer file, Integer rank){
         return squareView[file][rank];
     }

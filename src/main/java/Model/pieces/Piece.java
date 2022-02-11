@@ -14,10 +14,21 @@ public class Piece {
         this.pieceType = pieceType;
     }
 
-
+    //add the file and rank position to the Piece
     public void addPosition(Integer file, Integer rank){
         this.file = file;
         this.rank = rank;
+    }
+
+    //Set the enPassantAvailableToTakeFile to the File that the piece will move to after the en Passant
+    public void setEnPassantAvailableToTakeFile(Integer file){
+        this.enPassantAvailableToTakeFile = file;
+    }
+
+
+    // Change the PieceType for when a Pawn get promoted
+    public void pawnPromotion(PieceType pieceType){
+        this.pieceType = pieceType;
     }
 
     public Integer getFile() {
@@ -36,19 +47,7 @@ public class Piece {
         return isWhite;
     }
 
-    public Boolean isKing(){
-        return false;
-    }
-
-    public void setEnPassantAvailableToTakeFile(Integer file){
-        this.enPassantAvailableToTakeFile = file;
-    }
-
     public Integer getEnPassantAvailableToTakeFile(){
         return enPassantAvailableToTakeFile;
-    }
-
-    public void pawnPromotion(PieceType pieceType){
-        this.pieceType = pieceType;
     }
 }

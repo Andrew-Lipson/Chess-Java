@@ -1,53 +1,27 @@
 package View;
 
-import Model.*;
 import Model.pieces.Piece;
 import Observer.Observer;
-import javafx.fxml.FXML;
-import javafx.fxml.FXMLLoader;
 import javafx.scene.Group;
-import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.image.Image;
 import javafx.scene.paint.Color;
-import javafx.scene.shape.Circle;
 import javafx.scene.text.Font;
 import javafx.scene.text.Text;
-import javafx.stage.Modality;
 import javafx.stage.Stage;
 
 import java.io.IOException;
-import java.nio.charset.Charset;
 import java.util.ArrayList;
-import java.util.Objects;
-
-import static java.util.Objects.isNull;
 
 public class MainView implements Observer{
 
-    //private final Board board;
-    private BoardSquares boardSquares;
     private BoardSquaresView boardSquaresView;
     private final Group root = new Group();
     private Piece[] whitePieces, blackPieces;
     private ArrayList<SquareView> circlesActivated = new ArrayList<SquareView>();
-//    private PieceView[] whitePiecesView = new PieceView[16];
-//    private PieceView[] blackPiecesView = new PieceView[16];
 
+    //Setting up the JAVAFX stage that will be used for the display
     public MainView(Stage stage) throws IOException {
-        //this.board = board;
-
-        startUpStage(stage);
-    }
-
-    public void setUpMainView(BoardSquares boardSquares, Piece [] whitePieces, Piece [] blackPieces){
-        this.boardSquares = boardSquares;
-        this.whitePieces = whitePieces;
-        this.blackPieces = blackPieces;
-        renderBoard();
-    }
-
-    private void startUpStage(Stage stage){
         Scene scene = new Scene(root, Color.BROWN);
         Image icon = new Image("chess-icon.png");
         stage.getIcons().add(icon);
@@ -67,6 +41,15 @@ public class MainView implements Observer{
         stage.show();
     }
 
+    //WILL CHANGE WITH FEN UPDATE
+    public void setUpMainView(Piece [] whitePieces, Piece [] blackPieces){
+        this.whitePieces = whitePieces;
+        this.blackPieces = blackPieces;
+        renderBoard();
+    }
+
+    //Adding Rank numbers to make it easier for me to see what file and rank each square is.
+    //DELETE ONCE PROJECT IS COMPLETE
     private void rankNumbers(Group root, Integer rank){
         Text text = new Text();
         text.setText(rank.toString());
@@ -76,6 +59,8 @@ public class MainView implements Observer{
         root.getChildren().add(text);
     }
 
+    //Adding File numbers to make it easier for me to see what file and rank each square is.
+    //DELETE ONCE PROJECT IS COMPLETE
     private void fileNumbers(Group root, Integer file){
         Text text = new Text();
         text.setText(file.toString());
@@ -85,6 +70,7 @@ public class MainView implements Observer{
         root.getChildren().add(text);
     }
 
+    //WILL CHANGE WITH FEN UPDATE
     public void renderBoard(){
         
         this.boardSquaresView = new BoardSquaresView();
@@ -110,15 +96,17 @@ public class MainView implements Observer{
         return boardSquaresView;
     }
 
+    //WILL CHANGE WITH FEN UPDATE
     @Override
     public void update(Integer previousFile, Integer previousRank, Piece piece) {
-        removeCircles();
+        removeMoveOptionsCircles();
         this.circlesActivated.clear();
         this.boardSquaresView.getSquareView(previousFile, previousRank).removePiece();
         this.boardSquaresView.getSquareView(piece.getFile(), piece.getRank()).addPiece(piece);
     }
 
-    public void addMoveOptions(ArrayList<Integer[]> possibleMoves){
+    //Adding circles to squares after a piece has been clicked to show what moves are available
+    public void addMoveOptionsCircles(ArrayList<Integer[]> possibleMoves){
         for (Integer[] moves:possibleMoves){
             SquareView squareView = boardSquaresView.getSquareView(moves[0],moves[1]);
             squareView.addCircle();
@@ -126,7 +114,8 @@ public class MainView implements Observer{
         }
     }
 
-    public void removeCircles(){
+    //Removing the circles of the possible moves
+    public void removeMoveOptionsCircles(){
         for (SquareView squareview:this.circlesActivated) {
             squareview.removeCircle();
         }

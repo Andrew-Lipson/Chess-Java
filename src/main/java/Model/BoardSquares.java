@@ -11,7 +11,7 @@ public class BoardSquares {
             }
         }
     }
-
+    // Return a Square from the specific File and Rank
     public Square getSquare(Integer file, Integer rank){
         return squares[file][rank];
     }

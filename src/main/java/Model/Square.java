@@ -14,19 +14,14 @@ public class Square {
         this.piece = null;
     }
 
-    public Integer getFile(){
-        return this.file;
-    }
 
-    public Integer getRank(){
-        return this.rank;
-    }
-
+    //Add a Piece to this Square
     public void addPiece(Piece piece){
         this.piece = piece;
         this.piece.addPosition(this.file,this.rank);
     }
 
+    //Remove a Piece from this Square
     public void removePiece(){
         this.piece =  null;
     }
@@ -35,14 +30,11 @@ public class Square {
         return this.piece;
     }
 
-    public void checkForPromotion(Piece piece){
-        if(piece.getPieceType()!=PieceType.Pawn){
-            return;
-        }
-        Integer rank=piece.getIsWhite()?0:7;
-        if(this.rank!=rank){
-            return;
-        }
-        piece.pawnPromotion(PieceType.Queen);
-    }
+//    public Integer getFile(){
+//        return this.file;
+//    }
+//
+//    public Integer getRank(){
+//        return this.rank;
+//    }
 }

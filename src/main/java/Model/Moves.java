@@ -15,11 +15,12 @@ public class Moves {
         this.board = board;
     }
 
+    //choosing the correct function to call
     public static ArrayList<Integer[]> chooseMove(Integer file, Integer rank, Boolean isWhite, Board board, PieceType pieceType){
         ArrayList<Integer[]> possibleMoves = new ArrayList<Integer[]>();
         switch (pieceType){
             case Bishop:
-                return diagnal(file,rank,board, isWhite);
+                return diagonal(file,rank,board, isWhite);
             case Rook:
                 return straight(file,rank,board, isWhite);
             case Queen:
@@ -35,40 +36,44 @@ public class Moves {
         return possibleMoves;
     }
 
-    private static Boolean addPossibleMoveStraightAndDiagnal(Integer file, Integer rank, Board board, Boolean isWhite, ArrayList<Integer[]> possibleMoves){
+    //Adding moves to the possibleMoves List for the Straight and Diagonal
+    //If there is a piece on the position return true, otherwise False
+    private static Boolean addPossibleMoveStraightAndDiagonal(Integer file, Integer rank, Board board, Boolean isWhite, ArrayList<Integer[]> possibleMoves){
         Piece piece = board.getBoardSquares().getSquare(file,rank).getPiece();
+        //If no Piece on the Position, add possible move and return false
         if (isNull(piece)){
             possibleMoves.add(new Integer[]{file,rank});
             return false;
         }
+        //If there is an opponent's Piece on the Position, add possible move and return true
         else if (piece.getIsWhite() != isWhite){
             possibleMoves.add(new Integer[]{file,rank});
             return true;
         }
+        //If there is same colour piece on the Position, just return true
         else {
             return true;
         }
     }
 
+    //Add a Position to possibleMoves if the square is null or an opponent's piece is there
     private static void addPossibleMoves(Integer file, Integer rank, Board board, Boolean isWhite, ArrayList<Integer[]> possibleMoves){
         Piece piece = board.getBoardSquares().getSquare(file,rank).getPiece();
-        if(isNull(piece)){
-            possibleMoves.add(new Integer[]{file,rank});
-        }
-        else if (piece.getIsWhite() != isWhite){
+        if(isNull(piece) || piece.getIsWhite() != isWhite){
             possibleMoves.add(new Integer[]{file,rank});
         }
     }
 
 
-    public static ArrayList<Integer[]> diagnal(Integer file, Integer rank, Board board, Boolean isWhite){
+    //Adding all diagonal moves to possibleMoves
+    public static ArrayList<Integer[]> diagonal(Integer file, Integer rank, Board board, Boolean isWhite){
         ArrayList<Integer[]> possibleMoves = new ArrayList<Integer[]>();
         for (int iRank = -1; iRank < 2; iRank+=2) {
             for (int iFile = -1; iFile < 2; iFile+=2){
                 Integer tempRank = rank+iRank;
                 Integer tempFile = file+iFile;
                 while (tempRank>=0 && tempRank<8 && tempFile>=0 && tempFile<8){
-                    if(addPossibleMoveStraightAndDiagnal(tempFile, tempRank, board,isWhite,possibleMoves)){
+                    if(addPossibleMoveStraightAndDiagonal(tempFile, tempRank, board,isWhite,possibleMoves)){
                         break;
                     };
                         tempRank += iRank;
@@ -79,19 +84,20 @@ public class Moves {
         return possibleMoves;
     }
 
+    //Adding all straight moves to possibleMoves
     public static ArrayList<Integer[]> straight(Integer file, Integer rank, Board board, Boolean isWhite) {
         ArrayList<Integer[]> possibleMoves = new ArrayList<Integer[]>();
         for (int i = -1; i < 2; i += 2) {
             Integer tempRank = rank + i;
             while (tempRank >= 0 && tempRank < 8) {
-                if(addPossibleMoveStraightAndDiagnal(file, tempRank, board,isWhite,possibleMoves)){
+                if(addPossibleMoveStraightAndDiagonal(file, tempRank, board,isWhite,possibleMoves)){
                     break;
                 };
                     tempRank += i;
             }
             Integer tempFile = file + i;
             while (tempFile >= 0 && tempFile < 8) {
-                if(addPossibleMoveStraightAndDiagnal(tempFile, rank, board,isWhite,possibleMoves)){
+                if(addPossibleMoveStraightAndDiagonal(tempFile, rank, board,isWhite,possibleMoves)){
                     break;
                 };
                 tempFile += i;
@@ -100,11 +106,14 @@ public class Moves {
         return possibleMoves;
     }
 
+    //Adding all diagonal and straight moves to possibleMoves
     public static ArrayList<Integer[]> queen(Integer file, Integer rank, Board board, Boolean isWhite) {
-        ArrayList<Integer[]> possibleMoves = diagnal(file, rank, board, isWhite);
+        ArrayList<Integer[]> possibleMoves = diagonal(file, rank, board, isWhite);
         possibleMoves.addAll(straight(file, rank, board, isWhite));
         return possibleMoves;
     }
+
+    //Adding all knight moves to possibleMoves
     public static ArrayList<Integer[]> knight(Integer file, Integer rank, Board board, Boolean isWhite) {
         ArrayList<Integer[]> possibleMoves = new ArrayList<Integer[]>();
         for (int iRank = -2; iRank < 3; iRank++) {
@@ -119,6 +128,7 @@ public class Moves {
         return possibleMoves;
     }
 
+    //Adding all king moves to possibleMoves
     public static ArrayList<Integer[]> king(Integer file, Integer rank, Board board, Boolean isWhite) {
         ArrayList<Integer[]> possibleMoves = new ArrayList<Integer[]>();
         for (int iRank = -1; iRank < 2; iRank++) {
@@ -135,6 +145,7 @@ public class Moves {
         return possibleMoves;
     }
 
+    //Adding all pawn moves to possibleMoves
     public static ArrayList<Integer[]> pawn(Integer file, Integer rank, Board board, Boolean isWhite) {
         ArrayList<Integer[]> possibleMoves = new ArrayList<Integer[]>();
         Integer startingRank;
