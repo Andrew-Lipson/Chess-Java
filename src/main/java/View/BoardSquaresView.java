@@ -1,5 +1,7 @@
 package View;
 
+import Model.Position;
+
 public class BoardSquaresView {
 
     SquareView[][] squareView = new SquareView[8][8];
@@ -13,7 +15,7 @@ public class BoardSquaresView {
     }
 
     // Return a SquareView from the specific File and Rank
-    public SquareView getSquareView(Integer file, Integer rank){
-        return squareView[file][rank];
+    public SquareView getSquareView(Position position){
+        return squareView[position.getFile()][position.getRank()];
     }
 }

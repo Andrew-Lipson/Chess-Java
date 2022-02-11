@@ -16,38 +16,38 @@ public class Moves {
     }
 
     //choosing the correct function to call
-    public static ArrayList<Integer[]> chooseMove(Integer file, Integer rank, Boolean isWhite, Board board, PieceType pieceType){
-        ArrayList<Integer[]> possibleMoves = new ArrayList<Integer[]>();
+    public static ArrayList<Position> chooseMove(Position position, Boolean isWhite, Board board, PieceType pieceType){
+        //ArrayList<Position> possibleMoves = new ArrayList<Position>();
         switch (pieceType){
             case Bishop:
-                return diagonal(file,rank,board, isWhite);
+                return diagonal(position,board, isWhite);
             case Rook:
-                return straight(file,rank,board, isWhite);
+                return straight(position,board, isWhite);
             case Queen:
-                return queen(file,rank,board, isWhite);
+                return queen(position,board, isWhite);
             case Knight:
-                return knight(file,rank,board, isWhite);
+                return knight(position,board, isWhite);
             case King:
-                return king(file,rank,board, isWhite);
+                return king(position,board, isWhite);
             case Pawn:
-                return pawn(file,rank,board, isWhite);
+                return pawn(position,board, isWhite);
         }
 
-        return possibleMoves;
+        return null;
     }
 
     //Adding moves to the possibleMoves List for the Straight and Diagonal
     //If there is a piece on the position return true, otherwise False
-    private static Boolean addPossibleMoveStraightAndDiagonal(Integer file, Integer rank, Board board, Boolean isWhite, ArrayList<Integer[]> possibleMoves){
-        Piece piece = board.getBoardSquares().getSquare(file,rank).getPiece();
+    private static Boolean addPossibleMoveStraightAndDiagonal(Position position, Board board, Boolean isWhite, ArrayList<Position> possibleMoves){
+        Piece piece = board.getPiece(position);
         //If no Piece on the Position, add possible move and return false
         if (isNull(piece)){
-            possibleMoves.add(new Integer[]{file,rank});
+            possibleMoves.add(position);
             return false;
         }
         //If there is an opponent's Piece on the Position, add possible move and return true
         else if (piece.getIsWhite() != isWhite){
-            possibleMoves.add(new Integer[]{file,rank});
+            possibleMoves.add(position);
             return true;
         }
         //If there is same colour piece on the Position, just return true
@@ -57,23 +57,23 @@ public class Moves {
     }
 
     //Add a Position to possibleMoves if the square is null or an opponent's piece is there
-    private static void addPossibleMoves(Integer file, Integer rank, Board board, Boolean isWhite, ArrayList<Integer[]> possibleMoves){
-        Piece piece = board.getBoardSquares().getSquare(file,rank).getPiece();
+    private static void addPossibleMoves(Position position, Board board, Boolean isWhite, ArrayList<Position> possibleMoves){
+        Piece piece = board.getPiece(position);
         if(isNull(piece) || piece.getIsWhite() != isWhite){
-            possibleMoves.add(new Integer[]{file,rank});
+            possibleMoves.add(position);
         }
     }
 
 
     //Adding all diagonal moves to possibleMoves
-    public static ArrayList<Integer[]> diagonal(Integer file, Integer rank, Board board, Boolean isWhite){
-        ArrayList<Integer[]> possibleMoves = new ArrayList<Integer[]>();
+    public static ArrayList<Position> diagonal(Position position, Board board, Boolean isWhite){
+        ArrayList<Position> possibleMoves = new ArrayList<Position>();
         for (int iRank = -1; iRank < 2; iRank+=2) {
             for (int iFile = -1; iFile < 2; iFile+=2){
-                Integer tempRank = rank+iRank;
-                Integer tempFile = file+iFile;
+                int tempRank = position.getRank()+iRank;
+                int tempFile = position.getFile()+iFile;
                 while (tempRank>=0 && tempRank<8 && tempFile>=0 && tempFile<8){
-                    if(addPossibleMoveStraightAndDiagonal(tempFile, tempRank, board,isWhite,possibleMoves)){
+                    if(addPossibleMoveStraightAndDiagonal(new Position(tempFile, tempRank), board,isWhite,possibleMoves)){
                         break;
                     };
                         tempRank += iRank;
@@ -85,19 +85,19 @@ public class Moves {
     }
 
     //Adding all straight moves to possibleMoves
-    public static ArrayList<Integer[]> straight(Integer file, Integer rank, Board board, Boolean isWhite) {
-        ArrayList<Integer[]> possibleMoves = new ArrayList<Integer[]>();
+    public static ArrayList<Position> straight(Position position, Board board, Boolean isWhite) {
+        ArrayList<Position> possibleMoves = new ArrayList<Position>();
         for (int i = -1; i < 2; i += 2) {
-            Integer tempRank = rank + i;
+            int tempRank = position.getRank() + i;
             while (tempRank >= 0 && tempRank < 8) {
-                if(addPossibleMoveStraightAndDiagonal(file, tempRank, board,isWhite,possibleMoves)){
+                if(addPossibleMoveStraightAndDiagonal(new Position(position.getFile(), tempRank), board,isWhite,possibleMoves)){
                     break;
                 };
                     tempRank += i;
             }
-            Integer tempFile = file + i;
+            int tempFile = position.getFile() + i;
             while (tempFile >= 0 && tempFile < 8) {
-                if(addPossibleMoveStraightAndDiagonal(tempFile, rank, board,isWhite,possibleMoves)){
+                if(addPossibleMoveStraightAndDiagonal(new Position(tempFile, position.getRank()), board,isWhite,possibleMoves)){
                     break;
                 };
                 tempFile += i;
@@ -107,21 +107,21 @@ public class Moves {
     }
 
     //Adding all diagonal and straight moves to possibleMoves
-    public static ArrayList<Integer[]> queen(Integer file, Integer rank, Board board, Boolean isWhite) {
-        ArrayList<Integer[]> possibleMoves = diagonal(file, rank, board, isWhite);
-        possibleMoves.addAll(straight(file, rank, board, isWhite));
+    public static ArrayList<Position> queen(Position position, Board board, Boolean isWhite) {
+        ArrayList<Position> possibleMoves = diagonal(position, board, isWhite);
+        possibleMoves.addAll(straight(position, board, isWhite));
         return possibleMoves;
     }
 
     //Adding all knight moves to possibleMoves
-    public static ArrayList<Integer[]> knight(Integer file, Integer rank, Board board, Boolean isWhite) {
-        ArrayList<Integer[]> possibleMoves = new ArrayList<Integer[]>();
+    public static ArrayList<Position> knight(Position position, Board board, Boolean isWhite) {
+        ArrayList<Position> possibleMoves = new ArrayList<Position>();
         for (int iRank = -2; iRank < 3; iRank++) {
             for (int iFile = -2; iFile < 3; iFile++){
-                Integer tempRank = rank+iRank;
-                Integer tempFile = file+iFile;
+                int tempRank = position.getRank()+iRank;
+                int tempFile = position.getFile()+iFile;
                 if(iRank!=0 && iFile!=0 && ((iFile+iRank)%2!=0) && tempRank>=0 && tempRank<8 && tempFile>=0 && tempFile<8) {
-                    addPossibleMoves(tempFile, tempRank, board,isWhite,possibleMoves);
+                    addPossibleMoves(new Position(tempFile, tempRank), board,isWhite,possibleMoves);
                 }
             }
         }
@@ -129,15 +129,15 @@ public class Moves {
     }
 
     //Adding all king moves to possibleMoves
-    public static ArrayList<Integer[]> king(Integer file, Integer rank, Board board, Boolean isWhite) {
-        ArrayList<Integer[]> possibleMoves = new ArrayList<Integer[]>();
+    public static ArrayList<Position> king(Position position, Board board, Boolean isWhite) {
+        ArrayList<Position> possibleMoves = new ArrayList<Position>();
         for (int iRank = -1; iRank < 2; iRank++) {
             for (int iFile = -1; iFile < 2; iFile++) {
                 if(iRank!=0 || iFile!=0){
-                    Integer tempRank = rank+iRank;
-                    Integer tempFile = file+iFile;
+                    int tempRank = position.getRank()+iRank;
+                    int tempFile = position.getFile()+iFile;
                     if(tempRank>=0 && tempRank<8 && tempFile>=0 && tempFile<8) {
-                        addPossibleMoves(tempFile, tempRank, board,isWhite,possibleMoves);
+                        addPossibleMoves(new Position(tempFile, tempRank), board,isWhite,possibleMoves);
                     }
                 }
             }
@@ -146,10 +146,12 @@ public class Moves {
     }
 
     //Adding all pawn moves to possibleMoves
-    public static ArrayList<Integer[]> pawn(Integer file, Integer rank, Board board, Boolean isWhite) {
-        ArrayList<Integer[]> possibleMoves = new ArrayList<Integer[]>();
-        Integer startingRank;
-        Integer movementDirection;
+    public static ArrayList<Position> pawn(Position position, Board board, Boolean isWhite) {
+        ArrayList<Position> possibleMoves = new ArrayList<Position>();
+        int file = position.getFile();
+        int rank = position.getRank();
+        int startingRank;
+        int movementDirection;
         if(isWhite){
             startingRank = 6;
             movementDirection = -1;
@@ -158,15 +160,15 @@ public class Moves {
             startingRank = 1;
             movementDirection = 1;
         }
-        Integer tempRank = rank+movementDirection;
-        Integer tempFile = file;
-        Piece piece = board.getBoardSquares().getSquare(tempFile,tempRank).getPiece();
+        int tempRank = rank+movementDirection;
+        int tempFile = file;
+        Piece piece = board.getPiece(new Position(tempFile, tempRank));
         if(tempFile>=0 && tempFile<8 && isNull(piece)){
-            possibleMoves.add(new Integer[]{tempFile, tempRank});
+            possibleMoves.add(new Position(tempFile, tempRank));
             if(rank == startingRank){
                 tempRank+=movementDirection;
-                if(isNull(board.getBoardSquares().getSquare(tempFile,tempRank).getPiece())) {
-                    possibleMoves.add(new Integer[]{tempFile, tempRank});
+                if(isNull(board.getPiece(new Position(tempFile, tempRank)))) {
+                    possibleMoves.add(new Position(tempFile, tempRank));
                 }
             }
         }
@@ -174,15 +176,15 @@ public class Moves {
             tempRank = rank + movementDirection;
             tempFile = file+iFile;
             if (tempFile >= 0 && tempFile < 8){
-                piece = board.getBoardSquares().getSquare(tempFile,tempRank).getPiece();
+                piece = board.getPiece(new Position(tempFile, tempRank));
                 if(!isNull(piece) && piece.getIsWhite()!=isWhite){
-                    possibleMoves.add(new Integer[]{tempFile, tempRank});
+                    possibleMoves.add(new Position(tempFile, tempRank));
                 }
             }
         }
-        piece = board.getBoardSquares().getSquare(file,rank).getPiece();
+        piece = board.getPiece(position);
         if(!isNull(piece.getEnPassantAvailableToTakeFile())){
-            possibleMoves.add(new Integer[]{piece.getEnPassantAvailableToTakeFile(), rank + movementDirection});
+            possibleMoves.add(new Position(piece.getEnPassantAvailableToTakeFile(), rank + movementDirection));
         }
         return possibleMoves;
     }
