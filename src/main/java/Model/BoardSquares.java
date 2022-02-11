@@ -2,6 +2,8 @@ package Model;
 
 import Model.pieces.Piece;
 
+import static java.util.Objects.isNull;
+
 public class BoardSquares {
 
     Piece[][] squares = new Piece[8][8];
@@ -19,7 +21,12 @@ public class BoardSquares {
     }
 
     public void removePiece(Position position){
-        squares[position.getFile()][position.getRank()] = null;
+        Piece piece = getPiece(position);
+        if(!isNull(piece)){
+            piece.addPosition(null);
+            squares[position.getFile()][position.getRank()] = null;
+        }
+
     }
 
     public void addPiece(Position position, Piece piece){
