@@ -38,24 +38,24 @@ public class Controller {
                 int finalFile = file;
                 int finalRank = rank;
 
-
-                ImageView imageView = boardSquaresView.getSquareView(file,rank).getImageview();
+                Position position = new Position(finalFile,finalRank);
+                ImageView imageView = boardSquaresView.getSquareView(position).getImageview();
                 imageView.setPickOnBounds(true);
                 imageView.setOnMouseClicked(new EventHandler<MouseEvent>() {
                         @Override
                         public void handle(MouseEvent mouseEvent) {
-                            pieceClicked(finalFile, finalRank);
+                            pieceClicked(position);
                         }
                     }
                 );
 
 
-                Circle circle = boardSquaresView.getSquareView(file,rank).getCircle();
+                Circle circle = boardSquaresView.getSquareView(position).getCircle();
                 circle.setPickOnBounds(true);
                 circle.setOnMouseClicked(new EventHandler<MouseEvent>() {
                          @Override
                          public void handle(MouseEvent mouseEvent) {
-                             circleClicked(finalFile, finalRank );
+                             circleClicked(position);
                          }
                      }
                 );
@@ -65,9 +65,9 @@ public class Controller {
     }
 
     //
-    public void pieceClicked(Integer file, Integer rank){
+    public void pieceClicked(Position position){
         // Check if the piece clicked was just clicked, and remove the possible moves from the board
-        if (clickedPiece == board.getBoardSquares().getSquare(file, rank).getPiece()) {
+        if (clickedPiece == board.getPiece(position)) {
             mainview.removeMoveOptionsCircles();
             this.clickedPiece = null;
         }
@@ -77,11 +77,11 @@ public class Controller {
                 mainview.removeMoveOptionsCircles();
             }
             //Add the Clicked piece's possible moves
-            this.clickedPiece = board.getBoardSquares().getSquare(file, rank).getPiece();
+            this.clickedPiece = board.getPiece(position);
             Boolean isWhite = this.clickedPiece.getIsWhite();
             if (board.getWhitesTurn() == isWhite) {
-                PieceType pieceType = board.getBoardSquares().getSquare(file, rank).getPiece().getPieceType();
-                ArrayList<Integer[]> moves = Moves.chooseMove(file, rank, isWhite, board, pieceType);
+                PieceType pieceType = board.getPiece(position).getPieceType();
+                ArrayList<Position> moves = Moves.chooseMove(position, isWhite, board, pieceType);
 
                 mainview.addMoveOptionsCircles(moves);
             }
@@ -89,8 +89,9 @@ public class Controller {
     }
 
     //Move the previously clicked piece to the clicked circle position and remove the
-    public void circleClicked(Integer file, Integer rank){
-        board.movePieces(clickedPiece.getFile(), clickedPiece.getRank(),file,rank);
+    public void circleClicked(Position newPosition){
+        Position previousPosition = clickedPiece.getPosition();
+        board.movePieces(previousPosition,newPosition);
         this.clickedPiece = null;
     }
 
