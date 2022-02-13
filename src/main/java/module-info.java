@@ -9,5 +9,7 @@ module Model {
     opens Controller to javafx.fxml;
     exports View;
     opens View to javafx.fxml;
+    exports Main;
+    opens Main to javafx.fxml;
 
 }

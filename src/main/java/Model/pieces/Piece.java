@@ -15,8 +15,17 @@ public class Piece {
         this.pieceType = pieceType;
     }
 
+    //Use to Clone a previous Piece
+    public Piece(Piece piece){
+
+        this.isWhite = piece.getIsWhite();
+        this.position = piece.getPosition();
+        this.pieceType = piece.getPieceType();
+        this.enPassantAvailableToTakeFile = piece.getEnPassantAvailableToTakeFile();
+    }
+
     //add the file and rank position to the Piece
-    public void addPosition(Position position){
+    public void setPosition(Position position){
         this.position = position;
     }
 
@@ -24,7 +33,6 @@ public class Piece {
     public void setEnPassantAvailableToTakeFile(Integer file){
         this.enPassantAvailableToTakeFile = file;
     }
-
 
     // Change the PieceType for when a Pawn get promoted
     public void pawnPromotion(PieceType pieceType){

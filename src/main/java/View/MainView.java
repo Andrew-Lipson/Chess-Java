@@ -1,7 +1,6 @@
 package View;
 
-import Model.Position;
-import Model.pieces.Piece;
+
 import Observer.Observer;
 import javafx.scene.Group;
 import javafx.scene.Scene;
@@ -14,11 +13,13 @@ import javafx.stage.Stage;
 import java.io.IOException;
 import java.util.ArrayList;
 
+import static java.lang.Character.isDigit;
+
 public class MainView implements Observer{
 
     private BoardSquaresView boardSquaresView;
     private final Group root = new Group();
-    private Piece[] whitePieces, blackPieces;
+    private String[] currentFEN;
     private ArrayList<SquareView> circlesActivated = new ArrayList<SquareView>();
 
     //Setting up the JAVAFX stage that will be used for the display
@@ -36,17 +37,16 @@ public class MainView implements Observer{
             fileNumbers(root,i);
         }
 
+        this.boardSquaresView = new BoardSquaresView();
 
+        for (int rank = 0; rank < 8; rank++) {
+            for (int file = 0; file < 8; file++) {
+                root.getChildren().add(this.boardSquaresView.getSquareView(new PositionView(file,rank)));
+            }
+        }
 
         stage.setScene(scene);
         stage.show();
-    }
-
-    //WILL CHANGE WITH FEN UPDATE
-    public void setUpMainView(Piece [] whitePieces, Piece [] blackPieces){
-        this.whitePieces = whitePieces;
-        this.blackPieces = blackPieces;
-        renderBoard();
     }
 
     //Adding Rank numbers to make it easier for me to see what file and rank each square is.
@@ -71,44 +71,40 @@ public class MainView implements Observer{
         root.getChildren().add(text);
     }
 
-    //WILL CHANGE WITH FEN UPDATE
-    public void renderBoard(){
-        
-        this.boardSquaresView = new BoardSquaresView();
 
-        for (Piece piece: this.whitePieces) {
-            SquareView squareView = this.boardSquaresView.getSquareView(piece.getPosition());
-            squareView.addPiece(piece);
-        }
-
-        for (Piece piece: this.blackPieces) {
-            SquareView squareView = this.boardSquaresView.getSquareView(piece.getPosition());
-            squareView.addPiece(piece);
-        }
-
-        for (int rank = 0; rank < 8; rank++) {
-            for (int file = 0; file < 8; file++) {
-                root.getChildren().add(this.boardSquaresView.getSquareView(new Position(file,rank)));
+    // using the FEN string, update the view to match the FEN input
+    public void update(String FENPosition) {
+        System.out.println(FENPosition);
+        String[] str = FENPosition.split(" ");
+        char[] chars = str[0].toCharArray();
+        int rank = 0;
+        int file = 0;
+        for (Character character:chars) {
+            if(character.equals('/')){
+                rank+=1;
+                file=0;
             }
+            else if(isDigit(character)) {
+                for(int i = 0; i<Character.getNumericValue(character);i++){
+                    getSquareView(new PositionView(file,rank)).addPiece('x');
+                    file +=1;
+                }
+
+            }
+            else{
+                getSquareView(new PositionView(file,rank)).addPiece(character);
+                file+=1;
+            }
+
         }
-    }
-
-    public BoardSquaresView getBoardSquaresView() {
-        return boardSquaresView;
-    }
-
-    //WILL CHANGE WITH FEN UPDATE
-    @Override
-    public void update(Position previousPosition, Piece piece) {
         removeMoveOptionsCircles();
         this.circlesActivated.clear();
-        this.boardSquaresView.getSquareView(previousPosition).removePiece();
-        this.boardSquaresView.getSquareView(piece.getPosition()).addPiece(piece);
     }
 
+
     //Adding circles to squares after a piece has been clicked to show what moves are available
-    public void addMoveOptionsCircles(ArrayList<Position> possibleMoves){
-        for (Position position:possibleMoves){
+    public void addMoveOptionsCircles(ArrayList<PositionView> possibleMoves){
+        for (PositionView position:possibleMoves){
             SquareView squareView = boardSquaresView.getSquareView(position);
             squareView.addCircle();
             circlesActivated.add(squareView);
@@ -120,5 +116,9 @@ public class MainView implements Observer{
         for (SquareView squareview:this.circlesActivated) {
             squareview.removeCircle();
         }
+    }
+
+    public SquareView getSquareView(PositionView position) {
+        return boardSquaresView.getSquareView(position);
     }
 }

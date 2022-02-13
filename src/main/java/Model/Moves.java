@@ -7,13 +7,8 @@ import java.util.ArrayList;
 
 import static java.util.Objects.isNull;
 
-public class Moves {
+public final class Moves {
 
-    private Board board;
-
-    public Moves(Board board){
-        this.board = board;
-    }
 
     //choosing the correct function to call
     public static ArrayList<Position> chooseMove(Position position, Boolean isWhite, Board board, PieceType pieceType){
@@ -66,7 +61,7 @@ public class Moves {
 
 
     //Adding all diagonal moves to possibleMoves
-    public static ArrayList<Position> diagonal(Position position, Board board, Boolean isWhite){
+    private static ArrayList<Position> diagonal(Position position, Board board, Boolean isWhite){
         ArrayList<Position> possibleMoves = new ArrayList<Position>();
         for (int iRank = -1; iRank < 2; iRank+=2) {
             for (int iFile = -1; iFile < 2; iFile+=2){
@@ -85,7 +80,7 @@ public class Moves {
     }
 
     //Adding all straight moves to possibleMoves
-    public static ArrayList<Position> straight(Position position, Board board, Boolean isWhite) {
+    private static ArrayList<Position> straight(Position position, Board board, Boolean isWhite) {
         ArrayList<Position> possibleMoves = new ArrayList<Position>();
         for (int i = -1; i < 2; i += 2) {
             int tempRank = position.getRank() + i;
@@ -107,14 +102,14 @@ public class Moves {
     }
 
     //Adding all diagonal and straight moves to possibleMoves
-    public static ArrayList<Position> queen(Position position, Board board, Boolean isWhite) {
+    private static ArrayList<Position> queen(Position position, Board board, Boolean isWhite) {
         ArrayList<Position> possibleMoves = diagonal(position, board, isWhite);
         possibleMoves.addAll(straight(position, board, isWhite));
         return possibleMoves;
     }
 
     //Adding all knight moves to possibleMoves
-    public static ArrayList<Position> knight(Position position, Board board, Boolean isWhite) {
+    private static ArrayList<Position> knight(Position position, Board board, Boolean isWhite) {
         ArrayList<Position> possibleMoves = new ArrayList<Position>();
         for (int iRank = -2; iRank < 3; iRank++) {
             for (int iFile = -2; iFile < 3; iFile++){
@@ -129,7 +124,7 @@ public class Moves {
     }
 
     //Adding all king moves to possibleMoves
-    public static ArrayList<Position> king(Position position, Board board, Boolean isWhite) {
+    private static ArrayList<Position> king(Position position, Board board, Boolean isWhite) {
         ArrayList<Position> possibleMoves = new ArrayList<Position>();
         for (int iRank = -1; iRank < 2; iRank++) {
             for (int iFile = -1; iFile < 2; iFile++) {
@@ -146,7 +141,7 @@ public class Moves {
     }
 
     //Adding all pawn moves to possibleMoves
-    public static ArrayList<Position> pawn(Position position, Board board, Boolean isWhite) {
+    private static ArrayList<Position> pawn(Position position, Board board, Boolean isWhite) {
         ArrayList<Position> possibleMoves = new ArrayList<Position>();
         int file = position.getFile();
         int rank = position.getRank();

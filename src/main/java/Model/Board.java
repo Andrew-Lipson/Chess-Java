@@ -17,14 +17,19 @@ public class Board{
     private Boolean whitesTurn;
     private final Observer _observer;
     private ArrayList<Piece> enPassantAvailablePieces = new ArrayList<Piece>();
+    private FEN fen;
 
     public Board(Observer observer) {
         boardSquares = new BoardSquares();
         createPieces(whitePieces, true);
         createPieces(blackPieces, false);
         this._observer = observer;
+        fen = new FEN(createFirstFENPosition());
+        _observer.update(fen.createCompleteFEN());
         whitesTurn = true;
     }
+
+
 
     //Create all the piece objects and put them on the board in the correct position
     private void createPieces( Piece[] pieces, Boolean isWhite){
@@ -51,7 +56,15 @@ public class Board{
         for(int i = 8;i<16;i++) {
             addPiece(new Position(i-8,rank),pieces[i]);
         }
+    }
 
+    // basically create a copy of boardSquares to help create the first FEN
+    private Piece[][] createFirstFENPosition(){
+        Piece[][] piece2DArray = new Piece[8][8];
+        for (int rank = 0; rank < 8; rank++) {
+            piece2DArray[rank] = boardSquares.getRankPiece(rank);
+        }
+        return piece2DArray;
     }
 
     //Add the piece to the specific Square on the file and rank provided
@@ -59,6 +72,7 @@ public class Board{
         boardSquares.addPiece(position, piece);
     }
 
+    //remove the piece on the specific position
     private void removePiece(Position position){
         boardSquares.removePiece(position);
     }
@@ -69,32 +83,44 @@ public class Board{
         whitesTurn = !whitesTurn;
     }
 
-    //WILL CHANGE WITH FEN UPDATE
+    // move the piece from the previousPosition to the newPosition.
+    // also checking for en Passant and promotion. Then update the view
     public void movePieces(Position previousPosition, Position newPosition){
+        fen.setEnPassantPiece(null);
         Piece piece = boardSquares.getPiece(previousPosition);
+
+        // if en Passant occured, return as the checkForEnPassant function did everything necessary
         if(checkForEnPassant(previousPosition, newPosition, piece)){
             return;
         }
+
         disableEnPassant();
 
+        // check if a pawn double moved and do what is needed
         if(piece.getPieceType() == PieceType.Pawn && abs(previousPosition.getRank()- newPosition.getRank())==2){
+            fen.setEnPassantPiece(boardSquares.getPiece(new Position(previousPosition.getFile(),previousPosition.getRank())));
             enableEnPassant(newPosition, piece.getIsWhite());
         }
         this.removePiece(previousPosition);
         this.addPiece(newPosition,piece);
         checkForPromotion(newPosition.getRank(), piece);
+
+
+        updateView(newPosition, previousPosition);
         nextTurn();
-        _observer.update(previousPosition, piece);
+
     }
 
-    //Check if a pawn did a double move, then update any pawn that can en Passant next turn and then
-    //add any pieces that are able to en passant on the next turn to the enPassantAvailablePieces list
+
+
+    //update any pawn that can en Passant next turn and then add those pieces that
+    // are able to en passant on the next turn to the enPassantAvailablePieces list
     private void enableEnPassant(Position position, Boolean isWhite){
         int tempFile;
         for (int iFile = -1; iFile < 2; iFile+=2) {
             tempFile = position.getFile()+iFile;
             if (tempFile >= 0 && tempFile < 8){
-                Piece piece = this.getPiece(new Position(tempFile,position.getRank()));
+                Piece piece = boardSquares.getPiece(new Position(tempFile,position.getRank()));
                 if(!isNull(piece) && piece.getPieceType()==PieceType.Pawn && piece.getIsWhite() != isWhite){
                     piece.setEnPassantAvailableToTakeFile(position.getFile());
                     enPassantAvailablePieces.add(piece);
@@ -103,17 +129,17 @@ public class Board{
         }
     }
 
-    //WILL CHANGE WITH FEN UPDATE
+    //check to see if the piece being moved did En Passant
     private Boolean checkForEnPassant(Position previousPosition, Position newPosition, Piece piece){
         if (piece.getPieceType() == PieceType.Pawn){
             if(enPassantAvailablePieces.contains(piece)){
                 if(Objects.equals(piece.getEnPassantAvailableToTakeFile(), newPosition.getFile())){
                     this.removePiece(previousPosition);
-                    this.removePiece(new Position(newPosition.getFile(), previousPosition.getFile()));
+                    this.removePiece(new Position(newPosition.getFile(), previousPosition.getRank()));
                     this.addPiece(newPosition, piece);
+
+                    updateView(newPosition, previousPosition);
                     nextTurn();
-                    _observer.update(previousPosition, piece);
-                    _observer.update(new Position(newPosition.getFile(), previousPosition.getFile()), piece);
                     disableEnPassant();
                     return true;
                 }
@@ -130,6 +156,7 @@ public class Board{
         enPassantAvailablePieces.clear();
     }
 
+    //check to see if a pawn has made it to the other side of the board. If so call the promotion function
     private void checkForPromotion(int newRank, Piece piece){
         if(piece.getPieceType()!=PieceType.Pawn){
             return;
@@ -141,22 +168,30 @@ public class Board{
         piece.pawnPromotion(PieceType.Queen);
     }
 
+
+    //update the FEN and then update the view
+    public void updateView(Position newPosition, Position previousPosition){
+        fen.updateFENPosition(boardSquares.getRankPiece(newPosition.getRank()), newPosition.getRank());
+        if (previousPosition.getRank()!= newPosition.getRank()){
+            fen.updateFENPosition(boardSquares.getRankPiece(previousPosition.getRank()), previousPosition.getRank());
+        }
+        _observer.update(fen.createCompleteFEN());
+    }
+
+
+    //call chooseMove in Moves class
+    public ArrayList<Position> chooseMove(Position position, Boolean isWhite, Board board, PieceType pieceType){
+        return Moves.chooseMove(position, isWhite, board, pieceType);
+    }
+
+
     public Piece getPiece(Position position){
-        return boardSquares.getPiece(position);
-    }
-    public BoardSquares getBoardSquares(){
-        return boardSquares;
+        return boardSquares.getPieceClone(position);
     }
 
-    public Piece[] getBlackPieces() {
-        return blackPieces;
-    }
-
-    public Piece[] getWhitePieces() {
-        return whitePieces;
-    }
 
     public Boolean getWhitesTurn() {
         return whitesTurn;
     }
+
 }

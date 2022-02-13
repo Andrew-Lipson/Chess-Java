@@ -1,6 +1,5 @@
 package View;
 
-import Model.pieces.Piece;
 import javafx.scene.Group;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
@@ -15,6 +14,7 @@ public class SquareView extends Group {
     private final ImageView imageview = new ImageView();
     private final Circle circle = new Circle();
     private final double heightWidth = 80;
+    private Character FENPiece = 'x';
 
     //Intilising the SquareView for X & Y coordinates, the colour, the shape (rectangle) and size
     //setting the ImageView and the Circle
@@ -57,24 +57,61 @@ public class SquareView extends Group {
         circle.setOpacity(0.5);
     }
 
-    //get's the correct image from the resouces. add's the Image to the ImageView
-    //removes any previous imageview (incase it's a capture) and then add the imageview to the group
-    public void addPiece(Piece piece){
-        Image image = new Image(getPNGString(piece));
+    //Update the FENPiece and then get the correct image from the resouces and add/remove the imageview from the Group.
+    public void addPiece(Character charactor){
+        //check if the charactor is the same. If it is then return
+        if(charactor == this.FENPiece){
+            return;
+        }
+        //check if there was no piece previous on the spot. If so then add imageview to the Group
+        if (this.FENPiece == 'x'){
+            getChildren().add(imageview);
+        }
+        this.FENPiece = charactor;
+        //if there is no longer a piece on this square, remove the imageview and return
+        if (charactor == 'x'){
+            getChildren().remove(imageview);
+            return;
+        }
+        Boolean isWhite = true;
+        if(Character.isLowerCase(charactor)){
+            isWhite = false;
+        }
+
+        Character lowerCase = Character.toLowerCase(charactor);
+        Image image = new Image(getPNGString(lowerCase, isWhite));
         this.imageview.setImage(image);
-        getChildren().remove(imageview);
-        getChildren().add(imageview);
     }
 
-    //remove a piece from this SquareView
-    public void removePiece(){
-        getChildren().remove(this.imageview);
-    }
 
     //returns the correct url (String) that the piece requires
-    public String getPNGString(Piece piece){
-        String output = piece.getPieceType().toString() + "-";
-        if(piece.getIsWhite()){
+    public String getPNGString(Character character, Boolean isWhite){
+        String output = "";
+        switch (character){
+            case 'k':
+                output+="King";
+                break;
+            case 'q':
+                output+="Queen";
+                break;
+            case 'r':
+                output+="Rook";
+                break;
+            case 'n':
+                output+="Knight";
+                break;
+            case 'b':
+                output+="Bishop";
+                break;
+            case 'p':
+                output+="Pawn";
+                break;
+        }
+
+
+
+        output += "-";
+        if(isWhite){
             output+="White";
         }
         else{
