@@ -9,9 +9,9 @@ public class FEN {
 
     private String[] fenPosition = new String[8];
     private String[] fenBreaks = {"/","/","/","/","/","/","/"," ",};
-    private Boolean whitesTurn = false;
-    private Boolean[] whiteCastling = {true, true};
-    private Boolean[] blackCastling = {true, true};
+    private boolean whitesTurn = false;
+    private boolean[] whiteCastling = {true, true};
+    private boolean[] blackCastling = {true, true};
     private Piece enPassantPiece = null;
     private int halfmove = 0;
     private int fullmove = 0;
@@ -77,7 +77,7 @@ public class FEN {
     }
 
     //update the fullmove if it's back to white. Update the halfmove if required
-    private void updateFENTurns(Boolean halfmoveUpdate){
+    private void updateFENTurns(boolean halfmoveUpdate){
         whitesTurn=!whitesTurn;
         if (whitesTurn){
             fullmove+=1;

@@ -14,7 +14,7 @@ public class Board{
     private final BoardSquares boardSquares;
     private final Piece[] whitePieces = new Piece[16];
     private final Piece[] blackPieces = new Piece[16];
-    private Boolean whitesTurn;
+    private boolean whitesTurn;
     private final Observer _observer;
     private ArrayList<Piece> enPassantAvailablePieces = new ArrayList<Piece>();
     private FEN fen;
@@ -32,7 +32,7 @@ public class Board{
 
 
     //Create all the piece objects and put them on the board in the correct position
-    private void createPieces( Piece[] pieces, Boolean isWhite){
+    private void createPieces( Piece[] pieces, boolean isWhite){
         int rank = isWhite?6:1;
         for(int i = 0;i<8;i++){
             pieces[i] = new Piece(isWhite, PieceType.Pawn);
@@ -115,7 +115,7 @@ public class Board{
 
     //update any pawn that can en Passant next turn and then add those pieces that
     // are able to en passant on the next turn to the enPassantAvailablePieces list
-    private void enableEnPassant(Position position, Boolean isWhite){
+    private void enableEnPassant(Position position, boolean isWhite){
         int tempFile;
         for (int iFile = -1; iFile < 2; iFile+=2) {
             tempFile = position.getFile()+iFile;
@@ -130,7 +130,7 @@ public class Board{
     }
 
     //check to see if the piece being moved did En Passant
-    private Boolean checkForEnPassant(Position previousPosition, Position newPosition, Piece piece){
+    private boolean checkForEnPassant(Position previousPosition, Position newPosition, Piece piece){
         if (piece.getPieceType() == PieceType.Pawn){
             if(enPassantAvailablePieces.contains(piece)){
                 if(Objects.equals(piece.getEnPassantAvailableToTakeFile(), newPosition.getFile())){
@@ -180,7 +180,7 @@ public class Board{
 
 
     //call chooseMove in Moves class
-    public ArrayList<Position> chooseMove(Position position, Boolean isWhite, Board board, PieceType pieceType){
+    public ArrayList<Position> chooseMove(Position position, boolean isWhite, Board board, PieceType pieceType){
         return Moves.chooseMove(position, isWhite, board, pieceType);
     }
 
@@ -190,7 +190,7 @@ public class Board{
     }
 
 
-    public Boolean getWhitesTurn() {
+    public boolean getWhitesTurn() {
         return whitesTurn;
     }
 

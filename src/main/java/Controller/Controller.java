@@ -84,7 +84,7 @@ public class Controller {
             }
             //Add the Clicked piece's possible moves
             this.clickedPiece = board.getPiece(position);
-            Boolean isWhite = this.clickedPiece.getIsWhite();
+            boolean isWhite = this.clickedPiece.getIsWhite();
             if (board.getWhitesTurn() == isWhite) {
                 PieceType pieceType = board.getPiece(position).getPieceType();
                 ArrayList<Position> moves = board.chooseMove(position, isWhite, board, pieceType);

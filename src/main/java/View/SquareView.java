@@ -73,7 +73,7 @@ public class SquareView extends Group {
             getChildren().remove(imageview);
             return;
         }
-        Boolean isWhite = true;
+        boolean isWhite = true;
         if(Character.isLowerCase(charactor)){
             isWhite = false;
         }
@@ -85,7 +85,7 @@ public class SquareView extends Group {
 
 
     //returns the correct url (String) that the piece requires
-    public String getPNGString(Character character, Boolean isWhite){
+    public String getPNGString(Character character, boolean isWhite){
         String output = "";
         switch (character){
             case 'k':

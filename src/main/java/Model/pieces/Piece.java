@@ -4,12 +4,12 @@ package Model.pieces;
 import Model.Position;
 
 public class Piece {
-    private Boolean isWhite;
+    private boolean isWhite;
     private Position position;
     private PieceType pieceType;
     private Integer enPassantAvailableToTakeFile = null;
 
-    public Piece(Boolean isWhite, PieceType pieceType){
+    public Piece(boolean isWhite, PieceType pieceType){
 
         this.isWhite = isWhite;
         this.pieceType = pieceType;
@@ -51,7 +51,7 @@ public class Piece {
         return pieceType.getFenRepresentation(isWhite);
     }
 
-    public Boolean getIsWhite() {
+    public boolean getIsWhite() {
         return isWhite;
     }
 
