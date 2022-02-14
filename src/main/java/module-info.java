@@ -1,15 +1,13 @@
 module Model {
     requires javafx.controls;
     requires javafx.fxml;
+    requires transitive javafx.graphics;
 
-
-    opens Model to javafx.fxml;
+    opens Main to javafx.graphics;
+    
     exports Model;
+    exports Model.pieces;
     exports Controller;
-    opens Controller to javafx.fxml;
     exports View;
-    opens View to javafx.fxml;
-    exports Main;
-    opens Main to javafx.fxml;
-
+    exports Observer;
 }
