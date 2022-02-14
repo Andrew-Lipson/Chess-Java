@@ -35,7 +35,7 @@ public class FEN {
                     output += emptySquare;
                     emptySquare = 0;
                 }
-                output += getFENletter(piece);
+                output += piece.getFenRepresentation();
 
             }
         }
@@ -43,35 +43,6 @@ public class FEN {
             output += emptySquare;
         }
         fenPosition[rank]=output;
-    }
-
-    //From the Piece arg, get the correct FEN letter
-    private String getFENletter(Piece piece){
-        String output = "";
-        switch (piece.getPieceType()){
-            case King:
-                output+="k";
-                break;
-            case Queen:
-                output+="q";
-                break;
-            case Rook:
-                output+="r";
-                break;
-            case Knight:
-                output+="n";
-                break;
-            case Bishop:
-                output+="b";
-                break;
-            case Pawn:
-                output+="p";
-                break;
-        }
-        if(piece.getIsWhite()){
-            output = output.toUpperCase();
-        }
-        return output;
     }
 
     //Set the En Passant Piece

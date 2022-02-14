@@ -47,6 +47,10 @@ public class Piece {
         return pieceType;
     }
 
+    public String getFenRepresentation(){
+        return pieceType.getFenRepresentation(isWhite);
+    }
+
     public Boolean getIsWhite() {
         return isWhite;
     }

@@ -20,7 +20,7 @@ public class Main extends Application {
 
 
 
-        Observer ObserverMainView = new MainView(stage); // Start up View
+        Observer ObserverMainView = new MainView(); // Start up View
 
 
         Board board = new Board(ObserverMainView); // Start up Model
@@ -28,7 +28,7 @@ public class Main extends Application {
         MainView mainView = (MainView) ObserverMainView;
 
         Controller controller = new Controller(board, mainView); // Start up Controller
-
+        controller.showBoard(stage);
     }
 
     public static void main(String[] args) {

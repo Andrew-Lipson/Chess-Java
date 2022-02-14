@@ -23,14 +23,9 @@ public class MainView implements Observer{
     private ArrayList<SquareView> circlesActivated = new ArrayList<SquareView>();
 
     //Setting up the JAVAFX stage that will be used for the display
-    public MainView(Stage stage) throws IOException {
-        Scene scene = new Scene(root, Color.BROWN);
-        Image icon = new Image("chess-icon.png");
-        stage.getIcons().add(icon);
-        stage.setTitle("CHESS");
-        stage.setWidth(730);
-        stage.setHeight(750);
-        stage.setResizable(false);
+    public MainView() throws IOException {
+
+
 
         for (int i = 0; i < 8; i++) {
             rankNumbers(root,i);
@@ -45,6 +40,17 @@ public class MainView implements Observer{
             }
         }
 
+
+    }
+
+    public void showBoard(Stage stage){
+        Image icon = new Image("chess-icon.png");
+        stage.getIcons().add(icon);
+        stage.setTitle("CHESS");
+        stage.setWidth(730);
+        stage.setHeight(750);
+        stage.setResizable(false);
+        Scene scene = new Scene(root, Color.BROWN);
         stage.setScene(scene);
         stage.show();
     }

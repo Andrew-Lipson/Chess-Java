@@ -12,6 +12,7 @@ import javafx.event.EventHandler;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.shape.Circle;
+import javafx.stage.Stage;
 
 import java.util.ArrayList;
 
@@ -63,6 +64,10 @@ public class Controller {
 
             }
         }
+    }
+
+    public void showBoard(Stage stage){
+        mainview.showBoard(stage);
     }
 
     //Once a piece is clicked and displays possible moves or removes the possibles moves
