@@ -7,11 +7,11 @@ import javafx.scene.paint.Color;
 import javafx.scene.shape.Circle;
 import javafx.scene.shape.Rectangle;
 
-import Contract.*;
+import View.Contract.Listener;
 
 public class SquareView extends Group {
 
-    private final Contract.Controller controller;
+    private final Listener listener;
     private final PositionView positionView;
     private final Rectangle rectangle;
     private final int file;
@@ -30,13 +30,13 @@ public class SquareView extends Group {
      * 
      * @param file
      * @param rank
-     * @param controller
+     * @param listener
      */
-    public SquareView(int file, int rank, Contract.Controller controller) {
+    public SquareView(int file, int rank, Listener listener) {
 
         this.file = file;
         this.rank = rank;
-        this.controller = controller;
+        this.listener = listener;
         this.positionView = new PositionView(file,rank);
         this.rectangle = new Rectangle();
 
@@ -70,7 +70,7 @@ public class SquareView extends Group {
         this.imageview.setFitHeight(heightWidth);
         this.imageview.setFitWidth(heightWidth);
         imageview.setPickOnBounds(true);
-        imageview.setOnMouseClicked(__ -> this.controller.handlePieceClicked(this.positionView));
+        imageview.setOnMouseClicked(__ -> this.listener.onPieceClicked(this.positionView));
     }
 
     /**
@@ -83,7 +83,7 @@ public class SquareView extends Group {
         circle.setFill(Color.DARKBLUE);
         circle.setOpacity(0.5);
         circle.setPickOnBounds(true);
-        circle.setOnMouseClicked(__ -> this.controller.handleCircleClicked(this.positionView));
+        circle.setOnMouseClicked(__ -> this.listener.onCircleClicked(this.positionView));
     }
 
     /**

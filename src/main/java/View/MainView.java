@@ -12,7 +12,7 @@ import javafx.stage.Stage;
 import java.io.IOException;
 import java.util.ArrayList;
 
-import Contract.*;
+import View.Contract.Listener;
 
 import static java.lang.Character.isDigit;
 
@@ -28,10 +28,10 @@ public class MainView {
      * Setting up the JAVAFX stage that will be used for the display
      * 
      * @param stage
-     * @param controller
+     * @param listener
      * @throws IOException
      */
-    public MainView(Stage stage, Contract.Controller controller) throws IOException {
+    public MainView(Stage stage, Listener listener) throws IOException {
         this.stage = stage;
 
         for (int i = 0; i < 8; i++) {
@@ -39,7 +39,7 @@ public class MainView {
             fileNumbers(root,i);
         }
 
-        this.boardSquaresView = new BoardSquaresView(controller);
+        this.boardSquaresView = new BoardSquaresView(listener);
 
         for (int rank = 0; rank < 8; rank++) {
             for (int file = 0; file < 8; file++) {

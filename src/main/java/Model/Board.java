@@ -1,6 +1,6 @@
 package Model;
 
-import Contract.*;
+import Model.Contract.Observer;
 import Model.pieces.*;
 
 import java.util.ArrayList;
@@ -15,11 +15,11 @@ public class Board {
     private final Piece[] whitePieces = new Piece[16];
     private final Piece[] blackPieces = new Piece[16];
     private boolean whitesTurn;
-    private final Contract.Observer _observer;
+    private final Observer _observer;
     private ArrayList<Piece> enPassantAvailablePieces = new ArrayList<Piece>();
     private FEN fen;
 
-    public Board(Contract.Observer observer) {
+    public Board(Observer observer) {
         boardSquares = new BoardSquares();
         createPieces(whitePieces, true);
         createPieces(blackPieces, false);

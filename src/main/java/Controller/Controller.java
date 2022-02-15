@@ -1,18 +1,19 @@
 package Controller;
 
-import Contract.*;
 import Model.Board;
 import Model.Position;
+import Model.Contract.Observer;
 import Model.pieces.Piece;
 import Model.pieces.PieceType;
 import View.MainView;
 import View.PositionView;
+import View.Contract.Listener;
 
 import java.util.ArrayList;
 
 import static java.util.Objects.nonNull;
 
-public class Controller implements Contract.Controller, Contract.Observer {
+public class Controller implements Listener, Observer {
 
     Board board;
     MainView mainview;
@@ -48,7 +49,7 @@ public class Controller implements Contract.Controller, Contract.Observer {
      * Once a piece is clicked and displays possible moves or removes the possibles moves
      */
     @Override
-    public void handlePieceClicked(PositionView positionView) {
+    public void onPieceClicked(PositionView positionView) {
         // Check if the piece clicked was just clicked, and remove the possible moves from the board
         Position position = new Position(positionView.getFile(), positionView.getRank());
         if (clickedPiece == board.getPiece(position)) {
@@ -74,7 +75,7 @@ public class Controller implements Contract.Controller, Contract.Observer {
      * Move the previously clicked piece to the clicked circle position and remove the
      */
     @Override
-    public void handleCircleClicked(PositionView position) {
+    public void onCircleClicked(PositionView position) {
         Position newPosition = new Position(position.getFile(), position.getRank());
         Position previousPosition = clickedPiece.getPosition();
         board.movePieces(previousPosition,newPosition);
