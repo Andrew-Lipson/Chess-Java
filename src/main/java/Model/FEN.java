@@ -17,14 +17,19 @@ public class FEN {
     private int fullmove = 0;
     private String output;
 
-    public FEN(Piece[][] piece2DArray){
-        for (int rank = 0; rank < 8; rank++){
-                updateFENPosition(piece2DArray[rank],rank);
-            }
+    public FEN(Piece[][] piece2DArray) {
+        for (int rank = 0; rank < 8; rank++) {
+            updateFENPosition(piece2DArray[rank],rank);
+        }
     }
 
-    //with all the pieces in the rank, update the appropriate FEN rank in FENPosition
-    public void updateFENPosition(Piece[] pieceRank, int rank){
+    /**
+     * With all the pieces in the rank, update the appropriate FEN rank in FENPosition
+     * 
+     * @param pieceRank
+     * @param rank
+     */
+    public void updateFENPosition(Piece[] pieceRank, int rank) {
         String output = "";
         int emptySquare = 0;
         for (Piece piece:pieceRank) {
@@ -39,31 +44,39 @@ public class FEN {
 
             }
         }
-        if (!(emptySquare==0)) {
+        if (!(emptySquare == 0)) {
             output += emptySquare;
         }
-        fenPosition[rank]=output;
+        fenPosition[rank] = output;
     }
 
-    //Set the En Passant Piece
-    public void setEnPassantPiece(Piece piece){
+    /**
+     * Set the En Passant Piece
+     * 
+     * @param piece
+     */
+    public void setEnPassantPiece(Piece piece) {
         this.enPassantPiece = piece;
     }
 
-    //Add all the FEN elements together to get a completed FEN string
-    public String createCompleteFEN(){
+    /**
+     * Add all the FEN elements together to get a completed FEN string
+     * 
+     * @return
+     */
+    public String createCompleteFEN() {
         updateFENTurns(false);
         output = "";
         for (int i =0;i< fenPosition.length;i++) {
-            output+=fenPosition[i];
-            output+=fenBreaks[i];
+            output += fenPosition[i];
+            output += fenBreaks[i];
         }
 
         if (whitesTurn){
-            output+="w ";
+            output += "w ";
         }
         else{
-            output+="b ";
+            output += "b ";
         }
 
         castlingToString();
@@ -71,49 +84,60 @@ public class FEN {
         output += enPassantToString(enPassantPiece);
 
 
-        output+=" " + halfmove + " " + fullmove;
+        output += " " + halfmove + " " + fullmove;
 
         return output;
     }
 
-    //update the fullmove if it's back to white. Update the halfmove if required
-    private void updateFENTurns(boolean halfmoveUpdate){
-        whitesTurn=!whitesTurn;
+    /**
+     * Update the fullmove if it's back to white. Update the halfmove if required
+     * 
+     * @param halfmoveUpdate
+     */
+    private void updateFENTurns(boolean halfmoveUpdate) {
+        whitesTurn =! whitesTurn;
         if (whitesTurn){
-            fullmove+=1;
+            fullmove += 1;
         }
-        if(halfmoveUpdate){
-            halfmove+=1;
+        if(halfmoveUpdate) {
+            halfmove += 1;
         }
     }
 
-    //add the correct castling notation to the output FEN String
+    /**
+     * Add the correct castling notation to the output FEN String
+     */
     private void castlingToString() {
-        if (!whiteCastling[0] && !whiteCastling[1] && !blackCastling[0] && !blackCastling[1]){
-            output+="-";
+        if (!whiteCastling[0] && !whiteCastling[1] && !blackCastling[0] && !blackCastling[1]) {
+            output += "-";
         }
-        if (whiteCastling[0]){
-            output+="K";
+        if (whiteCastling[0]) {
+            output += "K";
         }
-        if (whiteCastling[1]){
-            output+="Q";
+        if (whiteCastling[1]) {
+            output += "Q";
         }
-        if (blackCastling[0]){
-            output+="k";
+        if (blackCastling[0]) {
+            output += "k";
         }
-        if (blackCastling[1]){
-            output+="q";
+        if (blackCastling[1]) {
+            output += "q";
         }
 
-        output+= " ";
+        output += " ";
     }
 
-    //return the correct enPassant notation
-    private String enPassantToString(Piece piece){
+    /**
+     * Returns the correct enPassant notation
+     * 
+     * @param piece
+     * @return enPassant notation
+     */
+    private String enPassantToString(Piece piece) {
 
         String output = "";
 
-        if (isNull(piece)){
+        if (isNull(piece)) {
             output += "-";
             return output;
         }
@@ -145,14 +169,8 @@ public class FEN {
                 break;
         }
 
-        output+=8-(piece.getPosition().getRank());
+        output += 8 - (piece.getPosition().getRank());
 
         return output;
-
     }
-
-
-
-
-
 }
