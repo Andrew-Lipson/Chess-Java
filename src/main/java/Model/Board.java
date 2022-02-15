@@ -1,7 +1,7 @@
 package Model;
 
+import Model.Contract.Observer;
 import Model.pieces.*;
-import Observer.Observer;
 
 import java.util.ArrayList;
 import java.util.Objects;
@@ -9,93 +9,142 @@ import java.util.Objects;
 import static java.lang.Math.abs;
 import static java.util.Objects.isNull;
 
-public class Board{
+public class Board {
 
     private final BoardSquares boardSquares;
     private final Piece[] whitePieces = new Piece[16];
     private final Piece[] blackPieces = new Piece[16];
-    private Boolean whitesTurn;
+    private boolean whitesTurn;
     private final Observer _observer;
     private ArrayList<Piece> enPassantAvailablePieces = new ArrayList<Piece>();
+    private FEN fen;
 
     public Board(Observer observer) {
         boardSquares = new BoardSquares();
         createPieces(whitePieces, true);
         createPieces(blackPieces, false);
         this._observer = observer;
+        fen = new FEN(createFirstFENPosition());
         whitesTurn = true;
     }
 
-    //Create all the piece objects and put them on the board in the correct position
-    private void createPieces( Piece[] pieces, Boolean isWhite){
-        int rank = isWhite?6:1;
-        for(int i = 0;i<8;i++){
+    /**
+     * Create all the piece objects and put them on the board in the correct position
+     * 
+     * @param pieces
+     * @param isWhite
+     */
+    private void createPieces(Piece[] pieces, boolean isWhite) {
+        int rank = isWhite ? 6 : 1;
+        for(int i = 0; i < 8; i++){
             pieces[i] = new Piece(isWhite, PieceType.Pawn);
-            addPiece(new Position(i,rank),pieces[i]);
+            addPiece(new Position(i,rank), pieces[i]);
         }
 
-        rank = isWhite?7:0;
+        rank = isWhite ? 7 : 0;
 
-        for(int i = 8;i<16;i+=7) {
+        for(int i = 8; i < 16; i += 7) {
             pieces[i] = new Piece(isWhite, PieceType.Rook);
         }
-        for(int i = 9;i<16;i+=5) {
+        for(int i = 9; i < 16; i += 5) {
             pieces[i] = new Piece(isWhite, PieceType.Knight);
         }
-        for(int i = 10;i<16;i+=3) {
+        for(int i = 10; i < 16; i += 3) {
             pieces[i] = new Piece(isWhite, PieceType.Bishop);
         }
         pieces[11] = new Piece(isWhite, PieceType.Queen);
         pieces[12] = new Piece(isWhite, PieceType.King);
 
-        for(int i = 8;i<16;i++) {
-            addPiece(new Position(i-8,rank),pieces[i]);
+        for(int i = 8; i < 16; i++) {
+            addPiece(new Position(i-8, rank), pieces[i]);
         }
-
     }
 
-    //Add the piece to the specific Square on the file and rank provided
-    private void addPiece(Position position, Piece piece){
+    /**
+     * basically create a copy of boardSquares to help create the first FEN
+     * 
+     * @return 2d array of the first fen position
+     */
+    private Piece[][] createFirstFENPosition() {
+        Piece[][] piece2DArray = new Piece[8][8];
+        for (int rank = 0; rank < 8; rank++) {
+            piece2DArray[rank] = boardSquares.getRankPiece(rank);
+        }
+        return piece2DArray;
+    }
+
+    /**
+     * Add the piece to the specific Square on the file and rank provided
+     * 
+     * @param position
+     * @param piece
+     */
+    private void addPiece(Position position, Piece piece) {
         boardSquares.addPiece(position, piece);
     }
 
-    private void removePiece(Position position){
+    /**
+     * remove the piece on the specific position
+     * 
+     * @param position
+     */
+    private void removePiece(Position position) {
         boardSquares.removePiece(position);
     }
 
-
-    // change the whitesTurn
-    private void nextTurn(){
+    /**
+     * Change the whitesTurn
+     */
+    private void nextTurn() {
         whitesTurn = !whitesTurn;
     }
 
-    //WILL CHANGE WITH FEN UPDATE
-    public void movePieces(Position previousPosition, Position newPosition){
+    /**
+     * Move the piece from the previousPosition to the newPosition.
+     * Also checking for en Passant and promotion. Then update the view
+     * 
+     * @param previousPosition
+     * @param newPosition
+     */
+    public void movePieces(Position previousPosition, Position newPosition) {
+        fen.setEnPassantPiece(null);
         Piece piece = boardSquares.getPiece(previousPosition);
-        if(checkForEnPassant(previousPosition, newPosition, piece)){
+
+        // if en Passant occured, return as the checkForEnPassant function did everything necessary
+        if(checkForEnPassant(previousPosition, newPosition, piece)) {
             return;
         }
+
         disableEnPassant();
 
-        if(piece.getPieceType() == PieceType.Pawn && abs(previousPosition.getRank()- newPosition.getRank())==2){
+        // check if a pawn double moved and do what is needed
+        if(piece.getPieceType() == PieceType.Pawn && abs(previousPosition.getRank() - newPosition.getRank()) == 2) {
+            fen.setEnPassantPiece(boardSquares.getPiece(new Position(previousPosition.getFile(),previousPosition.getRank())));
             enableEnPassant(newPosition, piece.getIsWhite());
         }
         this.removePiece(previousPosition);
         this.addPiece(newPosition,piece);
         checkForPromotion(newPosition.getRank(), piece);
+
+        updateView(newPosition, previousPosition);
         nextTurn();
-        _observer.update(previousPosition, piece);
     }
 
-    //Check if a pawn did a double move, then update any pawn that can en Passant next turn and then
-    //add any pieces that are able to en passant on the next turn to the enPassantAvailablePieces list
-    private void enableEnPassant(Position position, Boolean isWhite){
+    /**
+     * Update any pawn that can en Passant next turn and then add those pieces that
+     * are able to en passant on the next turn to the enPassantAvailablePieces list
+     * 
+     * @param position
+     * @param isWhite
+     */
+    
+    private void enableEnPassant(Position position, boolean isWhite) {
         int tempFile;
         for (int iFile = -1; iFile < 2; iFile+=2) {
-            tempFile = position.getFile()+iFile;
+            tempFile = position.getFile() + iFile;
             if (tempFile >= 0 && tempFile < 8){
-                Piece piece = this.getPiece(new Position(tempFile,position.getRank()));
-                if(!isNull(piece) && piece.getPieceType()==PieceType.Pawn && piece.getIsWhite() != isWhite){
+                Piece piece = boardSquares.getPiece(new Position(tempFile,position.getRank()));
+                if(!isNull(piece) && piece.getPieceType() == PieceType.Pawn && piece.getIsWhite() != isWhite){
                     piece.setEnPassantAvailableToTakeFile(position.getFile());
                     enPassantAvailablePieces.add(piece);
                 }
@@ -103,17 +152,24 @@ public class Board{
         }
     }
 
-    //WILL CHANGE WITH FEN UPDATE
-    private Boolean checkForEnPassant(Position previousPosition, Position newPosition, Piece piece){
-        if (piece.getPieceType() == PieceType.Pawn){
-            if(enPassantAvailablePieces.contains(piece)){
-                if(Objects.equals(piece.getEnPassantAvailableToTakeFile(), newPosition.getFile())){
+    /**
+     * check to see if the piece being moved did En Passant
+     * 
+     * @param previousPosition
+     * @param newPosition
+     * @param piece
+     * @return boolean indicating if enPassant available
+     */
+    private boolean checkForEnPassant(Position previousPosition, Position newPosition, Piece piece) {
+        if (piece.getPieceType() == PieceType.Pawn) {
+            if(enPassantAvailablePieces.contains(piece)) {
+                if(Objects.equals(piece.getEnPassantAvailableToTakeFile(), newPosition.getFile())) {
                     this.removePiece(previousPosition);
-                    this.removePiece(new Position(newPosition.getFile(), previousPosition.getFile()));
+                    this.removePiece(new Position(newPosition.getFile(), previousPosition.getRank()));
                     this.addPiece(newPosition, piece);
+
+                    updateView(newPosition, previousPosition);
                     nextTurn();
-                    _observer.update(previousPosition, piece);
-                    _observer.update(new Position(newPosition.getFile(), previousPosition.getFile()), piece);
                     disableEnPassant();
                     return true;
                 }
@@ -122,41 +178,71 @@ public class Board{
         return false;
     }
 
-    //remove the availability to en Passant from all the necessary pieces
-    private void disableEnPassant(){
+    /**
+     * Remove the availability to en Passant from all the necessary pieces
+     */
+    private void disableEnPassant() {
         for (Piece piece:enPassantAvailablePieces) {
             piece.setEnPassantAvailableToTakeFile(null);
         }
         enPassantAvailablePieces.clear();
     }
 
-    private void checkForPromotion(int newRank, Piece piece){
-        if(piece.getPieceType()!=PieceType.Pawn){
+    /**
+     * Check to see if a pawn has made it to the other side of the board. If so call the promotion function
+     * 
+     * @param newRank
+     * @param piece
+     */
+    private void checkForPromotion(int newRank, Piece piece) {
+        if(piece.getPieceType() != PieceType.Pawn) {
             return;
         }
-        int rank=piece.getIsWhite()?0:7;
-        if(newRank!=rank){
+        int rank = piece.getIsWhite() ? 0 : 7;
+        if(newRank != rank){
             return;
         }
         piece.pawnPromotion(PieceType.Queen);
     }
 
-    public Piece getPiece(Position position){
-        return boardSquares.getPiece(position);
-    }
-    public BoardSquares getBoardSquares(){
-        return boardSquares;
+
+    /**
+     * Update the FEN and then update the view
+     * 
+     * @param newPosition
+     * @param previousPosition
+     */
+    public void updateView(Position newPosition, Position previousPosition) {
+        fen.updateFENPosition(boardSquares.getRankPiece(newPosition.getRank()), newPosition.getRank());
+        if (previousPosition.getRank() != newPosition.getRank()){
+            fen.updateFENPosition(boardSquares.getRankPiece(previousPosition.getRank()), previousPosition.getRank());
+        }
+        _observer.update();
     }
 
-    public Piece[] getBlackPieces() {
-        return blackPieces;
+
+    /**
+     * Call chooseMove in Moves class
+     * 
+     * @param position
+     * @param isWhite
+     * @param board
+     * @param pieceType
+     * @return list of possible moves
+     */
+    public ArrayList<Position> chooseMove(Position position, boolean isWhite, Board board, PieceType pieceType) {
+        return Moves.chooseMove(position, isWhite, board, pieceType);
     }
 
-    public Piece[] getWhitePieces() {
-        return whitePieces;
+    public String getCompleteFEN() {
+        return fen.createCompleteFEN();
     }
 
-    public Boolean getWhitesTurn() {
+    public Piece getPiece(Position position) {
+        return boardSquares.getPieceClone(position);
+    }
+
+    public boolean getWhitesTurn() {
         return whitesTurn;
     }
 }

@@ -1,99 +1,89 @@
 package Controller;
 
-
-import Model.*;
+import Model.Board;
+import Model.Position;
+import Model.Contract.Observer;
 import Model.pieces.Piece;
 import Model.pieces.PieceType;
-import Observer.Observer;
-import View.BoardSquaresView;
 import View.MainView;
-import javafx.event.EventHandler;
-import javafx.scene.image.ImageView;
-import javafx.scene.input.MouseEvent;
-import javafx.scene.shape.Circle;
+import View.PositionView;
+import View.Contract.Listener;
 
 import java.util.ArrayList;
 
-import static java.util.Objects.isNull;
+import static java.util.Objects.nonNull;
 
-public class Controller {
+public class Controller implements Listener, Observer {
 
     Board board;
     MainView mainview;
     Piece clickedPiece = null;
 
-    public Controller(Board board, Observer mainview){
+    public void startApplication(Board board, MainView mainview) {
         this.board = board;
-        this.mainview = (MainView) mainview;
-        this.mainview.setUpMainView(this.board.getWhitePieces(), this.board.getBlackPieces());
+        this.mainview = mainview;
 
-        addOnClick(this.mainview.getBoardSquaresView());
+        update();
+        showBoard();
     }
 
+    private void showBoard() {
+        mainview.showBoard();
+    }
 
-    //add the onclick function to both pieces (ImageView) and potential moves (Circle)
-    private void addOnClick(BoardSquaresView boardSquaresView){
-        for (int rank = 0; rank < 8; rank++) {
-            for (int file = 0; file < 8; file++){
-                int finalFile = file;
-                int finalRank = rank;
-
-                Position position = new Position(finalFile,finalRank);
-                ImageView imageView = boardSquaresView.getSquareView(position).getImageview();
-                imageView.setPickOnBounds(true);
-                imageView.setOnMouseClicked(new EventHandler<MouseEvent>() {
-                        @Override
-                        public void handle(MouseEvent mouseEvent) {
-                            pieceClicked(position);
-                        }
-                    }
-                );
-
-
-                Circle circle = boardSquaresView.getSquareView(position).getCircle();
-                circle.setPickOnBounds(true);
-                circle.setOnMouseClicked(new EventHandler<MouseEvent>() {
-                         @Override
-                         public void handle(MouseEvent mouseEvent) {
-                             circleClicked(position);
-                         }
-                     }
-                );
-
-            }
+    /**
+     * Convert the Position to PositionView for the View component
+     * 
+     * @param moves
+     * @return
+     */
+    private ArrayList<PositionView> convertMovesFromPositiontoPositionView(ArrayList<Position> moves) {
+        ArrayList<PositionView> movesForMainView = new ArrayList<>();
+        for (Position position: moves) {
+            movesForMainView.add(new PositionView(position.getFile(), position.getRank()));
         }
+        return movesForMainView;
     }
 
-    //
-    public void pieceClicked(Position position){
+    /**
+     * Once a piece is clicked and displays possible moves or removes the possibles moves
+     */
+    @Override
+    public void onPieceClicked(PositionView positionView) {
         // Check if the piece clicked was just clicked, and remove the possible moves from the board
+        Position position = new Position(positionView.getFile(), positionView.getRank());
         if (clickedPiece == board.getPiece(position)) {
             mainview.removeMoveOptionsCircles();
             this.clickedPiece = null;
-        }
-        else{
-            //Check if another piece has been previously clicked and remove that piece's possible moves
-            if(!isNull(clickedPiece)){
+        } else {
+            // Check if another piece has been previously clicked and remove that piece's possible moves
+            if(nonNull(clickedPiece)) {
                 mainview.removeMoveOptionsCircles();
             }
-            //Add the Clicked piece's possible moves
+            // Add the Clicked piece's possible moves
             this.clickedPiece = board.getPiece(position);
-            Boolean isWhite = this.clickedPiece.getIsWhite();
+            boolean isWhite = this.clickedPiece.getIsWhite();
             if (board.getWhitesTurn() == isWhite) {
                 PieceType pieceType = board.getPiece(position).getPieceType();
-                ArrayList<Position> moves = Moves.chooseMove(position, isWhite, board, pieceType);
-
-                mainview.addMoveOptionsCircles(moves);
+                ArrayList<Position> moves = board.chooseMove(position, isWhite, board, pieceType);
+                mainview.addMoveOptionsCircles(convertMovesFromPositiontoPositionView(moves));
             }
         }
     }
 
-    //Move the previously clicked piece to the clicked circle position and remove the
-    public void circleClicked(Position newPosition){
+    /**
+     * Move the previously clicked piece to the clicked circle position and remove the
+     */
+    @Override
+    public void onCircleClicked(PositionView position) {
+        Position newPosition = new Position(position.getFile(), position.getRank());
         Position previousPosition = clickedPiece.getPosition();
         board.movePieces(previousPosition,newPosition);
         this.clickedPiece = null;
     }
 
-
+    @Override
+    public void update() {
+        mainview.updateView(board.getCompleteFEN());
+    }
 }
