@@ -24,9 +24,15 @@ public class SquareView extends Group {
     private final double heightWidth = 80;
     private Character FENPiece = 'x';
 
-    //Intilising the SquareView for X & Y coordinates, the colour, the shape (rectangle) and size
-    //setting the ImageView and the Circle
-    public SquareView(int file, int rank, Contract.Controller controller){
+    /**
+     * Intilising the SquareView for X & Y coordinates, the colour, the shape (rectangle) and size
+     * seeting the ImageView and the Circle
+     * 
+     * @param file
+     * @param rank
+     * @param controller
+     */
+    public SquareView(int file, int rank, Contract.Controller controller) {
 
         this.file = file;
         this.rank = rank;
@@ -55,8 +61,10 @@ public class SquareView extends Group {
         getChildren().add(this.rectangle);
     }
 
-    //sets the ImageView's X & Y coordinates and it's height and width
-    public void initialiseImageView(){
+    /**
+     * Sets the ImageView's X & Y coordinates and it's height and width
+     */
+    public void initialiseImageView() {
         this.imageview.setX(xCoordinate);
         this.imageview.setY(yCoordinate);
         this.imageview.setFitHeight(heightWidth);
@@ -65,8 +73,10 @@ public class SquareView extends Group {
         imageview.setOnMouseClicked(__ -> this.controller.handlePieceClicked(this.positionView));
     }
 
-    //sets the Circle's X & Y coordinates, it's radius and colour
-    public void initialiseCircle(){
+    /**
+     * Sets the Circle's X & Y coordinates, it's radius and colour
+     */
+    public void initialiseCircle() {
         circle.setRadius(20);
         circle.setCenterX(xCoordinate+40);
         circle.setCenterY(yCoordinate+40);
@@ -76,24 +86,28 @@ public class SquareView extends Group {
         circle.setOnMouseClicked(__ -> this.controller.handleCircleClicked(this.positionView));
     }
 
-    //Update the FENPiece and then get the correct image from the resouces and add/remove the imageview from the Group.
-    public void addPiece(Character charactor){
-        //check if the charactor is the same. If it is then return
-        if(charactor == this.FENPiece){
+    /**
+     * Update the FENPiece and then get the correct image from the resouces and add/remove the imageview from the Group.
+     * 
+     * @param charactor
+     */
+    public void addPiece(Character charactor) {
+        // check if the charactor is the same. If it is then return
+        if(charactor == this.FENPiece) {
             return;
         }
-        //check if there was no piece previous on the spot. If so then add imageview to the Group
-        if (this.FENPiece == 'x'){
+        // check if there was no piece previous on the spot. If so then add imageview to the Group
+        if (this.FENPiece == 'x') {
             getChildren().add(imageview);
         }
         this.FENPiece = charactor;
-        //if there is no longer a piece on this square, remove the imageview and return
-        if (charactor == 'x'){
+        // if there is no longer a piece on this square, remove the imageview and return
+        if (charactor == 'x') {
             getChildren().remove(imageview);
             return;
         }
         boolean isWhite = true;
-        if(Character.isLowerCase(charactor)){
+        if(Character.isLowerCase(charactor)) {
             isWhite = false;
         }
 
@@ -102,10 +116,16 @@ public class SquareView extends Group {
     }
 
 
-    //returns the correct url (String) that the piece requires
-    public String getPNGString(Character character, boolean isWhite){
+    /**
+     * Returns the correct uri (String) that the piece requires
+     * 
+     * @param character
+     * @param isWhite
+     * @return uri of the filename
+     */
+    public String getPNGString(Character character, boolean isWhite) {
         String output = "";
-        switch (character){
+        switch (character) {
             case 'k':
                 output += "King";
                 break;
@@ -126,25 +146,22 @@ public class SquareView extends Group {
                 break;
         }
 
-
-
         output += "-";
-        if(isWhite){
-            output+="White";
-        }
-        else{
-            output+="Black";
-        }
+        output += isWhite ? "White" : "Black";
         output+=".png";
         return output;
     }
 
-    //Add Circle to the Group
+    /**
+     * Add Circle to the Group
+     */
     public void addCircle(){
         this.getChildren().add(circle);
     }
 
-    //Remove Circle from the Group
+    /**
+     * Remove Circle from the Group
+     */
     public void removeCircle(){
         this.getChildren().remove(circle);
     }
@@ -152,6 +169,9 @@ public class SquareView extends Group {
     public ImageView getImageview() {
         return imageview;
     }
-    public Circle getCircle() {return circle;}
+
+    public Circle getCircle() {
+        return circle;
+    }
 }
 

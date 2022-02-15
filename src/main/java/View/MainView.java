@@ -24,10 +24,15 @@ public class MainView {
     private String[] currentFEN;
     private ArrayList<SquareView> circlesActivated = new ArrayList<SquareView>();
 
-    //Setting up the JAVAFX stage that will be used for the display
+    /**
+     * Setting up the JAVAFX stage that will be used for the display
+     * 
+     * @param stage
+     * @param controller
+     * @throws IOException
+     */
     public MainView(Stage stage, Contract.Controller controller) throws IOException {
         this.stage = stage;
-
 
         for (int i = 0; i < 8; i++) {
             rankNumbers(root,i);
@@ -41,10 +46,9 @@ public class MainView {
                 root.getChildren().add(this.boardSquaresView.getSquareView(new PositionView(file,rank)));
             }
         }
-
     }
 
-    public void showBoard(){
+    public void showBoard() {
         Image icon = new Image("chess-icon.png");
         stage.getIcons().add(icon);
         stage.setTitle("CHESS");
@@ -56,9 +60,14 @@ public class MainView {
         stage.show();
     }
 
-    //Adding Rank numbers to make it easier for me to see what file and rank each square is.
-    //DELETE ONCE PROJECT IS COMPLETE
-    private void rankNumbers(Group root, Integer rank){
+    /**
+     * Adding Rank numbers to make it easier for me to see what file and rank each square is.
+     * DELETE ONCE PROJECT IS COMPLETE
+
+     * @param root
+     * @param rank
+     */
+    private void rankNumbers(Group root, Integer rank) {
         Text text = new Text();
         text.setText(rank.toString());
         text.setX(660);
@@ -67,9 +76,14 @@ public class MainView {
         root.getChildren().add(text);
     }
 
-    //Adding File numbers to make it easier for me to see what file and rank each square is.
-    //DELETE ONCE PROJECT IS COMPLETE
-    private void fileNumbers(Group root, Integer file){
+    /**
+     * Adding File numbers to make it easier for me to see what file and rank each square is.
+     * DELETE ONCE PROJECT IS COMPLETE
+
+     * @param root
+     * @param file
+     */
+    private void fileNumbers(Group root, Integer file) {
         Text text = new Text();
         text.setText(file.toString());
         text.setX(40+80*file);
@@ -79,7 +93,11 @@ public class MainView {
     }
 
 
-    // using the FEN string, update the view to match the FEN input
+    /**
+     * Using the FEN string, update the view to match the FEN input
+     * 
+     * @param FENPosition
+     */
     public void updateView(String FENPosition) {
         System.out.println(FENPosition);
         String[] str = FENPosition.split(" ");
@@ -89,10 +107,10 @@ public class MainView {
         for (Character character:chars) {
             if(character.equals('/')){
                 rank += 1;
-                file=0;
+                file = 0;
             }
             else if(isDigit(character)) {
-                for(int i = 0; i<Character.getNumericValue(character);i++){
+                for(int i = 0; i < Character.getNumericValue(character); i++){
                     getSquareView(new PositionView(file,rank)).addPiece('x');
                     file += 1;
                 }
@@ -109,17 +127,23 @@ public class MainView {
     }
 
 
-    //Adding circles to squares after a piece has been clicked to show what moves are available
-    public void addMoveOptionsCircles(ArrayList<PositionView> possibleMoves){
-        for (PositionView position:possibleMoves){
+    /**
+     * Adding circles to squares after a piece has been clicked to show what moves are available
+     * 
+     * @param possibleMoves
+     */
+    public void addMoveOptionsCircles(ArrayList<PositionView> possibleMoves) {
+        for (PositionView position:possibleMoves) {
             SquareView squareView = boardSquaresView.getSquareView(position);
             squareView.addCircle();
             circlesActivated.add(squareView);
         }
     }
 
-    //Removing the circles of the possible moves
-    public void removeMoveOptionsCircles(){
+    /**
+     * Removing the circles of the possible moves
+     */
+    public void removeMoveOptionsCircles() {
         for (SquareView squareview:this.circlesActivated) {
             squareview.removeCircle();
         }

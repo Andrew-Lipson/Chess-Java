@@ -14,8 +14,13 @@ public class BoardSquaresView {
         }
     }
 
-    // Return a SquareView from the specific File and Rank
-    public SquareView getSquareView(PositionView position){
+    /**
+     * Return a SquareView from the specific File and Rank
+     * 
+     * @param position
+     * @return the square view
+     */
+    public SquareView getSquareView(PositionView position) {
         return squareView[position.getFile()][position.getRank()];
     }
 }
