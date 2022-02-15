@@ -2,7 +2,6 @@ package Main;
 
 import Controller.Controller;
 import Model.Board;
-import Observer.Observer;
 import View.MainView;
 import javafx.application.Application;
 import javafx.stage.Stage;
@@ -14,17 +13,15 @@ public class Main extends Application {
     @Override
     public void start(Stage stage) throws IOException, InterruptedException {
 
+        Controller controller = new Controller(); // Start up Controller
+        MainView mainView = new MainView(stage, controller);// Start up View
+        Board board = new Board(controller); // Start up Model
 
 
-        Observer ObserverMainView = new MainView(); // Start up View
 
+        controller.setUpController(board,mainView);
 
-        Board board = new Board(ObserverMainView); // Start up Model
-
-        MainView mainView = (MainView) ObserverMainView;
-
-        Controller controller = new Controller(board, mainView); // Start up Controller
-        controller.showBoard(stage);
+        controller.showBoard();
     }
 
     public static void main(String[] args) {

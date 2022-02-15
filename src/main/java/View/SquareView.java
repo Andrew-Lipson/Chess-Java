@@ -1,8 +1,10 @@
 package View;
 
+import javafx.event.EventHandler;
 import javafx.scene.Group;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
+import javafx.scene.input.MouseEvent;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Circle;
 import javafx.scene.shape.Rectangle;
@@ -18,7 +20,7 @@ public class SquareView extends Group {
 
     //Intilising the SquareView for X & Y coordinates, the colour, the shape (rectangle) and size
     //setting the ImageView and the Circle
-    public SquareView(int file, int rank){
+    public SquareView(int file, int rank, OnClick controller){
         this.xCoordinate = (10 + heightWidth * file);
         this.yCoordinate = (10 + heightWidth * rank);
 
@@ -35,26 +37,41 @@ public class SquareView extends Group {
         rectangle.setY(yCoordinate);
         getChildren().add(rectangle);
 
-        setImageview();
-        setCircle();
+        PositionView positionView = new PositionView(file,rank);
+        setImageview(positionView, controller);
+        setCircle(positionView, controller);
     }
 
     //sets the ImageView's X & Y coordinates and it's height and width
-    public void setImageview(){
+    public void setImageview(PositionView position, OnClick controller){
         this.imageview.setX(xCoordinate);
         this.imageview.setY(yCoordinate);
         this.imageview.setFitHeight(heightWidth);
         this.imageview.setFitWidth(heightWidth);
-        //getChildren().add(imageview);
+        imageview.setPickOnBounds(true);
+        imageview.setOnMouseClicked(new EventHandler<MouseEvent>() {
+                                        @Override
+                                        public void handle(MouseEvent mouseEvent) {
+                                            controller.pieceClicked(position);
+                                        }
+                                    }
+        );
     }
 
     //sets the Circle's X & Y coordinates, it's radius and colour
-    public void setCircle(){
+    public void setCircle(PositionView position, OnClick controller){
         circle.setRadius(20);
         circle.setCenterX(xCoordinate+40);
         circle.setCenterY(yCoordinate+40);
         circle.setFill(Color.DARKBLUE);
         circle.setOpacity(0.5);
+        circle.setPickOnBounds(true);
+        circle.setOnMouseClicked(new EventHandler<MouseEvent>() {
+                                     @Override
+                                     public void handle(MouseEvent mouseEvent) {controller.circleClicked(position);
+                                     }
+                                 }
+        );
     }
 
     //Update the FENPiece and then get the correct image from the resouces and add/remove the imageview from the Group.
@@ -78,8 +95,7 @@ public class SquareView extends Group {
             isWhite = false;
         }
 
-        Character lowerCase = Character.toLowerCase(charactor);
-        Image image = new Image(getPNGString(lowerCase, isWhite));
+        Image image = new Image(getPNGString(Character.toLowerCase(charactor), isWhite));
         this.imageview.setImage(image);
     }
 

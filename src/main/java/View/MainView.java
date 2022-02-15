@@ -1,7 +1,6 @@
 package View;
 
 
-import Observer.Observer;
 import javafx.scene.Group;
 import javafx.scene.Scene;
 import javafx.scene.image.Image;
@@ -15,16 +14,17 @@ import java.util.ArrayList;
 
 import static java.lang.Character.isDigit;
 
-public class MainView implements Observer{
+public class MainView {
 
+    private final Stage stage;
     private BoardSquaresView boardSquaresView;
     private final Group root = new Group();
     private String[] currentFEN;
     private ArrayList<SquareView> circlesActivated = new ArrayList<SquareView>();
 
     //Setting up the JAVAFX stage that will be used for the display
-    public MainView() throws IOException {
-
+    public MainView(Stage stage, OnClick controller) throws IOException {
+        this.stage = stage;
 
 
         for (int i = 0; i < 8; i++) {
@@ -32,7 +32,7 @@ public class MainView implements Observer{
             fileNumbers(root,i);
         }
 
-        this.boardSquaresView = new BoardSquaresView();
+        this.boardSquaresView = new BoardSquaresView(controller);
 
         for (int rank = 0; rank < 8; rank++) {
             for (int file = 0; file < 8; file++) {
@@ -40,10 +40,9 @@ public class MainView implements Observer{
             }
         }
 
-
     }
 
-    public void showBoard(Stage stage){
+    public void showBoard(){
         Image icon = new Image("chess-icon.png");
         stage.getIcons().add(icon);
         stage.setTitle("CHESS");
@@ -79,7 +78,7 @@ public class MainView implements Observer{
 
 
     // using the FEN string, update the view to match the FEN input
-    public void update(String FENPosition) {
+    public void updateView(String FENPosition) {
         System.out.println(FENPosition);
         String[] str = FENPosition.split(" ");
         char[] chars = str[0].toCharArray();
@@ -124,7 +123,7 @@ public class MainView implements Observer{
         }
     }
 
-    public SquareView getSquareView(PositionView position) {
+    private SquareView getSquareView(PositionView position) {
         return boardSquaresView.getSquareView(position);
     }
 }

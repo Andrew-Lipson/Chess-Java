@@ -1,7 +1,6 @@
 package Model;
 
 import Model.pieces.*;
-import Observer.Observer;
 
 import java.util.ArrayList;
 import java.util.Objects;
@@ -25,7 +24,6 @@ public class Board{
         createPieces(blackPieces, false);
         this._observer = observer;
         fen = new FEN(createFirstFENPosition());
-        _observer.update(fen.createCompleteFEN());
         whitesTurn = true;
     }
 
@@ -175,13 +173,17 @@ public class Board{
         if (previousPosition.getRank()!= newPosition.getRank()){
             fen.updateFENPosition(boardSquares.getRankPiece(previousPosition.getRank()), previousPosition.getRank());
         }
-        _observer.update(fen.createCompleteFEN());
+        _observer.update();
     }
 
 
     //call chooseMove in Moves class
     public ArrayList<Position> chooseMove(Position position, boolean isWhite, Board board, PieceType pieceType){
         return Moves.chooseMove(position, isWhite, board, pieceType);
+    }
+
+    public String getCompleteFEN(){
+        return fen.createCompleteFEN();
     }
 
 

@@ -9,5 +9,4 @@ module Model {
     exports Model.pieces;
     exports Controller;
     exports View;
-    exports Observer;
 }
