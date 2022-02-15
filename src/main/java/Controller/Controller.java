@@ -10,7 +10,7 @@ import View.PositionView;
 
 import java.util.ArrayList;
 
-import static java.util.Objects.isNull;
+import static java.util.Objects.nonNull;
 
 public class Controller implements Contract.Controller, Contract.Observer {
 
@@ -18,7 +18,7 @@ public class Controller implements Contract.Controller, Contract.Observer {
     MainView mainview;
     Piece clickedPiece = null;
 
-    public void startApplication(Board board, MainView mainview){
+    public void startApplication(Board board, MainView mainview) {
         this.board = board;
         this.mainview = mainview;
 
@@ -26,7 +26,7 @@ public class Controller implements Contract.Controller, Contract.Observer {
         showBoard();
     }
 
-    private void showBoard(){
+    private void showBoard() {
         mainview.showBoard();
     }
 
@@ -36,9 +36,9 @@ public class Controller implements Contract.Controller, Contract.Observer {
      * @param moves
      * @return
      */
-    private ArrayList<PositionView> convertMovesFromPositiontoPositionView(ArrayList<Position> moves){
+    private ArrayList<PositionView> convertMovesFromPositiontoPositionView(ArrayList<Position> moves) {
         ArrayList<PositionView> movesForMainView = new ArrayList<>();
-        for (Position position:moves) {
+        for (Position position: moves) {
             movesForMainView.add(new PositionView(position.getFile(), position.getRank()));
         }
         return movesForMainView;
@@ -48,16 +48,15 @@ public class Controller implements Contract.Controller, Contract.Observer {
      * Once a piece is clicked and displays possible moves or removes the possibles moves
      */
     @Override
-    public void handlePieceClicked(PositionView positionView){
+    public void handlePieceClicked(PositionView positionView) {
         // Check if the piece clicked was just clicked, and remove the possible moves from the board
         Position position = new Position(positionView.getFile(), positionView.getRank());
         if (clickedPiece == board.getPiece(position)) {
             mainview.removeMoveOptionsCircles();
             this.clickedPiece = null;
-        }
-        else{
+        } else {
             // Check if another piece has been previously clicked and remove that piece's possible moves
-            if(!isNull(clickedPiece)){
+            if(nonNull(clickedPiece)) {
                 mainview.removeMoveOptionsCircles();
             }
             // Add the Clicked piece's possible moves
@@ -75,7 +74,7 @@ public class Controller implements Contract.Controller, Contract.Observer {
      * Move the previously clicked piece to the clicked circle position and remove the
      */
     @Override
-    public void handleCircleClicked(PositionView position){
+    public void handleCircleClicked(PositionView position) {
         Position newPosition = new Position(position.getFile(), position.getRank());
         Position previousPosition = clickedPiece.getPosition();
         board.movePieces(previousPosition,newPosition);

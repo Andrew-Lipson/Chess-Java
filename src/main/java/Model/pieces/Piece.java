@@ -9,8 +9,7 @@ public class Piece {
     private PieceType pieceType;
     private Integer enPassantAvailableToTakeFile = null;
 
-    public Piece(boolean isWhite, PieceType pieceType){
-
+    public Piece(boolean isWhite, PieceType pieceType) {
         this.isWhite = isWhite;
         this.pieceType = pieceType;
     }
@@ -20,8 +19,7 @@ public class Piece {
      * 
      * @param piece
      */
-    public Piece(Piece piece){
-
+    public Piece(Piece piece) {
         this.isWhite = piece.getIsWhite();
         this.position = piece.getPosition();
         this.pieceType = piece.getPieceType();
@@ -33,7 +31,7 @@ public class Piece {
      * 
      * @param position
      */
-    public void setPosition(Position position){
+    public void setPosition(Position position) {
         this.position = position;
     }
 
@@ -42,7 +40,7 @@ public class Piece {
      * 
      * @param file
      */
-    public void setEnPassantAvailableToTakeFile(Integer file){
+    public void setEnPassantAvailableToTakeFile(Integer file) {
         this.enPassantAvailableToTakeFile = file;
     }
 
@@ -51,7 +49,7 @@ public class Piece {
      * 
      * @param pieceType
      */
-    public void pawnPromotion(PieceType pieceType){
+    public void pawnPromotion(PieceType pieceType) {
         this.pieceType = pieceType;
     }
 
@@ -63,7 +61,7 @@ public class Piece {
         return pieceType;
     }
 
-    public String getFenRepresentation(){
+    public String getFenRepresentation() {
         return pieceType.getFenRepresentation(isWhite);
     }
 
@@ -71,7 +69,7 @@ public class Piece {
         return isWhite;
     }
 
-    public Integer getEnPassantAvailableToTakeFile(){
+    public Integer getEnPassantAvailableToTakeFile() {
         return enPassantAvailableToTakeFile;
     }
 }

@@ -17,10 +17,10 @@ public class FEN {
     private int fullmove = 0;
     private String output;
 
-    public FEN(Piece[][] piece2DArray){
-        for (int rank = 0; rank < 8; rank++){
-                updateFENPosition(piece2DArray[rank],rank);
-            }
+    public FEN(Piece[][] piece2DArray) {
+        for (int rank = 0; rank < 8; rank++) {
+            updateFENPosition(piece2DArray[rank],rank);
+        }
     }
 
     /**
@@ -29,7 +29,7 @@ public class FEN {
      * @param pieceRank
      * @param rank
      */
-    public void updateFENPosition(Piece[] pieceRank, int rank){
+    public void updateFENPosition(Piece[] pieceRank, int rank) {
         String output = "";
         int emptySquare = 0;
         for (Piece piece:pieceRank) {
@@ -44,10 +44,10 @@ public class FEN {
 
             }
         }
-        if (!(emptySquare==0)) {
+        if (!(emptySquare == 0)) {
             output += emptySquare;
         }
-        fenPosition[rank]=output;
+        fenPosition[rank] = output;
     }
 
     /**
@@ -55,7 +55,7 @@ public class FEN {
      * 
      * @param piece
      */
-    public void setEnPassantPiece(Piece piece){
+    public void setEnPassantPiece(Piece piece) {
         this.enPassantPiece = piece;
     }
 
@@ -64,19 +64,19 @@ public class FEN {
      * 
      * @return
      */
-    public String createCompleteFEN(){
+    public String createCompleteFEN() {
         updateFENTurns(false);
         output = "";
         for (int i =0;i< fenPosition.length;i++) {
-            output+=fenPosition[i];
-            output+=fenBreaks[i];
+            output += fenPosition[i];
+            output += fenBreaks[i];
         }
 
         if (whitesTurn){
-            output+="w ";
+            output += "w ";
         }
         else{
-            output+="b ";
+            output += "b ";
         }
 
         castlingToString();
@@ -84,7 +84,7 @@ public class FEN {
         output += enPassantToString(enPassantPiece);
 
 
-        output+=" " + halfmove + " " + fullmove;
+        output += " " + halfmove + " " + fullmove;
 
         return output;
     }
@@ -94,13 +94,13 @@ public class FEN {
      * 
      * @param halfmoveUpdate
      */
-    private void updateFENTurns(boolean halfmoveUpdate){
-        whitesTurn=!whitesTurn;
+    private void updateFENTurns(boolean halfmoveUpdate) {
+        whitesTurn =! whitesTurn;
         if (whitesTurn){
-            fullmove+=1;
+            fullmove += 1;
         }
-        if(halfmoveUpdate){
-            halfmove+=1;
+        if(halfmoveUpdate) {
+            halfmove += 1;
         }
     }
 
@@ -108,23 +108,23 @@ public class FEN {
      * Add the correct castling notation to the output FEN String
      */
     private void castlingToString() {
-        if (!whiteCastling[0] && !whiteCastling[1] && !blackCastling[0] && !blackCastling[1]){
-            output+="-";
+        if (!whiteCastling[0] && !whiteCastling[1] && !blackCastling[0] && !blackCastling[1]) {
+            output += "-";
         }
-        if (whiteCastling[0]){
-            output+="K";
+        if (whiteCastling[0]) {
+            output += "K";
         }
-        if (whiteCastling[1]){
-            output+="Q";
+        if (whiteCastling[1]) {
+            output += "Q";
         }
-        if (blackCastling[0]){
-            output+="k";
+        if (blackCastling[0]) {
+            output += "k";
         }
-        if (blackCastling[1]){
-            output+="q";
+        if (blackCastling[1]) {
+            output += "q";
         }
 
-        output+= " ";
+        output += " ";
     }
 
     /**
@@ -133,11 +133,11 @@ public class FEN {
      * @param piece
      * @return enPassant notation
      */
-    private String enPassantToString(Piece piece){
+    private String enPassantToString(Piece piece) {
 
         String output = "";
 
-        if (isNull(piece)){
+        if (isNull(piece)) {
             output += "-";
             return output;
         }
@@ -169,7 +169,7 @@ public class FEN {
                 break;
         }
 
-        output+=8-(piece.getPosition().getRank());
+        output += 8 - (piece.getPosition().getRank());
 
         return output;
     }

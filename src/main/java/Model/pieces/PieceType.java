@@ -15,6 +15,6 @@ public enum PieceType {
     }
 
     public String getFenRepresentation(boolean isWhite) {
-        return isWhite? this.fenRepresentation.toUpperCase():this.fenRepresentation;
+        return isWhite ? this.fenRepresentation.toUpperCase() : this.fenRepresentation;
     }
 }

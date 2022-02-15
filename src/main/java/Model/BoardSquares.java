@@ -22,7 +22,7 @@ public class BoardSquares{
      * @param position
      * @return the piece
      */
-    public Piece getPiece(Position position){
+    public Piece getPiece(Position position) {
         return squares[position.getFile()][position.getRank()];
     }
 
@@ -32,8 +32,8 @@ public class BoardSquares{
      * @param position
      * @return a clone of the piece on the position, or null if no piece found
      */
-    public Piece getPieceClone(Position position){
-        if (isNull(getPiece(position))){
+    public Piece getPieceClone(Position position) {
+        if (isNull(getPiece(position))) {
             return null;
         }
         return new Piece(getPiece(position));
@@ -44,9 +44,9 @@ public class BoardSquares{
      * 
      * @param position
      */
-    public void removePiece(Position position){
+    public void removePiece(Position position) {
         Piece piece = squares[position.getFile()][position.getRank()];
-        if(!isNull(piece)){
+        if(!isNull(piece)) {
             piece.setPosition(null);
             squares[position.getFile()][position.getRank()] = null;
         }
@@ -59,7 +59,7 @@ public class BoardSquares{
      * @param position
      * @param piece
      */
-    public void addPiece(Position position, Piece piece){
+    public void addPiece(Position position, Piece piece) {
         squares[position.getFile()][position.getRank()] = piece;
         piece.setPosition(position);
     }
@@ -69,7 +69,7 @@ public class BoardSquares{
      * @param rank
      * @return all pieces on rank
      */
-    public Piece[] getRankPiece(int rank){
+    public Piece[] getRankPiece(int rank) {
         Piece[] rankPiece = new Piece[8];
         for (int file = 0; file < 8; file++) {
             rankPiece[file] = getPieceClone(new Position(file,rank));

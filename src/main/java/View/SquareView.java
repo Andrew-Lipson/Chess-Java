@@ -107,22 +107,22 @@ public class SquareView extends Group {
         String output = "";
         switch (character){
             case 'k':
-                output+="King";
+                output += "King";
                 break;
             case 'q':
-                output+="Queen";
+                output += "Queen";
                 break;
             case 'r':
-                output+="Rook";
+                output += "Rook";
                 break;
             case 'n':
-                output+="Knight";
+                output += "Knight";
                 break;
             case 'b':
-                output+="Bishop";
+                output += "Bishop";
                 break;
             case 'p':
-                output+="Pawn";
+                output += "Pawn";
                 break;
         }
 

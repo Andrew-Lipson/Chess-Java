@@ -88,19 +88,19 @@ public class MainView {
         int file = 0;
         for (Character character:chars) {
             if(character.equals('/')){
-                rank+=1;
+                rank += 1;
                 file=0;
             }
             else if(isDigit(character)) {
                 for(int i = 0; i<Character.getNumericValue(character);i++){
                     getSquareView(new PositionView(file,rank)).addPiece('x');
-                    file +=1;
+                    file += 1;
                 }
 
             }
             else{
                 getSquareView(new PositionView(file,rank)).addPiece(character);
-                file+=1;
+                file += 1;
             }
 
         }
