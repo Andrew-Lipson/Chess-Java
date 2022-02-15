@@ -5,6 +5,7 @@ module Model {
 
     opens Main to javafx.graphics;
     
+    exports Contract;
     exports Model;
     exports Model.pieces;
     exports Controller;

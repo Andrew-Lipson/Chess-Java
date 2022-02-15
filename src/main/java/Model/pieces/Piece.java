@@ -1,9 +1,9 @@
 package Model.pieces;
 
-
 import Model.Position;
 
 public class Piece {
+
     private boolean isWhite;
     private Position position;
     private PieceType pieceType;
@@ -15,7 +15,11 @@ public class Piece {
         this.pieceType = pieceType;
     }
 
-    //Use to Clone a previous Piece
+    /**
+     * Use to Clone a previous Piece
+     * 
+     * @param piece
+     */
     public Piece(Piece piece){
 
         this.isWhite = piece.getIsWhite();
@@ -24,17 +28,29 @@ public class Piece {
         this.enPassantAvailableToTakeFile = piece.getEnPassantAvailableToTakeFile();
     }
 
-    //add the file and rank position to the Piece
+    /**
+     * add the file and rank position to the Piece
+     * 
+     * @param position
+     */
     public void setPosition(Position position){
         this.position = position;
     }
 
-    //Set the enPassantAvailableToTakeFile to the File that the piece will move to after the en Passant
+    /**
+     * Set the enPassantAvailableToTakeFile to the File that the piece will move to after the en Passant
+     * 
+     * @param file
+     */
     public void setEnPassantAvailableToTakeFile(Integer file){
         this.enPassantAvailableToTakeFile = file;
     }
 
-    // Change the PieceType for when a Pawn get promoted
+    /**
+     * Change the PieceType for when a Pawn get promoted
+     * 
+     * @param pieceType
+     */
     public void pawnPromotion(PieceType pieceType){
         this.pieceType = pieceType;
     }

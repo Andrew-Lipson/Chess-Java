@@ -1,29 +1,22 @@
 package Controller;
 
-
-
+import Contract.*;
 import Model.Board;
-import Model.Observer;
 import Model.Position;
 import Model.pieces.Piece;
 import Model.pieces.PieceType;
 import View.MainView;
-import View.OnClick;
 import View.PositionView;
 
 import java.util.ArrayList;
 
 import static java.util.Objects.isNull;
 
-public class Controller implements Observer, OnClick {
+public class Controller implements Contract.Controller, Contract.Observer {
 
     Board board;
     MainView mainview;
     Piece clickedPiece = null;
-
-    public Controller(){
-
-    }
 
     public void startApplication(Board board, MainView mainview){
         this.board = board;
@@ -37,9 +30,12 @@ public class Controller implements Observer, OnClick {
         mainview.showBoard();
     }
 
-
-
-    //Convert the Position to PositionView for the View component
+    /**
+     * Convert the Position to PositionView for the View component
+     * 
+     * @param moves
+     * @return
+     */
     private ArrayList<PositionView> convertMovesFromPositiontoPositionView(ArrayList<Position> moves){
         ArrayList<PositionView> movesForMainView = new ArrayList<>();
         for (Position position:moves) {
@@ -48,9 +44,11 @@ public class Controller implements Observer, OnClick {
         return movesForMainView;
     }
 
-    //Once a piece is clicked and displays possible moves or removes the possibles moves
+    /**
+     * Once a piece is clicked and displays possible moves or removes the possibles moves
+     */
     @Override
-    public void pieceClicked(PositionView positionView){
+    public void handlePieceClicked(PositionView positionView){
         // Check if the piece clicked was just clicked, and remove the possible moves from the board
         Position position = new Position(positionView.getFile(), positionView.getRank());
         if (clickedPiece == board.getPiece(position)) {
@@ -58,11 +56,11 @@ public class Controller implements Observer, OnClick {
             this.clickedPiece = null;
         }
         else{
-            //Check if another piece has been previously clicked and remove that piece's possible moves
+            // Check if another piece has been previously clicked and remove that piece's possible moves
             if(!isNull(clickedPiece)){
                 mainview.removeMoveOptionsCircles();
             }
-            //Add the Clicked piece's possible moves
+            // Add the Clicked piece's possible moves
             this.clickedPiece = board.getPiece(position);
             boolean isWhite = this.clickedPiece.getIsWhite();
             if (board.getWhitesTurn() == isWhite) {
@@ -73,15 +71,16 @@ public class Controller implements Observer, OnClick {
         }
     }
 
-    //Move the previously clicked piece to the clicked circle position and remove the
+    /**
+     * Move the previously clicked piece to the clicked circle position and remove the
+     */
     @Override
-    public void circleClicked(PositionView position){
+    public void handleCircleClicked(PositionView position){
         Position newPosition = new Position(position.getFile(), position.getRank());
         Position previousPosition = clickedPiece.getPosition();
         board.movePieces(previousPosition,newPosition);
         this.clickedPiece = null;
     }
-
 
     @Override
     public void update() {

@@ -23,7 +23,12 @@ public class FEN {
             }
     }
 
-    //with all the pieces in the rank, update the appropriate FEN rank in FENPosition
+    /**
+     * With all the pieces in the rank, update the appropriate FEN rank in FENPosition
+     * 
+     * @param pieceRank
+     * @param rank
+     */
     public void updateFENPosition(Piece[] pieceRank, int rank){
         String output = "";
         int emptySquare = 0;
@@ -45,12 +50,20 @@ public class FEN {
         fenPosition[rank]=output;
     }
 
-    //Set the En Passant Piece
+    /**
+     * Set the En Passant Piece
+     * 
+     * @param piece
+     */
     public void setEnPassantPiece(Piece piece){
         this.enPassantPiece = piece;
     }
 
-    //Add all the FEN elements together to get a completed FEN string
+    /**
+     * Add all the FEN elements together to get a completed FEN string
+     * 
+     * @return
+     */
     public String createCompleteFEN(){
         updateFENTurns(false);
         output = "";
@@ -76,7 +89,11 @@ public class FEN {
         return output;
     }
 
-    //update the fullmove if it's back to white. Update the halfmove if required
+    /**
+     * Update the fullmove if it's back to white. Update the halfmove if required
+     * 
+     * @param halfmoveUpdate
+     */
     private void updateFENTurns(boolean halfmoveUpdate){
         whitesTurn=!whitesTurn;
         if (whitesTurn){
@@ -87,7 +104,9 @@ public class FEN {
         }
     }
 
-    //add the correct castling notation to the output FEN String
+    /**
+     * Add the correct castling notation to the output FEN String
+     */
     private void castlingToString() {
         if (!whiteCastling[0] && !whiteCastling[1] && !blackCastling[0] && !blackCastling[1]){
             output+="-";
@@ -108,7 +127,12 @@ public class FEN {
         output+= " ";
     }
 
-    //return the correct enPassant notation
+    /**
+     * Returns the correct enPassant notation
+     * 
+     * @param piece
+     * @return enPassant notation
+     */
     private String enPassantToString(Piece piece){
 
         String output = "";
@@ -148,11 +172,5 @@ public class FEN {
         output+=8-(piece.getPosition().getRank());
 
         return output;
-
     }
-
-
-
-
-
 }

@@ -12,6 +12,8 @@ import javafx.stage.Stage;
 import java.io.IOException;
 import java.util.ArrayList;
 
+import Contract.*;
+
 import static java.lang.Character.isDigit;
 
 public class MainView {
@@ -23,7 +25,7 @@ public class MainView {
     private ArrayList<SquareView> circlesActivated = new ArrayList<SquareView>();
 
     //Setting up the JAVAFX stage that will be used for the display
-    public MainView(Stage stage, OnClick controller) throws IOException {
+    public MainView(Stage stage, Contract.Controller controller) throws IOException {
         this.stage = stage;
 
 
