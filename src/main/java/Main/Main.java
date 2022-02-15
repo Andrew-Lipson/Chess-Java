@@ -17,11 +17,7 @@ public class Main extends Application {
         MainView mainView = new MainView(stage, controller);// Start up View
         Board board = new Board(controller); // Start up Model
 
-
-
-        controller.setUpController(board,mainView);
-
-        controller.showBoard();
+        controller.startApplication(board,mainView);
     }
 
     public static void main(String[] args) {

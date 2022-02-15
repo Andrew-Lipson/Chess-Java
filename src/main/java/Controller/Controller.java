@@ -25,14 +25,15 @@ public class Controller implements Observer, OnClick {
 
     }
 
-    public void setUpController(Board board, MainView mainview){
+    public void startApplication(Board board, MainView mainview){
         this.board = board;
         this.mainview = mainview;
 
         update();
+        showBoard();
     }
 
-    public void showBoard(){
+    private void showBoard(){
         mainview.showBoard();
     }
 
