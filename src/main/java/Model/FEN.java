@@ -10,7 +10,7 @@ public class FEN {
     private String[] fenBreaks = {"/","/","/","/","/","/","/"," ",};
     private String enPassantPiece = "-";
     private int halfmove = 0;
-    private int fullmove = 0;
+    private int fullmove = 1;
     private String output;
 
     public FEN(Piece[][] piece2DArray) {
@@ -77,7 +77,6 @@ public class FEN {
      * @return
      */
     public String createCompleteFEN(boolean whitesTurn, boolean[] whiteCastling, boolean[] blackCastling) {
-        updateFENTurns( whitesTurn, false);
         output = "";
         for (int i =0;i< fenPosition.length;i++) {
             output += fenPosition[i];
@@ -106,7 +105,7 @@ public class FEN {
      * 
      * @param halfmoveUpdate
      */
-    private void updateFENTurns(boolean whitesTurn ,boolean halfmoveUpdate) {
+    public void updateFENTurns(boolean whitesTurn ,boolean halfmoveUpdate) {
         if (whitesTurn){
             fullmove += 1;
         }

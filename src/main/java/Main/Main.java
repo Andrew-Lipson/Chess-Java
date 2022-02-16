@@ -15,7 +15,7 @@ public class Main extends Application {
 
         Controller controller = new Controller(); // Start up Controller
         MainView mainView = new MainView(stage, controller);// Start up View
-        Board board = new Board(controller, "r3k1nr/pppq2p1/2n5/4p1B1/1bB3p1/4P3/PP1N1PP1/R2QNRK1 b kq - 2 2"); // Start up Model
+        Board board = new Board(controller, "rnbqkbnr/pp1ppppp/8/2pP4/4P3/8/PPP2PPP/RNBQKBNR w KQkq c6 0 2"); // Start up Model
 
         controller.startApplication(board,mainView);
     }

@@ -103,6 +103,9 @@ public class Board {
         }
         // str[3] is en Passant
         this.fen.setEnPassantPieceString(str[3]);
+        chars = str[3].toCharArray();
+        int enPassantFile = chars[0];
+        enableEnPassant(new Position(enPassantFile-97,9-Character.getNumericValue(chars[1])), false);
 
         // str[4] is halfmove
         this.fen.setHalfmove(Integer.parseInt(str[4]));
@@ -295,6 +298,7 @@ public class Board {
      * @param previousPosition
      */
     public void updateView(Position newPosition, Position previousPosition) {
+        fen.updateFENTurns(whitesTurn, false);
         fen.updateFENPosition(boardSquares.getRankPiece(newPosition.getRank()), newPosition.getRank());
         if (previousPosition.getRank() != newPosition.getRank()){
             fen.updateFENPosition(boardSquares.getRankPiece(previousPosition.getRank()), previousPosition.getRank());
