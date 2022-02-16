@@ -1,5 +1,7 @@
 package Model.pieces;
 
+import java.util.Arrays;
+
 public enum PieceType {
     King("k"),
     Queen("q"),
@@ -16,5 +18,9 @@ public enum PieceType {
 
     public String getFenRepresentation(boolean isWhite) {
         return isWhite ? this.fenRepresentation.toUpperCase() : this.fenRepresentation;
+    }
+
+    public static PieceType getPieceType(String fenRep){
+        return Arrays.stream(PieceType.values()).filter(pt -> pt.fenRepresentation.equals(fenRep)).findFirst().orElse(null);
     }
 }

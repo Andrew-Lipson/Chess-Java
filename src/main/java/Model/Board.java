@@ -6,14 +6,17 @@ import Model.pieces.*;
 import java.util.ArrayList;
 import java.util.Objects;
 
+import static java.lang.Character.isDigit;
 import static java.lang.Math.abs;
 import static java.util.Objects.isNull;
 
 public class Board {
 
     private final BoardSquares boardSquares;
-    private final Piece[] whitePieces = new Piece[16];
-    private final Piece[] blackPieces = new Piece[16];
+    private final ArrayList<Piece> whitePieces = new ArrayList<Piece>();
+    private final ArrayList<Piece> blackPieces = new ArrayList<Piece>();
+    private boolean[] whiteCastling;
+    private boolean[] blackCastling;
     private boolean whitesTurn;
     private final Observer _observer;
     private ArrayList<Piece> enPassantAvailablePieces = new ArrayList<Piece>();
@@ -23,9 +26,90 @@ public class Board {
         boardSquares = new BoardSquares();
         createPieces(whitePieces, true);
         createPieces(blackPieces, false);
+        whiteCastling = new boolean[]{true, true};
+        blackCastling = new boolean[]{true, true};
         this._observer = observer;
-        fen = new FEN(createFirstFENPosition());
         whitesTurn = true;
+        fen = new FEN(createFirstFENPosition());
+
+    }
+
+    public Board(Observer observer, String fenString) {
+        boardSquares = new BoardSquares();
+        decodeFEN(fenString);
+        this._observer = observer;
+        //this.fen = new FEN(createFirstFENPosition());
+        //whitesTurn = true;
+    }
+
+    private void decodeFEN(String fenString){
+        String[] str = fenString.split(" ");
+
+        //str[0] what's the position
+        char[] chars = str[0].toCharArray();
+        int rank = 0;
+        int file = 0;
+        for (Character character:chars) {
+            if (character.equals('/')) {
+                rank += 1;
+                file = 0;
+            } else if (isDigit(character)) {
+                for (int i = 0; i < Character.getNumericValue(character); i++) {
+                    file += 1;
+                }
+
+            } else {
+                boolean isWhite = Character.isUpperCase(character);
+                PieceType pieceType = PieceType.getPieceType(character.toString().toLowerCase());
+                Piece piece = new Piece(isWhite,pieceType);
+                piece.setPosition(new Position(file,rank));
+                boardSquares.addPiece(new Position(file,rank),piece);
+                if (isWhite){
+                    whitePieces.add(piece);
+                }
+                else {
+                    blackPieces.add(piece);
+                }
+                file += 1;
+            }
+        }
+
+        this.fen = new FEN(createFirstFENPosition());
+
+        //str[1] whose turn
+        whitesTurn = Objects.equals(str[1], "w");
+
+        //str[2] is castling
+        chars = str[2].toCharArray();
+        whiteCastling = new boolean[]{false, false};
+        blackCastling = new boolean[]{false, false};
+        for (char character: chars) {
+            switch (character) {
+                case 'K':
+                    whiteCastling[0] = true;
+                    break;
+                case 'Q':
+                    whiteCastling[1] = true;
+                    break;
+                case 'k':
+                    blackCastling[0] = true;
+                    break;
+                case 'q':
+                    blackCastling[1] = true;
+                    break;
+                default:
+                    break;
+            }
+        }
+        // str[3] is en Passant
+        this.fen.setEnPassantPieceString(str[3]);
+
+        // str[4] is halfmove
+        this.fen.setHalfmove(Integer.parseInt(str[4]));
+
+        // str[5] is fullmove
+        this.fen.setFullmove(Integer.parseInt(str[5]));
+
     }
 
     /**
@@ -34,29 +118,26 @@ public class Board {
      * @param pieces
      * @param isWhite
      */
-    private void createPieces(Piece[] pieces, boolean isWhite) {
+    private void createPieces(ArrayList<Piece> pieces, boolean isWhite) {
         int rank = isWhite ? 6 : 1;
         for(int i = 0; i < 8; i++){
-            pieces[i] = new Piece(isWhite, PieceType.Pawn);
-            addPiece(new Position(i,rank), pieces[i]);
+            pieces.add(new Piece(isWhite, PieceType.Pawn));
+            addPiece(new Position(i,rank), pieces.get(i));
         }
 
         rank = isWhite ? 7 : 0;
 
-        for(int i = 8; i < 16; i += 7) {
-            pieces[i] = new Piece(isWhite, PieceType.Rook);
-        }
-        for(int i = 9; i < 16; i += 5) {
-            pieces[i] = new Piece(isWhite, PieceType.Knight);
-        }
-        for(int i = 10; i < 16; i += 3) {
-            pieces[i] = new Piece(isWhite, PieceType.Bishop);
-        }
-        pieces[11] = new Piece(isWhite, PieceType.Queen);
-        pieces[12] = new Piece(isWhite, PieceType.King);
+        pieces.add(new Piece(isWhite, PieceType.Rook));
+        pieces.add(new Piece(isWhite, PieceType.Knight));
+        pieces.add(new Piece(isWhite, PieceType.Bishop));
+        pieces.add(new Piece(isWhite, PieceType.Queen));
+        pieces.add(new Piece(isWhite, PieceType.King));
+        pieces.add(new Piece(isWhite, PieceType.Bishop));
+        pieces.add(new Piece(isWhite, PieceType.Knight));
+        pieces.add(new Piece(isWhite, PieceType.Rook));
 
         for(int i = 8; i < 16; i++) {
-            addPiece(new Position(i-8, rank), pieces[i]);
+            addPiece(new Position(i-8, rank), pieces.get(i));
         }
     }
 
@@ -116,18 +197,19 @@ public class Board {
         }
 
         disableEnPassant();
-
-        // check if a pawn double moved and do what is needed
-        if(piece.getPieceType() == PieceType.Pawn && abs(previousPosition.getRank() - newPosition.getRank()) == 2) {
-            fen.setEnPassantPiece(boardSquares.getPiece(new Position(previousPosition.getFile(),previousPosition.getRank())));
-            enableEnPassant(newPosition, piece.getIsWhite());
-        }
         this.removePiece(previousPosition);
         this.addPiece(newPosition,piece);
+        // check if a pawn double moved and do what is needed
+        if(piece.getPieceType() == PieceType.Pawn && abs(previousPosition.getRank() - newPosition.getRank()) == 2) {
+            fen.setEnPassantPiece(new Position(newPosition.getFile(),newPosition.getRank()));
+            enableEnPassant(newPosition, piece.getIsWhite());
+        }
+
         checkForPromotion(newPosition.getRank(), piece);
 
-        updateView(newPosition, previousPosition);
         nextTurn();
+        updateView(newPosition, previousPosition);
+
     }
 
     /**
@@ -167,10 +249,10 @@ public class Board {
                     this.removePiece(previousPosition);
                     this.removePiece(new Position(newPosition.getFile(), previousPosition.getRank()));
                     this.addPiece(newPosition, piece);
-
-                    updateView(newPosition, previousPosition);
                     nextTurn();
                     disableEnPassant();
+                    updateView(newPosition, previousPosition);
+
                     return true;
                 }
             }
@@ -235,7 +317,7 @@ public class Board {
     }
 
     public String getCompleteFEN() {
-        return fen.createCompleteFEN();
+        return fen.createCompleteFEN(whitesTurn, whiteCastling, blackCastling);
     }
 
     public Piece getPiece(Position position) {

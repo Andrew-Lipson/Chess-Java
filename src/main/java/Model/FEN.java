@@ -1,6 +1,5 @@
 package Model;
 
-
 import Model.pieces.Piece;
 
 import static java.util.Objects.isNull;
@@ -9,10 +8,7 @@ public class FEN {
 
     private String[] fenPosition = new String[8];
     private String[] fenBreaks = {"/","/","/","/","/","/","/"," ",};
-    private boolean whitesTurn = false;
-    private boolean[] whiteCastling = {true, true};
-    private boolean[] blackCastling = {true, true};
-    private Piece enPassantPiece = null;
+    private String enPassantPiece = "-";
     private int halfmove = 0;
     private int fullmove = 0;
     private String output;
@@ -53,10 +49,26 @@ public class FEN {
     /**
      * Set the En Passant Piece
      * 
-     * @param piece
+     * @param position
      */
-    public void setEnPassantPiece(Piece piece) {
-        this.enPassantPiece = piece;
+    public void setEnPassantPiece(Position position) {
+        if(isNull(position)){
+            this.enPassantPiece = "-";
+            return;
+        }
+        this.enPassantPiece = enPassantToString(position);
+    }
+
+    public void setHalfmove(int halfmove) {
+        this.halfmove = halfmove;
+    }
+
+    public void setFullmove(int fullmove) {
+        this.fullmove = fullmove;
+    }
+
+    public void setEnPassantPieceString(String coordinates) {
+        this.enPassantPiece = coordinates;
     }
 
     /**
@@ -64,8 +76,8 @@ public class FEN {
      * 
      * @return
      */
-    public String createCompleteFEN() {
-        updateFENTurns(false);
+    public String createCompleteFEN(boolean whitesTurn, boolean[] whiteCastling, boolean[] blackCastling) {
+        updateFENTurns( whitesTurn, false);
         output = "";
         for (int i =0;i< fenPosition.length;i++) {
             output += fenPosition[i];
@@ -79,9 +91,9 @@ public class FEN {
             output += "b ";
         }
 
-        castlingToString();
+        castlingToString(whiteCastling, blackCastling);
 
-        output += enPassantToString(enPassantPiece);
+        output += enPassantPiece;
 
 
         output += " " + halfmove + " " + fullmove;
@@ -94,8 +106,7 @@ public class FEN {
      * 
      * @param halfmoveUpdate
      */
-    private void updateFENTurns(boolean halfmoveUpdate) {
-        whitesTurn =! whitesTurn;
+    private void updateFENTurns(boolean whitesTurn ,boolean halfmoveUpdate) {
         if (whitesTurn){
             fullmove += 1;
         }
@@ -107,7 +118,7 @@ public class FEN {
     /**
      * Add the correct castling notation to the output FEN String
      */
-    private void castlingToString() {
+    private void castlingToString(boolean[] whiteCastling, boolean[] blackCastling) {
         if (!whiteCastling[0] && !whiteCastling[1] && !blackCastling[0] && !blackCastling[1]) {
             output += "-";
         }
@@ -130,19 +141,15 @@ public class FEN {
     /**
      * Returns the correct enPassant notation
      * 
-     * @param piece
+     * @param position
      * @return enPassant notation
      */
-    private String enPassantToString(Piece piece) {
+    private String enPassantToString(Position position) {
 
         String output = "";
 
-        if (isNull(piece)) {
-            output += "-";
-            return output;
-        }
 
-        switch (piece.getPosition().getFile()) {
+        switch (position.getFile()) {
             case 0:
                 output += "a";
                 break;
@@ -169,7 +176,7 @@ public class FEN {
                 break;
         }
 
-        output += 8 - (piece.getPosition().getRank());
+        output += 8 - (position.getRank());
 
         return output;
     }
