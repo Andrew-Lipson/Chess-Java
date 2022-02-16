@@ -21,6 +21,8 @@ public class Board {
     private final Observer _observer;
     private ArrayList<Piece> enPassantAvailablePieces = new ArrayList<Piece>();
     private FEN fen;
+    private int halfmove = 0;
+    private int fullmove = 1;
 
     public Board(Observer observer) {
         boardSquares = new BoardSquares();
@@ -38,8 +40,6 @@ public class Board {
         boardSquares = new BoardSquares();
         decodeFEN(fenString);
         this._observer = observer;
-        //this.fen = new FEN(createFirstFENPosition());
-        //whitesTurn = true;
     }
 
     private void decodeFEN(String fenString){
@@ -108,10 +108,10 @@ public class Board {
         enableEnPassant(new Position(enPassantFile-97,9-Character.getNumericValue(chars[1])), false);
 
         // str[4] is halfmove
-        this.fen.setHalfmove(Integer.parseInt(str[4]));
+        this.halfmove = Integer.parseInt(str[4]);
 
         // str[5] is fullmove
-        this.fen.setFullmove(Integer.parseInt(str[5]));
+        this.fullmove = Integer.parseInt(str[5]);
 
     }
 
@@ -181,6 +181,7 @@ public class Board {
      */
     private void nextTurn() {
         whitesTurn = !whitesTurn;
+        fullmove+=whitesTurn?1:0;
     }
 
     /**
@@ -298,7 +299,6 @@ public class Board {
      * @param previousPosition
      */
     public void updateView(Position newPosition, Position previousPosition) {
-        fen.updateFENTurns(whitesTurn, false);
         fen.updateFENPosition(boardSquares.getRankPiece(newPosition.getRank()), newPosition.getRank());
         if (previousPosition.getRank() != newPosition.getRank()){
             fen.updateFENPosition(boardSquares.getRankPiece(previousPosition.getRank()), previousPosition.getRank());
@@ -321,7 +321,7 @@ public class Board {
     }
 
     public String getCompleteFEN() {
-        return fen.createCompleteFEN(whitesTurn, whiteCastling, blackCastling);
+        return fen.createCompleteFEN(whitesTurn, whiteCastling, blackCastling, halfmove, fullmove);
     }
 
     public Piece getPiece(Position position) {

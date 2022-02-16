@@ -9,9 +9,7 @@ public class FEN {
     private String[] fenPosition = new String[8];
     private String[] fenBreaks = {"/","/","/","/","/","/","/"," ",};
     private String enPassantPiece = "-";
-    private int halfmove = 0;
-    private int fullmove = 1;
-    private String output;
+
 
     public FEN(Piece[][] piece2DArray) {
         for (int rank = 0; rank < 8; rank++) {
@@ -59,14 +57,6 @@ public class FEN {
         this.enPassantPiece = enPassantToString(position);
     }
 
-    public void setHalfmove(int halfmove) {
-        this.halfmove = halfmove;
-    }
-
-    public void setFullmove(int fullmove) {
-        this.fullmove = fullmove;
-    }
-
     public void setEnPassantPieceString(String coordinates) {
         this.enPassantPiece = coordinates;
     }
@@ -76,8 +66,8 @@ public class FEN {
      * 
      * @return
      */
-    public String createCompleteFEN(boolean whitesTurn, boolean[] whiteCastling, boolean[] blackCastling) {
-        output = "";
+    public String createCompleteFEN(boolean whitesTurn, boolean[] whiteCastling, boolean[] blackCastling, int halfmove, int fullmove) {
+        String output = "";
         for (int i =0;i< fenPosition.length;i++) {
             output += fenPosition[i];
             output += fenBreaks[i];
@@ -90,7 +80,7 @@ public class FEN {
             output += "b ";
         }
 
-        castlingToString(whiteCastling, blackCastling);
+        output += castlingToString(whiteCastling, blackCastling);
 
         output += enPassantPiece;
 
@@ -100,24 +90,12 @@ public class FEN {
         return output;
     }
 
-    /**
-     * Update the fullmove if it's back to white. Update the halfmove if required
-     * 
-     * @param halfmoveUpdate
-     */
-    public void updateFENTurns(boolean whitesTurn ,boolean halfmoveUpdate) {
-        if (whitesTurn){
-            fullmove += 1;
-        }
-        if(halfmoveUpdate) {
-            halfmove += 1;
-        }
-    }
 
     /**
      * Add the correct castling notation to the output FEN String
      */
-    private void castlingToString(boolean[] whiteCastling, boolean[] blackCastling) {
+    private String castlingToString(boolean[] whiteCastling, boolean[] blackCastling) {
+        String output = "";
         if (!whiteCastling[0] && !whiteCastling[1] && !blackCastling[0] && !blackCastling[1]) {
             output += "-";
         }
@@ -135,6 +113,7 @@ public class FEN {
         }
 
         output += " ";
+        return output;
     }
 
     /**
@@ -147,33 +126,9 @@ public class FEN {
 
         String output = "";
 
-
-        switch (position.getFile()) {
-            case 0:
-                output += "a";
-                break;
-            case 1:
-                output += "b";
-                break;
-            case 2:
-                output += "c";
-                break;
-            case 3:
-                output += "d";
-                break;
-            case 4:
-                output += "e";
-                break;
-            case 5:
-                output += "f";
-                break;
-            case 6:
-                output += "g";
-                break;
-            case 7:
-                output += "h";
-                break;
-        }
+        int asciiValue = 97 + position.getFile();
+        char convertedChar = (char) asciiValue;
+        output += convertedChar;
 
         output += 8 - (position.getRank());
 
