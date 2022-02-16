@@ -103,9 +103,11 @@ public class Board {
         }
         // str[3] is en Passant
         this.fen.setEnPassantPieceString(str[3]);
-        chars = str[3].toCharArray();
-        int enPassantFile = chars[0];
-        enableEnPassant(new Position(enPassantFile-97,9-Character.getNumericValue(chars[1])), false);
+        if(!Objects.equals(str[3], "-")){
+            chars = str[3].toCharArray();
+            int enPassantFile = chars[0];
+            enableEnPassant(new Position(enPassantFile-97,9-Character.getNumericValue(chars[1])), false);
+        }
 
         // str[4] is halfmove
         this.halfmove = Integer.parseInt(str[4]);
