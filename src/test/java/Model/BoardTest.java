@@ -5,16 +5,12 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.ValueSource;
 
-import javax.management.ConstructorParameters;
-
-import static org.junit.jupiter.api.Assertions.*;
-
 class BoardTest {
 
     @Test
     public void initialisingBoard(){
         // standard initialising
-        Board board = new Board(null);
+        Game board = new Game(null);
         Assertions.assertEquals("rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1",board.getCompleteFEN());
 
     }
@@ -30,7 +26,7 @@ class BoardTest {
             "r2q1rk1/pp2ppbp/2p2np1/6B1/3PP1b1/Q1P2N2/P4PPP/3RKB1R b K - 0 13"
     })
     public void testingInitialisingWithString(String fen){
-        Board board = new Board(null, fen);
+        Game board = Fen.convertFenToBoard (fen,null);
         Assertions.assertEquals(fen, board.getCompleteFEN());
     }
 
