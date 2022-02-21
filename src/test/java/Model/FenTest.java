@@ -28,7 +28,7 @@ class FenTest {
             "8/8/2P5/4B3/1Q6/4K3/6P1/3k4 w - - 5 67",
             "r2q1rk1/pp2ppbp/2p2np1/6B1/3PP1b1/Q1P2N2/P4PPP/3RKB1R b K d3 0 13"
     })
-    public void testingInitialisingWithString(String fen){
+    public void convertFenToBoardTest1(String fen){
         Game board = Fen.convertFenToBoard (fen,null);
         Assertions.assertEquals(fen, board.getCompleteFEN());
     }
@@ -46,7 +46,7 @@ class FenTest {
             "r2q1rk1/pp2ppbp/2p2np1/6B1/3PP1b1/Q1P2N2/P4PPP/3RKB1R h K d3 0 13", //not white or black's move
             "rnbQkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBqKBNR w KQkq - 0 1" //Black in check even though White's turn
     })
-    public void testingInitialisingWithString2(String fen){
+    public void convertFenToBoardTest2(String fen){
         Game board = Fen.convertFenToBoard (fen,null);
         Assertions.assertNull(board);
     }
@@ -55,112 +55,112 @@ class FenTest {
 
     @Test
     @DisplayName("Opening Board Position")
-    public void creatingCorrectFenTest1(){
+    public void convertBoardToFenTest1(){
         Game board = new Game(null, CreateBoard.firstPosition(), null, null, new boolean[]{true, true}, new boolean[]{true, true}, true, null, 0, 1 );
         Assertions.assertEquals("rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1",board.getCompleteFEN());
     }
 
     @Test
     @DisplayName("rnbqkbnr/1ppppppp/8/p7/8/8/PPPPPPPP/RNBQKBNR, b, KQq, a6")
-    public void creatingCorrectFenTest2() {
+    public void convertBoardToFenTest2() {
         Game board = new Game(null, CreateBoard.secondPosition(), null, null, new boolean[]{true, true}, new boolean[]{false, true}, false, new Position(0,2), 5, 10);
         Assertions.assertEquals("rnbqkbnr/1ppppppp/8/p7/8/8/PPPPPPPP/RNBQKBNR b KQq a6 5 10", board.getCompleteFEN());
     }
 
     @Test
     @DisplayName("rnbqkbnr/1ppppppp/8/p7/1P6/8/P1PPPPPP/RNBQKBNR, w, KQk, b3")
-    public void creatingCorrectFenTest3() {
+    public void convertBoardToFenTest3() {
         Game board = new Game(null, CreateBoard.thirdPosition(), null, null, new boolean[]{true, true}, new boolean[]{true, false}, true, new Position(1,5), 0, 1);
         Assertions.assertEquals("rnbqkbnr/1ppppppp/8/p7/1P6/8/P1PPPPPP/RNBQKBNR w KQk b3 0 1", board.getCompleteFEN());
     }
 
     @Test
     @DisplayName("rnbqkbnr/1p1ppppp/8/p1p5/1P6/8/P1PPPPPP/RNBQKBNR, b, Kkq, c6")
-    public void creatingCorrectFenTest4() {
+    public void convertBoardToFenTest4() {
         Game board = new Game(null, CreateBoard.fourthPosition(), null, null, new boolean[]{true, false}, new boolean[]{true, true}, false, new Position(2,2), 0, 1);
         Assertions.assertEquals("rnbqkbnr/1p1ppppp/8/p1p5/1P6/8/P1PPPPPP/RNBQKBNR b Kkq c6 0 1", board.getCompleteFEN());
     }
 
     @Test
     @DisplayName("rnbqkbnr/1p1ppppp/8/p1p5/1P1P4/8/P1P1PPPP/RNBQKBNR, w, KQ, d3")
-    public void creatingCorrectFenTest5() {
+    public void convertBoardToFenTest5() {
         Game board = new Game(null, CreateBoard.fifthPosition(), null, null, new boolean[]{true, true}, new boolean[]{false, false}, true, new Position(3,5), 0, 1);
         Assertions.assertEquals("rnbqkbnr/1p1ppppp/8/p1p5/1P1P4/8/P1P1PPPP/RNBQKBNR w KQ d3 0 1", board.getCompleteFEN());
     }
 
     @Test
     @DisplayName("rnbqkbnr/1p1p1ppp/8/p1p1p3/1P1P4/8/P1P1PPPP/RNBQKBNR, b, Kk, e6")
-    public void creatingCorrectFenTest6(){
+    public void convertBoardToFenTest6(){
         Game board = new Game(null, CreateBoard.sixthPosition(), null, null, new boolean[]{true, false}, new boolean[]{true, false}, false, new Position(4,2), 0, 1 );
         Assertions.assertEquals("rnbqkbnr/1p1p1ppp/8/p1p1p3/1P1P4/8/P1P1PPPP/RNBQKBNR b Kk e6 0 1",board.getCompleteFEN());
     }
 
     @Test
     @DisplayName("rnbqkbnr/1p1p1ppp/8/p1p1p3/1P1P1P2/8/P1P1P1PP/RNBQKBNR, w, Kq, f3")
-    public void creatingCorrectFenTest7() {
+    public void convertBoardToFenTest7() {
         Game board = new Game(null, CreateBoard.seventhPosition(), null, null, new boolean[]{true, false}, new boolean[]{false, true}, true, new Position(5,5), 5, 10);
         Assertions.assertEquals("rnbqkbnr/1p1p1ppp/8/p1p1p3/1P1P1P2/8/P1P1P1PP/RNBQKBNR w Kq f3 5 10", board.getCompleteFEN());
     }
 
     @Test
     @DisplayName("rnbqkbnr/1p1p1p1p/8/p1p1p1p1/1P1P1P2/8/P1P1P1PP/RNBQKBNR, b, Qk, g6")
-    public void creatingCorrectFenTest8() {
+    public void convertBoardToFenTest8() {
         Game board = new Game(null, CreateBoard.eighthPosition(), null, null, new boolean[]{false, true}, new boolean[]{true, false}, false, new Position(6,2), 0, 1);
         Assertions.assertEquals("rnbqkbnr/1p1p1p1p/8/p1p1p1p1/1P1P1P2/8/P1P1P1PP/RNBQKBNR b Qk g6 0 1", board.getCompleteFEN());
     }
 
     @Test
     @DisplayName("rnbqkbnr/1p1p1p1p/8/p1p1p1p1/1P1P1P1P/8/P1P1P1P1/RNBQKBNR, w, Qkq, h3")
-    public void creatingCorrectFenTest9() {
+    public void convertBoardToFenTest9() {
         Game board = new Game(null, CreateBoard.ninthPosition(), null, null, new boolean[]{false, true}, new boolean[]{true, true}, true, new Position(7,5), 0, 1);
         Assertions.assertEquals("rnbqkbnr/1p1p1p1p/8/p1p1p1p1/1P1P1P1P/8/P1P1P1P1/RNBQKBNR w Qkq h3 0 1", board.getCompleteFEN());
     }
 
     @Test
     @DisplayName("No pieces, b, no castling")
-    public void creatingCorrectFenTest10() {
+    public void convertBoardToFenTest10() {
         Game board = new Game(null, CreateBoard.tenthPosition(), null, null, new boolean[]{false, false}, new boolean[]{false, false}, false, null, 0, 1);
         Assertions.assertEquals("8/8/8/8/8/8/8/8 b - - 0 1", board.getCompleteFEN());
     }
 
     @Test
     @DisplayName("r2q1rk1/pp2ppbp/2p2np1/6B1/3PP1b1/Q1P2N2/P4PPP/3RKB1R, w, K")
-    public void creatingCorrectFenTest11(){
+    public void convertBoardToFenTest11(){
         Game board = new Game(null, CreateBoard.eleventhPosition(), null, null, new boolean[]{true, false}, new boolean[]{false, false}, true, null, 0, 1 );
         Assertions.assertEquals("r2q1rk1/pp2ppbp/2p2np1/6B1/3PP1b1/Q1P2N2/P4PPP/3RKB1R w K - 0 1",board.getCompleteFEN());
     }
 
     @Test
     @DisplayName("Only Pawns, b, no Castling")
-    public void creatingCorrectFenTest12() {
+    public void convertBoardToFenTest12() {
         Game board = new Game(null, CreateBoard.twelfthPosition(), null, null, new boolean[]{false, false}, new boolean[]{false, false}, false, null, 5, 10);
         Assertions.assertEquals("pppppppp/pppppppp/pppppppp/pppppppp/PPPPPPPP/PPPPPPPP/PPPPPPPP/PPPPPPPP b - - 5 10", board.getCompleteFEN());
     }
 
     @Test
     @DisplayName("Only white Queens, w, no Castling")
-    public void creatingCorrectFenTest13() {
+    public void convertBoardToFenTest13() {
         Game board = new Game(null, CreateBoard.thirteenthPosition(), null, null, new boolean[]{false, false}, new boolean[]{false, false}, true, null, 0, 1);
         Assertions.assertEquals("QQQQQQQQ/QQQQQQQQ/QQQQQQQQ/QQQQQQQQ/QQQQQQQQ/QQQQQQQQ/QQQQQQQQ/QQQQQQQQ w - - 0 1", board.getCompleteFEN());
     }
 
     @Test
     @DisplayName("Only black Kings, b, no Castling")
-    public void creatingCorrectFenTest14() {
+    public void convertBoardToFenTest14() {
         Game board = new Game(null, CreateBoard.fourteenthPosition(), null, null, new boolean[]{false, false}, new boolean[]{false, false}, false, null, 0, 1);
         Assertions.assertEquals("kkkkkkkk/kkkkkkkk/kkkkkkkk/kkkkkkkk/kkkkkkkk/kkkkkkkk/kkkkkkkk/kkkkkkkk b - - 0 1", board.getCompleteFEN());
     }
 
     @Test
     @DisplayName("Opening Board Position, w, q")
-    public void creatingCorrectFenTest15() {
+    public void convertBoardToFenTest15() {
         Game board = new Game(null, CreateBoard.firstPosition(), null, null, new boolean[]{false, false}, new boolean[]{false, true}, true, null, 0, 1);
         Assertions.assertEquals("rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w q - 0 1", board.getCompleteFEN());
     }
 
     @Test
     @DisplayName("Opening Board Position, b, Q")
-    public void creatingCorrectFenTest16() {
+    public void convertBoardToFenTest16() {
         Game board = new Game(null, CreateBoard.firstPosition(), null, null, new boolean[]{false, true}, new boolean[]{false, false}, false, null, 0, 1);
         Assertions.assertEquals("rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR b Q - 0 1", board.getCompleteFEN());
     }
