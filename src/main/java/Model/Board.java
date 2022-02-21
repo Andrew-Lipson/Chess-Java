@@ -16,6 +16,10 @@ public class Board {
         }
     }
 
+    public Board(Piece[][] squares) {
+        this.squares = squares;
+    }
+
     /**
      * Return a Square from the specific File and Rank
      * 
@@ -23,7 +27,7 @@ public class Board {
      * @return the piece
      */
     public Piece getPiece(Position position) {
-        return squares[position.getFile()][position.getRank()];
+        return squares[position.getRank()][position.getFile()];
     }
 
     /**
@@ -45,10 +49,10 @@ public class Board {
      * @param position
      */
     public void removePiece(Position position) {
-        Piece piece = squares[position.getFile()][position.getRank()];
+        Piece piece = squares[position.getRank()][position.getFile()];
         if(!isNull(piece)) {
             piece.setPosition(null);
-            squares[position.getFile()][position.getRank()] = null;
+            squares[position.getRank()][position.getFile()] = null;
         }
 
     }
@@ -60,7 +64,7 @@ public class Board {
      * @param piece
      */
     public void addPiece(Position position, Piece piece) {
-        squares[position.getFile()][position.getRank()] = piece;
+        squares[position.getRank()][position.getFile()] = piece;
         piece.setPosition(position);
     }
 

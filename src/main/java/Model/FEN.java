@@ -4,11 +4,14 @@ import Model.Contract.Observer;
 import Model.pieces.Piece;
 import Model.pieces.PieceType;
 
+import java.lang.reflect.Array;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Objects;
 
 import static java.lang.Character.isDigit;
 import static java.util.Objects.isNull;
+import static java.util.Objects.nonNull;
 
 public class Fen {
 
@@ -42,6 +45,12 @@ public class Fen {
         return output;
     }
 
+    /**
+     *
+     * @param fenString
+     * @param observer
+     * @return null if game is impossible (Fen error, castling error, en passant error)
+     */
     public static Game convertFenToBoard(String fenString, Observer observer){
 
         final Board boardSquares = new Board();
@@ -50,12 +59,15 @@ public class Fen {
         boolean[] whiteCastling = {false, false};
         boolean[] blackCastling = {false, false};
         boolean whitesTurn;
-        ArrayList<Piece> enPassantAvailablePieces = new ArrayList<Piece>();
         Position enPassantPosition;
         int halfmove;
         int fullmove;
 
         String[] str = fenString.split(" ");
+        if (str.length!=6){
+            return null;
+        }
+
 
         //str[0] what's the position
         char[] chars = str[0].toCharArray();
@@ -63,6 +75,9 @@ public class Fen {
         int file = 0;
         for (Character character:chars) {
             if (character.equals('/')) {
+                if(file!=8){
+                    return null;
+                }
                 rank += 1;
                 file = 0;
             } else if (isDigit(character)) {
@@ -72,7 +87,11 @@ public class Fen {
 
             } else {
                 boolean isWhite = Character.isUpperCase(character);
-                PieceType pieceType = PieceType.getPieceType(character.toString().toLowerCase());
+                String lowerCase = character.toString().toLowerCase();
+                if (!Arrays.asList(new String[]{"k","q","r","n","b","p"}).contains(lowerCase)){
+                    return null;
+                }
+                PieceType pieceType = PieceType.getPieceType(lowerCase);
                 Piece piece = new Piece(isWhite,pieceType);
                 piece.setPosition(new Position(file,rank));
                 boardSquares.addPiece(new Position(file,rank),piece);
@@ -85,8 +104,14 @@ public class Fen {
                 file += 1;
             }
         }
+        if(file != 8 || rank != 7){
+            return null;
+        }
 
         //str[1] whose turn
+        if (!Arrays.asList(new String[]{"w", "b"}).contains(str[1])){
+            return null;
+        }
         whitesTurn = Objects.equals(str[1], "w");
 
         //str[2] is castling
@@ -94,29 +119,52 @@ public class Fen {
         for (char character: chars) {
             switch (character) {
                 case 'K':
-                    whiteCastling[0] = true;
+                    if (checkCastlingIsPossible(boardSquares, new Position(4,7),new Position(7,7))){
+                        whiteCastling[0] = true;
+                    }
+                    else {
+                        return null;
+                    }
                     break;
                 case 'Q':
-                    whiteCastling[1] = true;
+                    if (checkCastlingIsPossible(boardSquares, new Position(4,7),new Position(0,7))){
+                        whiteCastling[1] = true;
+                    }
+                    else {
+                        return null;
+                    }
                     break;
                 case 'k':
-                    blackCastling[0] = true;
+                    if (checkCastlingIsPossible(boardSquares, new Position(4,0),new Position(7,0))){
+                        blackCastling[0] = true;
+                    }
+                    else {
+                        return null;
+                    }
                     break;
                 case 'q':
-                    blackCastling[1] = true;
+                    if (checkCastlingIsPossible(boardSquares, new Position(4,0),new Position(0,0))){
+                        blackCastling[1] = true;
+                    }
+                    else {
+                        return null;
+                    }
+                    break;
+                case '-':
                     break;
                 default:
-                    break;
+                    return null;
             }
         }
 
         // str[3] is en Passant
-        //this.fen.setEnPassantPieceString(str[3]);
-        //Position enPassantPosition;
         if(!Objects.equals(str[3], "-")){
             chars = str[3].toCharArray();
             int enPassantFile = chars[0];
             enPassantPosition = new Position(enPassantFile-97,8-Character.getNumericValue(chars[1]));
+            if (!checkEnPassantIsPossible(boardSquares,enPassantPosition)){
+                return null;
+            }
         }
         else {
             enPassantPosition = null;
@@ -124,9 +172,15 @@ public class Fen {
 
         // str[4] is halfmove
         halfmove = Integer.parseInt(str[4]);
+        if (halfmove<0){
+            return null;
+        }
 
         // str[5] is fullmove
         fullmove = Integer.parseInt(str[5]);
+        if (fullmove<1){
+            return null;
+        }
 
         return new Game(observer, boardSquares, whitePieces, blackPieces, whiteCastling, blackCastling, whitesTurn, enPassantPosition, halfmove, fullmove);
     }
@@ -205,5 +259,36 @@ public class Fen {
         output += 8 - (position.getRank());
 
         return output;
+    }
+
+    private static boolean checkCastlingIsPossible(Board board, Position kingPosition, Position rookPosition){
+        Piece kingPiece = board.getPiece(kingPosition);
+        Piece rookPiece = board.getPiece(rookPosition);
+        if (isNull(rookPiece)||isNull(kingPiece)){
+            return false;
+        }
+        return (kingPiece.getPieceType() == PieceType.King && rookPiece.getPieceType() == PieceType.Rook);
+    }
+
+    private static boolean checkEnPassantIsPossible(Board board, Position enPassantPosition){
+        if (!Arrays.asList(new Integer[]{2,5}).contains(enPassantPosition.getRank())){
+            return false;
+        }
+        if(nonNull(board.getPiece(enPassantPosition))){
+            return false;
+        }
+        if (enPassantPosition.getRank()==2){
+            Piece piece = board.getPiece(new Position(enPassantPosition.getFile(),3));
+            if (isNull(piece) || piece.getPieceType() != PieceType.Pawn || piece.getIsWhite()){
+                return false;
+            }
+        }
+        else {
+            Piece piece = board.getPiece(new Position(enPassantPosition.getFile(),4));
+            if (isNull(piece) || piece.getPieceType() != PieceType.Pawn || !piece.getIsWhite()){
+                return false;
+            }
+        }
+        return true;
     }
 }
