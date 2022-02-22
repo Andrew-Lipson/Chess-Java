@@ -14,12 +14,12 @@ public final class Moves {
      * Choosing the correct function to call
      * 
      * @param position
-     * @param isWhite
      * @param board
-     * @param pieceType
      * @return list of possible moves
      */
-    public static ArrayList<Position> chooseMove(Position position, boolean isWhite, Game board, PieceType pieceType) {
+    public static ArrayList<Position> chooseMove(Position position, Game board) {
+        PieceType pieceType = board.getPiece(position).getPieceType();
+        boolean isWhite = board.getPiece(position).getIsWhite();
         switch (pieceType) {
             case Bishop:
                 return diagonal(position,board, isWhite);
@@ -34,6 +34,7 @@ public final class Moves {
             case Pawn:
                 return pawn(position,board, isWhite);
         }
+
 
         return new ArrayList<Position>();
     }

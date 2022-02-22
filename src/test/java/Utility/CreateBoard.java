@@ -1,13 +1,16 @@
 package Utility;
 
 import Model.Board;
+import Model.Position;
 import Model.pieces.Piece;
 import Model.pieces.PieceType;
+
+import static java.util.Objects.nonNull;
 
 public class CreateBoard {
 
     public static Board firstPosition() {
-        return new Board(new Piece[][]{
+        return makeBoard(new Piece[][]{
                 {black("r"), black("n"), black("b"), black("q"), black("k"), black("b"), black("n"), black("r")},
                 {black("p"), black("p"), black("p"), black("p"), black("p"), black("p"), black("p"), black("p")},
                 {null, null, null, null, null, null, null, null},
@@ -20,7 +23,7 @@ public class CreateBoard {
     }
 
     public static Board secondPosition() {
-        return new Board(new Piece[][]{
+        return makeBoard(new Piece[][]{
                 {black("r"), black("n"), black("b"), black("q"), black("k"), black("b"), black("n"), black("r")},
                 {null, black("p"), black("p"), black("p"), black("p"), black("p"), black("p"), black("p")},
                 {null, null, null, null, null, null, null, null},
@@ -33,7 +36,7 @@ public class CreateBoard {
     }
 
     public static Board thirdPosition() {
-        return new Board(new Piece[][]{
+        return makeBoard(new Piece[][]{
                 {black("r"), black("n"), black("b"), black("q"), black("k"), black("b"), black("n"), black("r")},
                 {null, black("p"), black("p"), black("p"), black("p"), black("p"), black("p"), black("p")},
                 {null, null, null, null, null, null, null, null},
@@ -46,7 +49,7 @@ public class CreateBoard {
     }
 
     public static Board fourthPosition() {
-        return new Board(new Piece[][]{
+        return makeBoard(new Piece[][]{
                 {black("r"), black("n"), black("b"), black("q"), black("k"), black("b"), black("n"), black("r")},
                 {null, black("p"), null, black("p"), black("p"), black("p"), black("p"), black("p")},
                 {null, null, null, null, null, null, null, null},
@@ -59,7 +62,7 @@ public class CreateBoard {
     }
 
     public static Board fifthPosition() {
-        return new Board(new Piece[][]{
+        return makeBoard(new Piece[][]{
                 {black("r"), black("n"), black("b"), black("q"), black("k"), black("b"), black("n"), black("r")},
                 {null, black("p"), null, black("p"), black("p"), black("p"), black("p"), black("p")},
                 {null, null, null, null, null, null, null, null},
@@ -72,7 +75,7 @@ public class CreateBoard {
     }
 
     public static Board sixthPosition() {
-        return new Board(new Piece[][]{
+        return makeBoard(new Piece[][]{
                 {black("r"), black("n"), black("b"), black("q"), black("k"), black("b"), black("n"), black("r")},
                 {null, black("p"), null, black("p"), null, black("p"), black("p"), black("p")},
                 {null, null, null, null, null, null, null, null},
@@ -85,7 +88,7 @@ public class CreateBoard {
     }
 
     public static Board seventhPosition() {
-        return new Board(new Piece[][]{
+        return makeBoard(new Piece[][]{
                 {black("r"), black("n"), black("b"), black("q"), black("k"), black("b"), black("n"), black("r")},
                 {null, black("p"), null, black("p"), null, black("p"), black("p"), black("p")},
                 {null, null, null, null, null, null, null, null},
@@ -98,7 +101,7 @@ public class CreateBoard {
     }
 
     public static Board eighthPosition() {
-        return new Board(new Piece[][]{
+        return makeBoard(new Piece[][]{
                 {black("r"), black("n"), black("b"), black("q"), black("k"), black("b"), black("n"), black("r")},
                 {null, black("p"), null, black("p"), null, black("p"), null, black("p")},
                 {null, null, null, null, null, null, null, null},
@@ -111,7 +114,7 @@ public class CreateBoard {
     }
 
     public static Board ninthPosition() {
-        return new Board(new Piece[][]{
+        return makeBoard(new Piece[][]{
                 {black("r"), black("n"), black("b"), black("q"), black("k"), black("b"), black("n"), black("r")},
                 {null, black("p"), null, black("p"), null, black("p"), null, black("p")},
                 {null, null, null, null, null, null, null, null},
@@ -124,7 +127,7 @@ public class CreateBoard {
     }
 
     public static Board tenthPosition() {
-        return new Board(new Piece[][]{
+        return makeBoard(new Piece[][]{
                 {null, null, null, null, null, null, null, null},
                 {null, null, null, null, null, null, null, null},
                 {null, null, null, null, null, null, null, null},
@@ -137,7 +140,7 @@ public class CreateBoard {
     }
 
     public static Board eleventhPosition() {
-        return new Board(new Piece[][]{
+        return makeBoard(new Piece[][]{
                 {black("r"), null, null, black("q"), null, black("r"), black("k"), null},
                 {black("p"), black("p"), null, null, black("p"), black("p"), black("b"), black("p")},
                 {null, null, black("p"), null, null, black("n"), black("p"), null},
@@ -150,7 +153,7 @@ public class CreateBoard {
     }
 
     public static Board twelfthPosition() {
-        return new Board(new Piece[][]{
+        return makeBoard(new Piece[][]{
                 {black("p"), black("p"), black("p"), black("p"), black("p"), black("p"), black("p"), black("p")},
                 {black("p"), black("p"), black("p"), black("p"), black("p"), black("p"), black("p"), black("p")},
                 {black("p"), black("p"), black("p"), black("p"), black("p"), black("p"), black("p"), black("p")},
@@ -163,7 +166,7 @@ public class CreateBoard {
     }
 
     public static Board thirteenthPosition() {
-        return new Board(new Piece[][]{
+        return makeBoard(new Piece[][]{
                 {white("q"), white("q"), white("q"), white("q"), white("q"), white("q"), white("q"), white("q")},
                 {white("q"), white("q"), white("q"), white("q"), white("q"), white("q"), white("q"), white("q")},
                 {white("q"), white("q"), white("q"), white("q"), white("q"), white("q"), white("q"), white("q")},
@@ -176,7 +179,7 @@ public class CreateBoard {
     }
 
     public static Board fourteenthPosition() {
-        return new Board(new Piece[][]{
+        return makeBoard(new Piece[][]{
                 {black("k"), black("k"), black("k"), black("k"), black("k"), black("k"), black("k"), black("k")},
                 {black("k"), black("k"), black("k"), black("k"), black("k"), black("k"), black("k"), black("k")},
                 {black("k"), black("k"), black("k"), black("k"), black("k"), black("k"), black("k"), black("k")},
@@ -187,6 +190,19 @@ public class CreateBoard {
                 {black("k"), black("k"), black("k"), black("k"), black("k"), black("k"), black("k"), black("k")}
         });
     }
+
+    static Board makeBoard(Piece[][] piecePositions){
+        Board board = new Board();
+        for (int rank = 0; rank < 8; rank++) {
+            for (int file = 0; file < 8; file++) {
+                if (nonNull( piecePositions[rank][file])){
+                    board.addPiece(new Position(file,rank),piecePositions[rank][file]);
+                }
+            }
+        }
+        return board;
+    }
+
 
     static Piece white(String fenRep) {
         return new Piece(true, PieceType.getPieceType(fenRep));

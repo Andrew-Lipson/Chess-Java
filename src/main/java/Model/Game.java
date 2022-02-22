@@ -7,7 +7,6 @@ import java.util.ArrayList;
 import java.util.Objects;
 
 import static java.lang.Math.abs;
-import static java.util.Objects.isNull;
 import static java.util.Objects.nonNull;
 
 public class Game {
@@ -49,7 +48,9 @@ public class Game {
         this.halfmove = halfmove;
         this.fullmove = fullmove;
         if (nonNull(enPassantPosition)) {
-            enableEnPassant(enPassantPosition, !whitesTurn);
+            int rank = enPassantPosition.getRank() + (whitesTurn?1:-1);
+            Position position = new Position(enPassantPosition.getFile(),rank);
+            enableEnPassant(position, !whitesTurn);
         }
     }
 
@@ -168,7 +169,7 @@ public class Game {
             tempFile = position.getFile() + iFile;
             if (tempFile >= 0 && tempFile < 8){
                 Piece piece = boardSquares.getPiece(new Position(tempFile,position.getRank()));
-                if(!isNull(piece) && piece.getPieceType() == PieceType.Pawn && piece.getIsWhite() != isWhite){
+                if(nonNull(piece) && piece.getPieceType() == PieceType.Pawn && piece.getIsWhite() != isWhite){
                     piece.setEnPassantAvailableToTakeFile(position.getFile());
                     enPassantAvailablePieces.add(piece);
                 }
@@ -248,11 +249,10 @@ public class Game {
      * @param position
      * @param isWhite
      * @param board
-     * @param pieceType
      * @return list of possible moves
      */
-    public ArrayList<Position> chooseMove(Position position, boolean isWhite, Game board, PieceType pieceType) {
-        return Moves.chooseMove(position, isWhite, board, pieceType);
+    public ArrayList<Position> chooseMove(Position position, boolean isWhite, Game board) {
+        return Moves.chooseMove(position, board);
     }
 
     public String getCompleteFEN() {

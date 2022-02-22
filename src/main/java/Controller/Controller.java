@@ -10,6 +10,7 @@ import View.PositionView;
 import View.Contract.Listener;
 
 import java.util.ArrayList;
+import java.util.Objects;
 
 import static java.util.Objects.nonNull;
 
@@ -52,7 +53,7 @@ public class Controller implements Listener, Observer {
     public void onPieceClicked(PositionView positionView) {
         // Check if the piece clicked was just clicked, and remove the possible moves from the board
         Position position = new Position(positionView.getFile(), positionView.getRank());
-        if (clickedPiece == board.getPiece(position)) {
+        if (nonNull(clickedPiece) && clickedPiece.getPosition().getFile() == position.getFile() && clickedPiece.getPosition().getRank() == position.getRank()) {
             mainview.removeMoveOptionsCircles();
             this.clickedPiece = null;
         } else {
@@ -65,7 +66,7 @@ public class Controller implements Listener, Observer {
             boolean isWhite = this.clickedPiece.getIsWhite();
             if (board.getWhitesTurn() == isWhite) {
                 PieceType pieceType = board.getPiece(position).getPieceType();
-                ArrayList<Position> moves = board.chooseMove(position, isWhite, board, pieceType);
+                ArrayList<Position> moves = board.chooseMove(position, isWhite, board);
                 mainview.addMoveOptionsCircles(convertMovesFromPositiontoPositionView(moves));
             }
         }

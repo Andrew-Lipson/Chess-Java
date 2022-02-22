@@ -16,9 +16,6 @@ public class Board {
         }
     }
 
-    public Board(Piece[][] squares) {
-        this.squares = squares;
-    }
 
     /**
      * Return a Square from the specific File and Rank
