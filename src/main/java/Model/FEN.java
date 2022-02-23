@@ -182,7 +182,9 @@ public class Fen {
             return null;
         }
 
-        return new Game(observer, boardSquares, whitePieces, blackPieces, whiteCastling, blackCastling, whitesTurn, enPassantPosition, halfmove, fullmove);
+        Game game = new Game(observer, boardSquares, whitePieces, blackPieces, whiteCastling, blackCastling, whitesTurn, enPassantPosition, halfmove, fullmove);
+        return game.checkForCheck()?null:game;
+
     }
 
     /**

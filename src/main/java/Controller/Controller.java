@@ -10,7 +10,6 @@ import View.PositionView;
 import View.Contract.Listener;
 
 import java.util.ArrayList;
-import java.util.Objects;
 
 import static java.util.Objects.nonNull;
 
@@ -66,7 +65,7 @@ public class Controller implements Listener, Observer {
             boolean isWhite = this.clickedPiece.getIsWhite();
             if (board.getWhitesTurn() == isWhite) {
                 PieceType pieceType = board.getPiece(position).getPieceType();
-                ArrayList<Position> moves = board.chooseMove(position, isWhite, board);
+                ArrayList<Position> moves = board.chooseMove(position, board);
                 mainview.addMoveOptionsCircles(convertMovesFromPositiontoPositionView(moves));
             }
         }

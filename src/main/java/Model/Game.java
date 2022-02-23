@@ -11,7 +11,8 @@ import static java.util.Objects.nonNull;
 
 public class Game {
 
-    private final Board boardSquares;
+    private final Board board;
+    private Board tempBoard;
     private ArrayList<Piece> whitePieces = new ArrayList<Piece>();
     private ArrayList<Piece> blackPieces = new ArrayList<Piece>();
     private boolean[] whiteCastling;
@@ -24,7 +25,7 @@ public class Game {
     private int fullmove;
 
     public Game(Observer observer) {
-        boardSquares = new Board();
+        board = new Board();
         createPieces(whitePieces, true);
         createPieces(blackPieces, false);
         whiteCastling = new boolean[]{true, true};
@@ -38,7 +39,7 @@ public class Game {
 
     public Game(Observer observer, Board boardSquares, ArrayList<Piece> whitePieces, ArrayList<Piece> blackPieces, boolean[] whiteCastling, boolean[] blackCastling, boolean whitesTurn, Position enPassantPosition, int halfmove, int fullmove){
         this._observer = observer;
-        this.boardSquares = boardSquares;
+        this.board = boardSquares;
         this.whitePieces = whitePieces;
         this.blackPieces = blackPieces;
         this.whiteCastling = whiteCastling;
@@ -92,7 +93,7 @@ public class Game {
     private Piece[][] exportBoardPositionForFEN() {
         Piece[][] piece2DArray = new Piece[8][8];
         for (int rank = 0; rank < 8; rank++) {
-            piece2DArray[rank] = boardSquares.getRankPiece(rank);
+            piece2DArray[rank] = board.getRankPiece(rank);
         }
         return piece2DArray;
     }
@@ -104,16 +105,31 @@ public class Game {
      * @param piece
      */
     private void addPiece(Position position, Piece piece) {
-        boardSquares.addPiece(position, piece);
+        board.addPiece(position, piece);
     }
 
     /**
-     * remove the piece on the specific position
-     * 
-     * @param position
+     *
+     * @param previousPosition
+     * @param newPosition
+     * @param enPassant
      */
-    private void removePiece(Position position) {
-        boardSquares.removePiece(position);
+    private void movePieceOnBoard(Position previousPosition, Position newPosition, Position enPassant) {
+        Piece removedPiece = board.getPiece(newPosition);
+        Piece movedPiece = board.getPiece(previousPosition);
+        if (nonNull(removedPiece)){
+            getColouredPieces(removedPiece.getIsWhite()).remove(removedPiece);
+        }
+        board.removePiece(previousPosition);
+        board.addPiece(newPosition,movedPiece);
+        if(nonNull(enPassant)){
+            getColouredPieces(board.getPiece(enPassant).getIsWhite()).remove(board.getPiece(enPassant));
+            board.removePiece(enPassant);
+        }
+    }
+
+    private ArrayList<Piece> getColouredPieces(boolean isWhite){
+        return isWhite?whitePieces:blackPieces;
     }
 
     /**
@@ -132,26 +148,27 @@ public class Game {
      * @param newPosition
      */
     public void movePieces(Position previousPosition, Position newPosition) {
-        Piece piece = boardSquares.getPiece(previousPosition);
+        Piece piece = board.getPiece(previousPosition);
 
         // if en Passant occured, return as the checkForEnPassant function did everything necessary
-        if(checkForEnPassant(previousPosition, newPosition, piece)) {
-            return;
+        if(!checkForEnPassant(previousPosition, newPosition, piece)) {
+            disableEnPassant();
+            this.movePieceOnBoard(previousPosition, newPosition, null);
+            // check if a pawn double moved and do what is needed
+            if(piece.getPieceType() == PieceType.Pawn && abs(previousPosition.getRank() - newPosition.getRank()) == 2) {
+                this.enPassantPosition = new Position(newPosition.getFile(),(newPosition.getRank()+previousPosition.getRank())/2);
+                enableEnPassant(newPosition, piece.getIsWhite());
+            }
+
+            checkForPromotion(newPosition.getRank(), piece);
         }
 
-        disableEnPassant();
-        this.removePiece(previousPosition);
-        this.addPiece(newPosition,piece);
-        // check if a pawn double moved and do what is needed
-        if(piece.getPieceType() == PieceType.Pawn && abs(previousPosition.getRank() - newPosition.getRank()) == 2) {
-            this.enPassantPosition = new Position(newPosition.getFile(),(newPosition.getRank()+previousPosition.getRank())/2);
-            enableEnPassant(newPosition, piece.getIsWhite());
-        }
-
-        checkForPromotion(newPosition.getRank(), piece);
-
+        updateView();
+        checkForCheck();
         nextTurn();
-        updateView(newPosition, previousPosition);
+
+
+
 
     }
 
@@ -168,7 +185,7 @@ public class Game {
         for (int iFile = -1; iFile < 2; iFile+=2) {
             tempFile = position.getFile() + iFile;
             if (tempFile >= 0 && tempFile < 8){
-                Piece piece = boardSquares.getPiece(new Position(tempFile,position.getRank()));
+                Piece piece = board.getPiece(new Position(tempFile,position.getRank()));
                 if(nonNull(piece) && piece.getPieceType() == PieceType.Pawn && piece.getIsWhite() != isWhite){
                     piece.setEnPassantAvailableToTakeFile(position.getFile());
                     enPassantAvailablePieces.add(piece);
@@ -189,13 +206,8 @@ public class Game {
         if (piece.getPieceType() == PieceType.Pawn) {
             if(enPassantAvailablePieces.contains(piece)) {
                 if(Objects.equals(piece.getEnPassantAvailableToTakeFile(), newPosition.getFile())) {
-                    this.removePiece(previousPosition);
-                    this.removePiece(new Position(newPosition.getFile(), previousPosition.getRank()));
-                    this.addPiece(newPosition, piece);
-                    nextTurn();
+                    this.movePieceOnBoard(previousPosition, newPosition, new Position(newPosition.getFile(), previousPosition.getRank()));
                     disableEnPassant();
-                    updateView(newPosition, previousPosition);
-
                     return true;
                 }
             }
@@ -234,11 +246,9 @@ public class Game {
 
     /**
      * Update the FEN and then update the view
-     * 
-     * @param newPosition
-     * @param previousPosition
+     *
      */
-    public void updateView(Position newPosition, Position previousPosition) {
+    public void updateView() {
         _observer.update();
     }
 
@@ -247,23 +257,67 @@ public class Game {
      * Call chooseMove in Moves class
      * 
      * @param position
-     * @param isWhite
      * @param board
      * @return list of possible moves
      */
-    public ArrayList<Position> chooseMove(Position position, boolean isWhite, Game board) {
-        return Moves.chooseMove(position, board);
+    public ArrayList<Position> chooseMove(Position position, Game board) {
+        return Moves.chooseMove(position, board, true);
     }
+
+    public boolean checkForCheck() {
+        Piece kingPiece = !whitesTurn ? whitePieces.stream().filter(piece3 -> piece3.getPieceType() == PieceType.King).findFirst().orElse(null) : blackPieces.stream().filter(piece3 -> piece3.getPieceType() == PieceType.King).findFirst().orElse(null);
+        ArrayList<Piece> checkingPieces = !whitesTurn ? blackPieces : whitePieces;
+        setTempGame();
+        if (Moves.checkForCheck(kingPiece, checkingPieces, this, false)){
+            System.out.println("CHECK!!");
+            return true;
+        }
+        return false;
+
+    }
+
 
     public String getCompleteFEN() {
         return Fen.convertBoardToFen(exportBoardPositionForFEN(), whitesTurn, whiteCastling, blackCastling, enPassantPosition, halfmove, fullmove);
     }
 
     public Piece getPiece(Position position) {
-        return boardSquares.getPieceClone(position);
+        return board.getPieceClone(position);
+    }
+
+    public ArrayList<Piece> getCloneBlackPieces(){
+        ArrayList<Piece> cloneBlackPieces = new ArrayList<>();
+        for (Piece piece:blackPieces) {
+            cloneBlackPieces.add(new Piece(piece));
+        }
+        return cloneBlackPieces;
+    }
+
+    public ArrayList<Piece> getCloneWhitePieces(){
+        ArrayList<Piece> cloneWhitePieces = new ArrayList<>();
+        for (Piece piece:whitePieces) {
+            cloneWhitePieces.add(new Piece(piece));
+        }
+        return cloneWhitePieces;
     }
 
     public boolean getWhitesTurn() {
         return whitesTurn;
+    }
+
+
+
+
+    public void setTempGame(){
+        this.tempBoard = new Board(board);
+    }
+
+    public Board getTempBoard(){
+        setTempGame();
+        return tempBoard;
+    }
+
+    public Piece getPieceFromTempBoard(Position position){
+        return tempBoard.getPieceClone(position);
     }
 }
