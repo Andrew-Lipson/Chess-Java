@@ -19,7 +19,7 @@ import static java.lang.Character.isDigit;
 public class MainView {
 
     private final Stage stage;
-    private BoardSquaresView boardSquaresView;
+    private BoardView boardSquaresView;
     private final Group root = new Group();
     private String[] currentFEN;
     private ArrayList<SquareView> circlesActivated = new ArrayList<SquareView>();
@@ -39,7 +39,7 @@ public class MainView {
             fileNumbers(root,i);
         }
 
-        this.boardSquaresView = new BoardSquaresView(listener);
+        this.boardSquaresView = new BoardView(listener);
 
         for (int rank = 0; rank < 8; rank++) {
             for (int file = 0; file < 8; file++) {

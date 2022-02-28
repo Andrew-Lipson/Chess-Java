@@ -1,6 +1,6 @@
 package Controller;
 
-import Model.Board;
+import Model.Game;
 import Model.Position;
 import Model.Contract.Observer;
 import Model.pieces.Piece;
@@ -15,11 +15,11 @@ import static java.util.Objects.nonNull;
 
 public class Controller implements Listener, Observer {
 
-    Board board;
+    Game board;
     MainView mainview;
     Piece clickedPiece = null;
 
-    public void startApplication(Board board, MainView mainview) {
+    public void startApplication(Game board, MainView mainview) {
         this.board = board;
         this.mainview = mainview;
 

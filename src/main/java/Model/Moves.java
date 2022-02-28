@@ -19,7 +19,7 @@ public final class Moves {
      * @param pieceType
      * @return list of possible moves
      */
-    public static ArrayList<Position> chooseMove(Position position, boolean isWhite, Board board, PieceType pieceType) {
+    public static ArrayList<Position> chooseMove(Position position, boolean isWhite, Game board, PieceType pieceType) {
         switch (pieceType) {
             case Bishop:
                 return diagonal(position,board, isWhite);
@@ -47,7 +47,7 @@ public final class Moves {
      * @param possibleMoves
      * @return boolean indicating if there is a piece on the position
      */
-    private static boolean addPossibleMoveStraightAndDiagonal(Position position, Board board, boolean isWhite, ArrayList<Position> possibleMoves) {
+    private static boolean addPossibleMoveStraightAndDiagonal(Position position, Game board, boolean isWhite, ArrayList<Position> possibleMoves) {
         Piece piece = board.getPiece(position);
         // If no Piece on the Position, add possible move and return false
         if (isNull(piece)) {
@@ -73,7 +73,7 @@ public final class Moves {
      * @param isWhite
      * @param possibleMoves
      */
-    private static void addPossibleMoves(Position position, Board board, boolean isWhite, ArrayList<Position> possibleMoves) {
+    private static void addPossibleMoves(Position position, Game board, boolean isWhite, ArrayList<Position> possibleMoves) {
         Piece piece = board.getPiece(position);
         if(isNull(piece) || piece.getIsWhite() != isWhite){
             possibleMoves.add(position);
@@ -89,7 +89,7 @@ public final class Moves {
      * @param isWhite
      * @return all possible diagonal moves
      */
-    private static ArrayList<Position> diagonal(Position position, Board board, boolean isWhite) {
+    private static ArrayList<Position> diagonal(Position position, Game board, boolean isWhite) {
         ArrayList<Position> possibleMoves = new ArrayList<Position>();
         for (int iRank = -1; iRank < 2; iRank += 2) {
             for (int iFile = -1; iFile < 2; iFile += 2){
@@ -115,7 +115,7 @@ public final class Moves {
      * @param isWhite
      * @return all possible straight moves
      */
-    private static ArrayList<Position> straight(Position position, Board board, boolean isWhite) {
+    private static ArrayList<Position> straight(Position position, Game board, boolean isWhite) {
         ArrayList<Position> possibleMoves = new ArrayList<Position>();
         for (int i = -1; i < 2; i += 2) {
             int tempRank = position.getRank() + i;
@@ -144,7 +144,7 @@ public final class Moves {
      * @param isWhite
      * @return all possible digonal and straight moves
      */
-    private static ArrayList<Position> queen(Position position, Board board, boolean isWhite) {
+    private static ArrayList<Position> queen(Position position, Game board, boolean isWhite) {
         ArrayList<Position> possibleMoves = diagonal(position, board, isWhite);
         possibleMoves.addAll(straight(position, board, isWhite));
         return possibleMoves;
@@ -158,7 +158,7 @@ public final class Moves {
      * @param isWhite
      * @return all possible knight moves
      */
-    private static ArrayList<Position> knight(Position position, Board board, boolean isWhite) {
+    private static ArrayList<Position> knight(Position position, Game board, boolean isWhite) {
         ArrayList<Position> possibleMoves = new ArrayList<Position>();
         for (int iRank = -2; iRank < 3; iRank++) {
             for (int iFile = -2; iFile < 3; iFile++){
@@ -180,7 +180,7 @@ public final class Moves {
      * @param isWhite
      * @return all possible king moves
      */
-    private static ArrayList<Position> king(Position position, Board board, boolean isWhite) {
+    private static ArrayList<Position> king(Position position, Game board, boolean isWhite) {
         ArrayList<Position> possibleMoves = new ArrayList<Position>();
         for (int iRank = -1; iRank < 2; iRank++) {
             for (int iFile = -1; iFile < 2; iFile++) {
@@ -204,7 +204,7 @@ public final class Moves {
      * @param isWhite
      * @return all possible pawn moves
      */
-    private static ArrayList<Position> pawn(Position position, Board board, boolean isWhite) {
+    private static ArrayList<Position> pawn(Position position, Game board, boolean isWhite) {
         ArrayList<Position> possibleMoves = new ArrayList<Position>();
         int file = position.getFile();
         int rank = position.getRank();
