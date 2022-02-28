@@ -1,6 +1,6 @@
 package Model;
 
-import Model.pieces.Piece;
+import Model.Pieces.Piece;
 
 import static java.util.Objects.isNull;
 
@@ -12,14 +12,6 @@ public class Board {
         for (int rank = 0; rank < 8; rank++) {
             for (int file = 0; file < 8; file++) {
                 board[file][rank] = null;
-            }
-        }
-    }
-
-    public Board(Board originalBoard){
-        for (int rank = 0; rank < 8; rank++) {
-            for (int file = 0; file < 8; file++) {
-                board[rank][file] = originalBoard.getPieceClone(new Position(file,rank));
             }
         }
     }

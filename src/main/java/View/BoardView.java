@@ -1,12 +1,12 @@
 package View;
 
-import View.Contract.Listener;
+import Contract.Contract;
 
 public class BoardView {
 
     SquareView[][] squareView = new SquareView[8][8];
 
-    public BoardView(Listener listener) {
+    public BoardView(Contract.Listener listener) {
         for (int rank = 0; rank < 8; rank++) {
             for (int file = 0; file < 8; file++) {
                 squareView[file][rank] = new SquareView(file, rank, listener);

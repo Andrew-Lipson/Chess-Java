@@ -1,4 +1,4 @@
-package Model.pieces;
+package Model.Pieces;
 
 import Model.Position;
 

@@ -1,6 +1,7 @@
 package View;
 
 
+import Contract.Contract;
 import javafx.scene.Group;
 import javafx.scene.Scene;
 import javafx.scene.image.Image;
@@ -11,8 +12,6 @@ import javafx.stage.Stage;
 
 import java.io.IOException;
 import java.util.ArrayList;
-
-import View.Contract.Listener;
 
 import static java.lang.Character.isDigit;
 
@@ -31,7 +30,7 @@ public class MainView {
      * @param listener
      * @throws IOException
      */
-    public MainView(Stage stage, Listener listener) throws IOException {
+    public MainView(Stage stage, Contract.Listener listener) throws IOException {
         this.stage = stage;
 
         for (int i = 0; i < 8; i++) {

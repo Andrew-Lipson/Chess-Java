@@ -1,26 +1,24 @@
 package Controller;
 
+import Contract.Contract;
 import Model.Game;
 import Model.Position;
-import Model.Contract.Observer;
-import Model.pieces.Piece;
-import Model.pieces.PieceType;
+import Model.Pieces.Piece;
 import View.MainView;
 import View.PositionView;
-import View.Contract.Listener;
 
 import java.util.ArrayList;
 
 import static java.util.Objects.nonNull;
 
-public class Controller implements Listener, Observer {
+public class Controller implements Contract.Listener, Contract.Observer {
 
-    Game board;
+    Game game;
     MainView mainview;
     Piece clickedPiece = null;
 
-    public void startApplication(Game board, MainView mainview) {
-        this.board = board;
+    public void startApplication(Game game, MainView mainview) {
+        this.game = game;
         this.mainview = mainview;
 
         update();
@@ -45,11 +43,13 @@ public class Controller implements Listener, Observer {
         return movesForMainView;
     }
 
-    /**
-     * Once a piece is clicked and displays possible moves or removes the possibles moves
-     */
     @Override
-    public void onPieceClicked(PositionView positionView) {
+    public void update() {
+        mainview.updateView(game.getCompleteFEN());
+    }
+
+    @Override
+    public void handlePieceClicked(PositionView positionView) {
         // Check if the piece clicked was just clicked, and remove the possible moves from the board
         Position position = new Position(positionView.getFile(), positionView.getRank());
         if (nonNull(clickedPiece) && clickedPiece.getPosition().getFile() == position.getFile() && clickedPiece.getPosition().getRank() == position.getRank()) {
@@ -61,29 +61,20 @@ public class Controller implements Listener, Observer {
                 mainview.removeMoveOptionsCircles();
             }
             // Add the Clicked piece's possible moves
-            this.clickedPiece = board.getPiece(position);
+            this.clickedPiece = game.getPiece(position);
             boolean isWhite = this.clickedPiece.getIsWhite();
-            if (board.getWhitesTurn() == isWhite) {
-                PieceType pieceType = board.getPiece(position).getPieceType();
-                ArrayList<Position> moves = board.chooseMove(position, board);
+            if (game.getWhitesTurn() == isWhite) {
+                ArrayList<Position> moves = game.getLegalMoves(position);
                 mainview.addMoveOptionsCircles(convertMovesFromPositiontoPositionView(moves));
             }
         }
     }
 
-    /**
-     * Move the previously clicked piece to the clicked circle position and remove the
-     */
     @Override
-    public void onCircleClicked(PositionView position) {
-        Position newPosition = new Position(position.getFile(), position.getRank());
+    public void handleCircleClicked(PositionView positionView) {
+        Position newPosition = new Position(positionView.getFile(), positionView.getRank());
         Position previousPosition = clickedPiece.getPosition();
-        board.movePieces(previousPosition,newPosition);
+        game.moveAMove(previousPosition,newPosition);
         this.clickedPiece = null;
-    }
-
-    @Override
-    public void update() {
-        mainview.updateView(board.getCompleteFEN());
     }
 }

@@ -2,7 +2,7 @@ package Main;
 
 import Controller.Controller;
 import Model.Game;
-import Model.Fen;
+import Model.Utilities.Fen;
 import View.MainView;
 import javafx.application.Application;
 import javafx.stage.Stage;
@@ -14,12 +14,12 @@ import static java.util.Objects.isNull;
 public class Main extends Application {
 
     @Override
-    public void start(Stage stage) throws IOException, InterruptedException {
+    public void start(Stage stage) throws IOException {
 
         Controller controller = new Controller(); // Start up Controller
         MainView mainView = new MainView(stage, controller);// Start up View
-//        Game board = startGame(controller, "8/5q2/8/k6R/8/8/8/8 b - - 0 1"); // Start up Model
-        Game board = startGame(controller,null);
+        Game board = startGame(controller, "r3kQ1r/ppp1pp1p/8/1b6/3B4/2N5/PPP2P1P/R3Kn1R b KQkq - 2 7"); // Start up Model
+//        Game board = startGame(controller,null);
         controller.startApplication(board,mainView);
     }
 
@@ -27,7 +27,7 @@ public class Main extends Application {
         launch();
     }
 
-    private Game startGame(Controller controller, String fen){
+    private Game startGame(Controller controller, String fen) {
         if(isNull(fen)){
             return new Game(controller);
         }

@@ -2,8 +2,8 @@ package Utility;
 
 import Model.Board;
 import Model.Position;
-import Model.pieces.Piece;
-import Model.pieces.PieceType;
+import Model.Pieces.Piece;
+import Model.Pieces.PieceType;
 
 import static java.util.Objects.nonNull;
 
