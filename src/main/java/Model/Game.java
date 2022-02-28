@@ -87,18 +87,7 @@ public class Game {
         }
     }
 
-
-
-
-
-
-
-
-
-
-
-
-
+//region Make A Move
 
     /**
      * Move the piece from the previousPosition to the newPosition.
@@ -257,17 +246,9 @@ public class Game {
         }
     }
 
+//endregion
 
-
-
-
-
-
-
-
-
-
-
+//region Getting Possible Moves
 
     /**
      * Get all move (including illegal moves) from the piece on @param position using the Moves function "getAllMovesIncludingIllegalMoves"
@@ -329,19 +310,9 @@ public class Game {
         return tempBoard;
     }
 
-
-
-
-
-
-
-
-
-
-
-
-
-
+//endregion
+    
+//region Getters
 
     /**
      * @return Full Fen string
@@ -382,7 +353,6 @@ public class Game {
         return whitesTurn;
     }
 
-
-
+//endregion
 
 }
