@@ -9,7 +9,7 @@ import java.util.ArrayList;
 
 import static java.util.Objects.isNull;
 
-public class Check {
+public final class Check {
 
 
     /**

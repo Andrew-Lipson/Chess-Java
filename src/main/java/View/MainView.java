@@ -20,7 +20,6 @@ public class MainView {
     private final Stage stage;
     private BoardView boardSquaresView;
     private final Group root = new Group();
-    private String[] currentFEN;
     private ArrayList<SquareView> circlesActivated = new ArrayList<SquareView>();
 
     /**
@@ -107,15 +106,13 @@ public class MainView {
             if(character.equals('/')){
                 rank += 1;
                 file = 0;
-            }
-            else if(isDigit(character)) {
+            } else if(isDigit(character)) {
                 for(int i = 0; i < Character.getNumericValue(character); i++){
                     getSquareView(new PositionView(file,rank)).addPiece('x');
                     file += 1;
                 }
 
-            }
-            else{
+            } else{
                 getSquareView(new PositionView(file,rank)).addPiece(character);
                 file += 1;
             }

@@ -174,8 +174,7 @@ public final class Moves {
         if(isWhite){
             startingRank = 6;
             movementDirection = -1;
-        }
-        else{
+        } else{
             startingRank = 1;
             movementDirection = 1;
         }
@@ -230,14 +229,10 @@ public final class Moves {
         if (isNull(piece)) {
             possibleMoves.add(position);
             return false;
-        }
-        // If there is an opponent's Piece on the Position, add possible move and return true
-        else if (piece.getIsWhite() != isWhite) {
+        } else if (piece.getIsWhite() != isWhite) { // If there is an opponent's Piece on the Position, add possible move and return true
             possibleMoves.add(position);
             return true;
-        }
-        // If there is same colour piece on the Position, just return true
-        else {
+        } else { // If there is same colour piece on the Position, just return true
             return true;
         }
     }

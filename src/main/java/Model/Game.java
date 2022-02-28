@@ -107,12 +107,12 @@ public class Game {
      * @param previousPosition current position of the piece
      * @param newPosition where the piece will be moving to
      */
-    public void moveAMove(Position previousPosition, Position newPosition) {
-        if (isNull(getPiece(previousPosition)) || getPiece(previousPosition).getIsWhite()!=whitesTurn){
+    public void makeAMove(Position previousPosition, Position newPosition) {
+        if (isNull(getPiece(previousPosition)) || getPiece(previousPosition).getIsWhite() != whitesTurn){
             return;
         }
 
-        if (getLegalMoves(previousPosition).stream().noneMatch(position -> position.getFile()== newPosition.getFile() && position.getRank()== newPosition.getRank())){
+        if (getLegalMoves(previousPosition).stream().noneMatch(position -> position.getFile()== newPosition.getFile() && position.getRank()== newPosition.getRank())){ // making sure the newPosition is a legal move
             return;
         }
         this.movePieceOnBoard(previousPosition, newPosition);
@@ -132,7 +132,8 @@ public class Game {
 
     }
 
-    /** Remove the piece from the old position on the board, and add it to the new position.
+    /**
+     * Remove the piece from the old position on the board, and add it to the new position.
      * Remove any capture pieces from whitePieces or blackPieces even an en Passant.
      *
      *
@@ -145,16 +146,14 @@ public class Game {
         if (nonNull(capturedPiece)){
             getColouredPieces(capturedPiece.getIsWhite()).remove(capturedPiece);
             halfMove = 0;
-        }
-        else if(movedPiece.getPieceType()==PieceType.Pawn) {
-            if(newPosition.getFile()!= previousPosition.getFile()) {
+        } else if(movedPiece.getPieceType() == PieceType.Pawn) {
+            if(newPosition.getFile() != previousPosition.getFile()) {
                 Position enPassantPosition = new Position(newPosition.getFile(), previousPosition.getRank());
                 getColouredPieces(board.getPiece(enPassantPosition).getIsWhite()).remove(board.getPiece(enPassantPosition));
                 board.removePiece(enPassantPosition);
             }
             halfMove = 0;
-        }
-        else {
+        } else {
             halfMove += 1;
         }
 
@@ -163,7 +162,8 @@ public class Game {
 
     }
 
-    /** get the correct ArrayList of pieces
+    /**
+     * get the correct ArrayList of pieces
      *
      * @param isWhite white pieces or black pieces
      * @return whitePieces or blackPieces
@@ -193,7 +193,6 @@ public class Game {
      * @param newPosition new position of the pawn
      * @param isWhite if the pawn is white or black
      */
-    
     private void enableEnPassant(Position newPosition, boolean isWhite) {
         int tempFile;
         for (int iFile = -1; iFile < 2; iFile+=2) {
@@ -230,7 +229,6 @@ public class Game {
 
     /**
      * Call updateView function in the observer
-     *
      */
     private void updateView() {
         _observer.update();
@@ -253,8 +251,7 @@ public class Game {
         if (Check.isThereALegalMove(this, whitesTurn)){
             if (Check.isTheKingUnderAttack(this, whitesTurn)){
                 System.out.println("CHECKMATE BITCHES!!");
-            }
-            else {
+            } else {
                 System.out.println("STALEMATE??");
             }
         }
@@ -293,7 +290,8 @@ public class Game {
         return onlyLegalMoves;
     }
 
-    /** This should have all variables identicle, but changing the cloned Game should not change the real Game
+    /**
+     * This should have all variables identicle, but changing the cloned Game should not change the real Game
      *
      * @return a Game that has been deep cloned
      */
@@ -313,7 +311,8 @@ public class Game {
         return clonedPieces;
     }
 
-    /** Create a new board and using the @param add the pieces to the board. This needs to be done
+    /**
+     * Create a new board and using the @param add the pieces to the board. This needs to be done
      *
      * @param clonedWhitePieces an ArrayList<Pieces> of all the white pieces still in the game
      * @param clonedBlackPieces an ArrayList<Pieces> of all the black pieces still in the game
@@ -331,8 +330,20 @@ public class Game {
     }
 
 
+
+
+
+
+
+
+
+
+
+
+
+
+
     /**
-     *
      * @return Full Fen string
      */
     public String getCompleteFEN() {
@@ -352,15 +363,8 @@ public class Game {
         return piece2DArray;
     }
 
-
-
-
-
-
-
-
-
-    /**Get a clone of the piece at the position
+    /**
+     * Get a clone of the piece at the position
      *
      * @param position of the piece
      * @return a clone of the required piece
@@ -369,7 +373,8 @@ public class Game {
         return board.getPieceClone(position);
     }
 
-    /** Get whose turn it is
+    /**
+     * Get whose turn it is
      *
      * @return whitesTurn
      */

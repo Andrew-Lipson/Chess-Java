@@ -74,7 +74,7 @@ public class Controller implements Contract.Listener, Contract.Observer {
     public void handleCircleClicked(PositionView positionView) {
         Position newPosition = new Position(positionView.getFile(), positionView.getRank());
         Position previousPosition = clickedPiece.getPosition();
-        game.moveAMove(previousPosition,newPosition);
+        game.makeAMove(previousPosition,newPosition);
         this.clickedPiece = null;
     }
 }

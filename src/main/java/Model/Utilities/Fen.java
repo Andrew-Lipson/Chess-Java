@@ -15,7 +15,7 @@ import static java.lang.Character.isDigit;
 import static java.util.Objects.isNull;
 import static java.util.Objects.nonNull;
 
-public class Fen {
+public final class Fen {
 
 
     /** Giving all necessary information to create a FEN string that represents the current state of the board
@@ -41,8 +41,7 @@ public class Fen {
 
         if (whitesTurn){
             output.append("w ");
-        }
-        else{
+        } else{
             output.append("b ");
         }
 
@@ -155,8 +154,7 @@ public class Fen {
             if (isNull(piece) || piece.getPieceType() != PieceType.Pawn || piece.getIsWhite()){
                 return false;
             }
-        }
-        else {
+        } else {
             Piece piece = board.getPiece(new Position(enPassantPosition.getFile(),4));
             if (isNull(piece) || piece.getPieceType() != PieceType.Pawn || !piece.getIsWhite()){
                 return false;
@@ -218,8 +216,7 @@ public class Fen {
                 boardSquares.addPiece(new Position(file,rank),piece);
                 if (isWhite){
                     whitePieces.add(piece);
-                }
-                else {
+                } else {
                     blackPieces.add(piece);
                 }
                 file += 1;
@@ -242,32 +239,28 @@ public class Fen {
                 case 'K':
                     if (checkCastlingIsPossible(boardSquares, new Position(4,7),new Position(7,7))){
                         whiteCastling[0] = true;
-                    }
-                    else {
+                    } else {
                         return null;
                     }
                     break;
                 case 'Q':
                     if (checkCastlingIsPossible(boardSquares, new Position(4,7),new Position(0,7))){
                         whiteCastling[1] = true;
-                    }
-                    else {
+                    } else {
                         return null;
                     }
                     break;
                 case 'k':
                     if (checkCastlingIsPossible(boardSquares, new Position(4,0),new Position(7,0))){
                         blackCastling[0] = true;
-                    }
-                    else {
+                    } else {
                         return null;
                     }
                     break;
                 case 'q':
                     if (checkCastlingIsPossible(boardSquares, new Position(4,0),new Position(0,0))){
                         blackCastling[1] = true;
-                    }
-                    else {
+                    } else {
                         return null;
                     }
                     break;
@@ -286,8 +279,7 @@ public class Fen {
             if (!checkEnPassantIsPossible(boardSquares,enPassantPosition)){
                 return null;
             }
-        }
-        else {
+        } else {
             enPassantPosition = null;
         }
 
