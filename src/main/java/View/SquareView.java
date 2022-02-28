@@ -1,5 +1,6 @@
 package View;
 
+import Contract.Contract;
 import javafx.scene.Group;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
@@ -7,11 +8,9 @@ import javafx.scene.paint.Color;
 import javafx.scene.shape.Circle;
 import javafx.scene.shape.Rectangle;
 
-import View.Contract.Listener;
-
 public class SquareView extends Group {
 
-    private final Listener listener;
+    private final Contract.Listener listener;
     private final PositionView positionView;
     private final Rectangle rectangle;
     private final int file;
@@ -32,7 +31,7 @@ public class SquareView extends Group {
      * @param rank
      * @param listener
      */
-    public SquareView(int file, int rank, Listener listener) {
+    public SquareView(int file, int rank, Contract.Listener listener) {
 
         this.file = file;
         this.rank = rank;
@@ -64,13 +63,15 @@ public class SquareView extends Group {
     /**
      * Sets the ImageView's X & Y coordinates and it's height and width
      */
-    public void initialiseImageView() {
+    public void initialiseImageView(){
         this.imageview.setX(xCoordinate);
         this.imageview.setY(yCoordinate);
         this.imageview.setFitHeight(heightWidth);
         this.imageview.setFitWidth(heightWidth);
         imageview.setPickOnBounds(true);
-        imageview.setOnMouseClicked(__ -> this.listener.onPieceClicked(this.positionView));
+        imageview.setOnMouseClicked(__ -> {
+        this.listener.handlePieceClicked(this.positionView);
+        });
     }
 
     /**
@@ -83,7 +84,7 @@ public class SquareView extends Group {
         circle.setFill(Color.DARKBLUE);
         circle.setOpacity(0.5);
         circle.setPickOnBounds(true);
-        circle.setOnMouseClicked(__ -> this.listener.onCircleClicked(this.positionView));
+        circle.setOnMouseClicked(__ -> this.listener.handleCircleClicked(this.positionView));
     }
 
     /**

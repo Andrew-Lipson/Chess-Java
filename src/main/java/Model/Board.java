@@ -1,24 +1,21 @@
 package Model;
 
-import Model.pieces.Piece;
+import Model.Pieces.Piece;
 
 import static java.util.Objects.isNull;
 
 public class Board {
 
-    Piece[][] squares = new Piece[8][8];
+    Piece[][] board = new Piece[8][8];
 
     public Board() {
         for (int rank = 0; rank < 8; rank++) {
             for (int file = 0; file < 8; file++) {
-                squares[file][rank] = null;
+                board[file][rank] = null;
             }
         }
     }
 
-    public Board(Piece[][] squares) {
-        this.squares = squares;
-    }
 
     /**
      * Return a Square from the specific File and Rank
@@ -27,7 +24,7 @@ public class Board {
      * @return the piece
      */
     public Piece getPiece(Position position) {
-        return squares[position.getRank()][position.getFile()];
+        return board[position.getRank()][position.getFile()];
     }
 
     /**
@@ -49,10 +46,10 @@ public class Board {
      * @param position
      */
     public void removePiece(Position position) {
-        Piece piece = squares[position.getRank()][position.getFile()];
+        Piece piece = board[position.getRank()][position.getFile()];
         if(!isNull(piece)) {
             piece.setPosition(null);
-            squares[position.getRank()][position.getFile()] = null;
+            board[position.getRank()][position.getFile()] = null;
         }
 
     }
@@ -64,7 +61,7 @@ public class Board {
      * @param piece
      */
     public void addPiece(Position position, Piece piece) {
-        squares[position.getRank()][position.getFile()] = piece;
+        board[position.getRank()][position.getFile()] = piece;
         piece.setPosition(position);
     }
 

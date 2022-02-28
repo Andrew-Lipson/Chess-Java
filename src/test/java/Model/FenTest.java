@@ -1,5 +1,6 @@
 package Model;
 
+import Model.Utilities.Fen;
 import Utility.CreateBoard;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.DisplayName;
@@ -26,7 +27,8 @@ class FenTest {
             "8/4npk1/5p1p/1Q5P/1p4P1/4r3/7q/3K1R2 b - - 1 49",
             "5r1k/6pp/4Qpb1/p7/8/6PP/P4PK1/3q4 b - - 4 37",
             "8/8/2P5/4B3/1Q6/4K3/6P1/3k4 w - - 5 67",
-            "r2q1rk1/pp2ppbp/2p2np1/6B1/3PP1b1/Q1P2N2/P4PPP/3RKB1R b K d3 0 13"
+            "r2q1rk1/pp2ppbp/2p2np1/6B1/3PP1b1/Q1P2N2/P4PPP/3RKB1R b K d3 0 13",
+            "3b1q1q/1N2PRQ1/rR3KBr/B4PP1/2Pk1r1b/1P2P1N1/2P2P2/8 b - - 5 5"//Checkmate
     })
     public void convertFenToBoardTest1(String fen){
         Game board = Fen.convertFenToBoard (fen,null);
@@ -44,7 +46,8 @@ class FenTest {
             "5r1k/6pp/4Qpb1/p7/8/6PP/P4PK1/3q4 b - - -1 37", //incorrect halfmoves
             "8/8/2P5/4B3/1Q6/4K3/6P1/3k4 w - - 5 0", //incorrect fullmoves
             "r2q1rk1/pp2ppbp/2p2np1/6B1/3PP1b1/Q1P2N2/P4PPP/3RKB1R h K d3 0 13", //not white or black's move
-            "rnbQkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBqKBNR w KQkq - 0 1" //Black in check even though White's turn
+            "rnbQkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBqKBNR w KQkq - 0 1", //Black in check even though White's turn
+            "3b1q1q/1N2PRQ1/rR3KBr/B4PP1/2Pk1r1b/1P2P1N1/2P2P2/8 w - - 5 5"
     })
     public void convertFenToBoardTest2(String fen){
         Game board = Fen.convertFenToBoard (fen,null);

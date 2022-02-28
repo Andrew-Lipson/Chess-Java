@@ -1,6 +1,7 @@
 package View;
 
 
+import Contract.Contract;
 import javafx.scene.Group;
 import javafx.scene.Scene;
 import javafx.scene.image.Image;
@@ -12,8 +13,6 @@ import javafx.stage.Stage;
 import java.io.IOException;
 import java.util.ArrayList;
 
-import View.Contract.Listener;
-
 import static java.lang.Character.isDigit;
 
 public class MainView {
@@ -21,7 +20,6 @@ public class MainView {
     private final Stage stage;
     private BoardView boardSquaresView;
     private final Group root = new Group();
-    private String[] currentFEN;
     private ArrayList<SquareView> circlesActivated = new ArrayList<SquareView>();
 
     /**
@@ -31,7 +29,7 @@ public class MainView {
      * @param listener
      * @throws IOException
      */
-    public MainView(Stage stage, Listener listener) throws IOException {
+    public MainView(Stage stage, Contract.Listener listener) throws IOException {
         this.stage = stage;
 
         for (int i = 0; i < 8; i++) {
@@ -108,15 +106,13 @@ public class MainView {
             if(character.equals('/')){
                 rank += 1;
                 file = 0;
-            }
-            else if(isDigit(character)) {
+            } else if(isDigit(character)) {
                 for(int i = 0; i < Character.getNumericValue(character); i++){
                     getSquareView(new PositionView(file,rank)).addPiece('x');
                     file += 1;
                 }
 
-            }
-            else{
+            } else{
                 getSquareView(new PositionView(file,rank)).addPiece(character);
                 file += 1;
             }
