@@ -50,9 +50,9 @@ public class Controller implements Contract.Listener, Contract.Observer {
     }
 
     @Override
-    public void pawnPromotion(boolean isWhite) {
+    public String pawnPromotion(boolean isWhite) {
         update();
-        mainview.promotionPopup(isWhite);
+        return mainview.promotionPopup(isWhite);
     }
 
     @Override
@@ -83,11 +83,6 @@ public class Controller implements Contract.Listener, Contract.Observer {
         Position previousPosition = clickedPiece.getPosition();
         game.makeAMove(previousPosition,newPosition);
         this.clickedPiece = null;
-    }
-
-    @Override
-    public void handlePromotionClicked(String string) {
-        game.promotionPieceDecision(PieceType.getPieceType(string));
     }
 
 }

@@ -25,7 +25,6 @@ public class Game {
     private Position enPassantPositionForFen;
     private int halfMove;
     private int fullMove;
-    private Piece promotionPiece;
 
     public Game(Contract.Observer observer) {
         board = new Board();
@@ -250,15 +249,13 @@ public class Game {
         if(newPosition.getRank() != rank){
             return;
         }
-        promotionPiece = piece;
-        _observer.pawnPromotion(whitesTurn);
-    }
 
-    public void promotionPieceDecision(PieceType pieceType){
-        promotionPiece.pawnPromotion(pieceType);
-        promotionPiece = null;
+        String fenRep = "x";
+        while(fenRep=="x"){
+            fenRep = _observer.pawnPromotion(whitesTurn);
+        }
+        piece.pawnPromotion(PieceType.getPieceType(fenRep));
     }
-
 
     /**
      * Call updateView function in the observer

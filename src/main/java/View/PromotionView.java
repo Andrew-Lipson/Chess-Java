@@ -15,19 +15,20 @@ import javafx.stage.StageStyle;
 
 public class PromotionView {
 
-    private final Contract.Listener listener;
     private final Stage promotionStage;
     private double xOffset = 0;
     private double yOffset = 0;
+    private String fenRep = "x";
 
-    public PromotionView(Contract.Listener listener, boolean isWhite){
-        this.listener = listener;
+    public PromotionView(boolean isWhite){
         promotionStage = new Stage();
-
-
         promotionStage.setScene(setUpStage(promotionStage,isWhite));
-        promotionStage.showAndWait();
 
+    }
+
+    public String showPromotionStage(){
+        promotionStage.showAndWait();
+        return fenRep;
     }
 
 
@@ -97,7 +98,7 @@ public class PromotionView {
         imageview.setImage(image);
 
         imageview.setOnMouseClicked(__ -> {
-            this.listener.handlePromotionClicked(fenRep[i]);
+            this.fenRep = fenRep[i];
             promotionStage.close();
         });
         return imageview;

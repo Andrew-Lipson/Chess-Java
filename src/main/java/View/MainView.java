@@ -147,8 +147,9 @@ public class MainView {
         }
     }
 
-    public void promotionPopup(boolean isWhite){
-        new PromotionView(listener, isWhite);
+    public String promotionPopup(boolean isWhite){
+        PromotionView promotionView = new PromotionView(isWhite);
+        return promotionView.showPromotionStage();
     }
 
     private SquareView getSquareView(PositionView position) {

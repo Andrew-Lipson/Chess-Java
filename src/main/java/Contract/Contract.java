@@ -11,15 +11,13 @@ public interface Contract {
 
         public void handleCircleClicked(PositionView positionView);
 
-        public void handlePromotionClicked(String string);
-
     }
 
     interface Observer {
 
         public void update();
 
-        public void pawnPromotion(boolean isWhite);
+        public String pawnPromotion(boolean isWhite);
 
     }
 }
