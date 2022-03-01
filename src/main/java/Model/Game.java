@@ -25,6 +25,7 @@ public class Game {
     private Position enPassantPositionForFen;
     private int halfMove;
     private int fullMove;
+    private Piece promotionPiece;
 
     public Game(Contract.Observer observer) {
         board = new Board();
@@ -249,7 +250,13 @@ public class Game {
         if(newPosition.getRank() != rank){
             return;
         }
-        piece.pawnPromotion(_observer.pawnPromotion());
+        promotionPiece = piece;
+        _observer.pawnPromotion(whitesTurn);
+    }
+
+    public void promotionPieceDecision(PieceType pieceType){
+        promotionPiece.pawnPromotion(pieceType);
+        promotionPiece = null;
     }
 
 

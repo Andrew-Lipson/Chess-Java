@@ -18,6 +18,7 @@ import static java.lang.Character.isDigit;
 public class MainView {
 
     private final Stage stage;
+    private final Contract.Listener listener;
     private BoardView boardSquaresView;
     private final Group root = new Group();
     private ArrayList<SquareView> circlesActivated = new ArrayList<SquareView>();
@@ -31,6 +32,7 @@ public class MainView {
      */
     public MainView(Stage stage, Contract.Listener listener) throws IOException {
         this.stage = stage;
+        this.listener = listener;
 
         for (int i = 0; i < 8; i++) {
             rankNumbers(root,i);
@@ -143,6 +145,10 @@ public class MainView {
         for (SquareView squareview:this.circlesActivated) {
             squareview.removeCircle();
         }
+    }
+
+    public void promotionPopup(boolean isWhite){
+        new PromotionView(listener, isWhite);
     }
 
     private SquareView getSquareView(PositionView position) {
