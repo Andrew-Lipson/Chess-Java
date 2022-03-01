@@ -179,7 +179,7 @@ public class MakingAMoveTest {
         Assertions.assertEquals("3rk1nr/ppp1pp1p/8/1N6/3n4/5Q2/PPP2P1P/R3K1R1 w Qk - 2 9",game.getCompleteFEN());
 
         game.makeAMove(new Position(0,7),new Position(3,7));
-        Assertions.assertEquals("3rk1nr/ppp1pp1p/8/1N6/3n4/5Q2/PPP2P1P/3RK1R1 b k - 3 8",game.getCompleteFEN());
+        Assertions.assertEquals("3rk1nr/ppp1pp1p/8/1N6/3n4/5Q2/PPP2P1P/3RK1R1 b k - 3 9",game.getCompleteFEN());
 
     }
 
