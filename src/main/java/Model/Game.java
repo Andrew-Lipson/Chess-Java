@@ -249,7 +249,7 @@ public class Game {
         if(newPosition.getRank() != rank){
             return;
         }
-        piece.pawnPromotion(PieceType.Queen);
+        piece.pawnPromotion(_observer.pawnPromotion());
     }
 
 

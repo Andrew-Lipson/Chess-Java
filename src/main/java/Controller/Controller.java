@@ -2,6 +2,7 @@ package Controller;
 
 import Contract.Contract;
 import Model.Game;
+import Model.Pieces.PieceType;
 import Model.Position;
 import Model.Pieces.Piece;
 import View.MainView;
@@ -46,6 +47,11 @@ public class Controller implements Contract.Listener, Contract.Observer {
     @Override
     public void update() {
         mainview.updateView(game.getCompleteFEN());
+    }
+
+    @Override
+    public PieceType pawnPromotion() {
+        return PieceType.Knight;
     }
 
     @Override

@@ -1,5 +1,6 @@
 package Contract;
 
+import Model.Pieces.PieceType;
 import View.PositionView;
 
 public interface Contract {
@@ -15,6 +16,8 @@ public interface Contract {
     interface Observer {
 
         public void update();
+
+        public PieceType pawnPromotion();
 
     }
 }
