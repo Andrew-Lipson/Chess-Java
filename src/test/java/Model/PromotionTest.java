@@ -72,7 +72,7 @@ public class PromotionTest {
     }
 
     @Test
-    @DisplayName("Pawn promotion to Queen, forward move")
+    @DisplayName("Pawn promotion to Queen, via capture")
     public void promotionTest5(){
         Game game = Fen.convertFenToBoard("4n2k/3P4/8/8/K7/8/3p4/2Q5 b - - 0 1",mockObserver);
         when(mockObserver.pawnPromotion(Mockito.anyBoolean())).thenReturn("q");
@@ -85,7 +85,7 @@ public class PromotionTest {
     }
 
     @Test
-    @DisplayName("Pawn promotion to Rook, forward move")
+    @DisplayName("Pawn promotion to Rook, via capture")
     public void promotionTest6(){
         Game game = Fen.convertFenToBoard("4n2k/3P4/8/8/K7/8/3p4/2Q5 b - - 0 1",mockObserver);
         when(mockObserver.pawnPromotion(Mockito.anyBoolean())).thenReturn("r");
@@ -98,7 +98,7 @@ public class PromotionTest {
     }
 
     @Test
-    @DisplayName("Pawn promotion to Bishop, forward move")
+    @DisplayName("Pawn promotion to Bishop, via capture")
     public void promotionTest7(){
         Game game = Fen.convertFenToBoard("4n2k/3P4/8/8/K7/8/3p4/2Q5 b - - 0 1",mockObserver);
         when(mockObserver.pawnPromotion(Mockito.anyBoolean())).thenReturn("b");
@@ -111,7 +111,7 @@ public class PromotionTest {
     }
 
     @Test
-    @DisplayName("Pawn promotion to Knight, forward move")
+    @DisplayName("Pawn promotion to Knight, via capture")
     public void promotionTest8(){
         Game game = Fen.convertFenToBoard("4n2k/3P4/8/8/K7/8/3p4/2Q5 b - - 0 1",mockObserver);
         when(mockObserver.pawnPromotion(Mockito.anyBoolean())).thenReturn("n");
