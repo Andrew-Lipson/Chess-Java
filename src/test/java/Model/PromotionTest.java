@@ -74,7 +74,7 @@ public class PromotionTest {
 //    }
 //
 //    @Test
-//    @DisplayName("Pawn promotion to Queen, via capture")
+//    @DisplayName("Pawn promotion to Queen, forward move")
 //    public void promotionTest5(){
 //        Game game = Fen.convertFenToBoard("4n2k/3P4/8/8/K7/8/3p4/2Q5 b - - 0 1",mockObserver);
 //        when(mockObserver.pawnPromotion()).thenReturn(PieceType.Queen);
@@ -87,7 +87,7 @@ public class PromotionTest {
 //    }
 //
 //    @Test
-//    @DisplayName("Pawn promotion to Rook, via capture")
+//    @DisplayName("Pawn promotion to Rook, forward move")
 //    public void promotionTest6(){
 //        Game game = Fen.convertFenToBoard("4n2k/3P4/8/8/K7/8/3p4/2Q5 b - - 0 1",mockObserver);
 //        when(mockObserver.pawnPromotion()).
@@ -100,7 +100,7 @@ public class PromotionTest {
 //    }
 //
 //    @Test
-//    @DisplayName("Pawn promotion to Bishop, via capture")
+//    @DisplayName("Pawn promotion to Bishop, forward move")
 //    public void promotionTest7(){
 //        Game game = Fen.convertFenToBoard("4n2k/3P4/8/8/K7/8/3p4/2Q5 b - - 0 1",mockObserver);
 //        when(mockObserver.pawnPromotion()).thenReturn(PieceType.Bishop);
@@ -113,7 +113,7 @@ public class PromotionTest {
 //    }
 //
 //    @Test
-//    @DisplayName("Pawn promotion to Knight, via capture")
+//    @DisplayName("Pawn promotion to Knight, forward move")
 //    public void promotionTest8(){
 //        Game game = Fen.convertFenToBoard("4n2k/3P4/8/8/K7/8/3p4/2Q5 b - - 0 1",mockObserver);
 //        when(mockObserver.pawnPromotion()).thenReturn()
