@@ -18,8 +18,8 @@ public class Main extends Application {
 
         Controller controller = new Controller(); // Start up Controller
         MainView mainView = new MainView(stage, controller);// Start up View
-//        Game board = startGame(controller, "r3kQ1r/ppp1pp1p/8/1b6/3B4/2N5/PPP2P1P/R3Kn1R b KQkq - 2 7"); // Start up Model
-        Game board = startGame(controller);
+        Game board = startGame(controller, "4n2k/3P4/8/8/K7/8/3p4/2Q5 w - - 0 1"); // Start up Model
+//        Game board = startGame(controller);
         controller.startApplication(board,mainView);
     }
 

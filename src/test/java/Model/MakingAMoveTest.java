@@ -2,17 +2,21 @@ package Model;
 
 import Contract.*;
 import Model.Utilities.Fen;
-import Utility.MockObserver;
 import org.junit.jupiter.api.Assertions;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.ValueSource;
+import org.mockito.Mock;
+import org.mockito.junit.jupiter.MockitoExtension;
 
+@ExtendWith(MockitoExtension.class)
 public class MakingAMoveTest {
 
+    @Mock
     private Contract.Observer mockObserver;
+
     private Game game;
     private final String[][] whitePawnOpening = new String[][]{
             {"rnbqkbnr/pppppppp/8/8/P7/8/1PPPPPPP/RNBQKBNR b KQkq a3 0 1", "rnbqkbnr/pppppppp/8/8/8/P7/1PPPPPPP/RNBQKBNR b KQkq - 0 1"},
@@ -36,12 +40,6 @@ public class MakingAMoveTest {
             {"rnbqkbnr/ppppppp1/8/7p/3P4/8/PPP1PPPP/RNBQKBNR w KQkq h6 0 2","rnbqkbnr/ppppppp1/7p/8/3P4/8/PPP1PPPP/RNBQKBNR w KQkq - 0 2"}
     };
 
-
-
-    @BeforeEach
-    public void createObserver(){
-        mockObserver = new MockObserver();
-    }
 
     @ParameterizedTest
     @DisplayName("Pawn opening for White")
@@ -179,7 +177,7 @@ public class MakingAMoveTest {
         Assertions.assertEquals("3rk1nr/ppp1pp1p/8/1N6/3n4/5Q2/PPP2P1P/R3K1R1 w Qk - 2 9",game.getCompleteFEN());
 
         game.makeAMove(new Position(0,7),new Position(3,7));
-        Assertions.assertEquals("3rk1nr/ppp1pp1p/8/1N6/3n4/5Q2/PPP2P1P/3RK1R1 b k - 3 8",game.getCompleteFEN());
+        Assertions.assertEquals("3rk1nr/ppp1pp1p/8/1N6/3n4/5Q2/PPP2P1P/3RK1R1 b k - 3 9",game.getCompleteFEN());
 
     }
 

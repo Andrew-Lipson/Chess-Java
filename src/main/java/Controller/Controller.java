@@ -2,6 +2,7 @@ package Controller;
 
 import Contract.Contract;
 import Model.Game;
+import Model.Pieces.PieceType;
 import Model.Position;
 import Model.Pieces.Piece;
 import View.MainView;
@@ -49,6 +50,12 @@ public class Controller implements Contract.Listener, Contract.Observer {
     }
 
     @Override
+    public void displayPromotionPopup() {
+        update();
+        mainview.promotionPopup(game.getWhitesTurn());
+    }
+
+    @Override
     public void handlePieceClicked(PositionView positionView) {
         // Check if the piece clicked was just clicked, and remove the possible moves from the board
         Position position = new Position(positionView.getFile(), positionView.getRank());
@@ -77,4 +84,10 @@ public class Controller implements Contract.Listener, Contract.Observer {
         game.makeAMove(previousPosition,newPosition);
         this.clickedPiece = null;
     }
+
+    @Override
+    public void onPromotionPieceDecided(String string) {
+        game.promotionPieceDecision(PieceType.getPieceType(string));
+    }
+
 }

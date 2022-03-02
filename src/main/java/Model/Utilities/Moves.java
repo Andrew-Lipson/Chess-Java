@@ -154,7 +154,30 @@ public final class Moves {
                 }
             }
         }
+        addCastlingIfPossible(position,game,isWhite,possibleMoves);
         return possibleMoves;
+    }
+
+    /**
+     * Add the kings new position to possibleMoves if Castling is possible
+     *
+     *
+     * @param position of the piece we are trying to move
+     * @param game that the piece is playing in
+     * @param isWhite is the piece white or black
+     * @param possibleMoves ArrayList of the possible moves already created
+     */
+    private static void addCastlingIfPossible(Position position, Game game, boolean isWhite, ArrayList<Position> possibleMoves){
+        if (game.getColouredCastling(isWhite)[0]) { // Kingside
+            if (isNull(game.getPiece(new Position(5, position.getRank()))) && isNull(game.getPiece(new Position(6, position.getRank())))) {
+                possibleMoves.add(new Position(6, position.getRank()));
+            }
+        }
+        if (game.getColouredCastling(isWhite)[1]){ // Queenside
+            if (isNull(game.getPiece(new Position(1,position.getRank()))) && isNull(game.getPiece(new Position(2,position.getRank()))) && isNull(game.getPiece(new Position(3,position.getRank())))){
+                possibleMoves.add(new Position(2,position.getRank()));
+            }
+        }
     }
 
     /**

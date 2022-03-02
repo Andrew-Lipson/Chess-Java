@@ -25,6 +25,7 @@ public class Game {
     private Position enPassantPositionForFen;
     private int halfMove;
     private int fullMove;
+    private Piece promotionPiece;
 
     public Game(Contract.Observer observer) {
         board = new Board();
@@ -114,11 +115,14 @@ public class Game {
             enableEnPassant(newPosition, piece.getIsWhite());
         }
 
-        checkForPromotion(newPosition, piece);
-
-        endTurn();
-        updateView();
-
+        disableCastlingIfRequired(piece, previousPosition);
+        if(canPromote(newPosition, piece)) {
+            promotionPiece = piece;
+            _observer.displayPromotionPopup();
+        } else {
+            endTurn();
+            updateView();
+        }
     }
 
     /**
@@ -142,6 +146,19 @@ public class Game {
                 board.removePiece(enPassantPosition);
             }
             halfMove = 0;
+        } else if(movedPiece.getPieceType() == PieceType.King) {
+            if (abs(previousPosition.getFile() - newPosition.getFile()) == 2) {
+                if (newPosition.getFile()>4){
+                    Piece rookCastlingPiece = board.getPiece(new Position(7, previousPosition.getRank()));
+                    board.removePiece(rookCastlingPiece.getPosition());
+                    board.addPiece(new Position(5, previousPosition.getRank()),rookCastlingPiece);
+                } else {
+                    Piece rookCastlingPiece = board.getPiece(new Position(0, previousPosition.getRank()));
+                    board.removePiece(rookCastlingPiece.getPosition());
+                    board.addPiece(new Position(3, previousPosition.getRank()),rookCastlingPiece);
+                }
+            }
+            halfMove += 1;
         } else {
             halfMove += 1;
         }
@@ -196,6 +213,29 @@ public class Game {
         }
     }
 
+    /**
+     * If either the king or rook moves, change the necessary castling to false
+     *
+     * @param piece that just moved
+     * @param previousPosition that the piece was on
+     */
+    private void disableCastlingIfRequired(Piece piece, Position previousPosition){
+        boolean[] castling = whitesTurn?whiteCastling:blackCastling;
+        if (!castling[0] && !castling[1]){
+            return;
+        }
+        if (piece.getPieceType()==PieceType.King){
+            castling[0]=false;
+            castling[1]=false;
+        } else if (piece.getPieceType()==PieceType.Rook){
+            if (previousPosition.getFile()==7){
+                castling[0]=false;
+            } else if (previousPosition.getFile()==0){
+                castling[1]=false;
+            }
+        }
+    }
+
 
     /**
      * WIP!
@@ -204,15 +244,23 @@ public class Game {
      * @param newPosition of the piece
      * @param piece that just moved
      */
-    private void checkForPromotion(Position newPosition, Piece piece) {
+    private boolean canPromote(Position newPosition, Piece piece) {
         if(piece.getPieceType() != PieceType.Pawn) {
-            return;
+            return false;
         }
         int rank = piece.getIsWhite() ? 0 : 7;
         if(newPosition.getRank() != rank){
-            return;
+            return false;
         }
-        piece.pawnPromotion(PieceType.Queen);
+        return true;
+    }
+
+    public void promotionPieceDecision(PieceType pieceType){
+        promotionPiece.pawnPromotion(pieceType);
+        promotionPiece = null;
+
+        endTurn();
+        updateView();
     }
 
 
@@ -268,6 +316,10 @@ public class Game {
                 onlyLegalMoves.add(movePosition);
             }
         }
+        Piece piece = getPiece(position);
+        if (nonNull(piece) && piece.getPieceType()==PieceType.King){
+            checkIfCastlingIsLegal(onlyLegalMoves, piece);
+        }
         return onlyLegalMoves;
     }
 
@@ -308,6 +360,34 @@ public class Game {
             tempBoard.addPiece(piece.getPosition(),piece);
         }
         return tempBoard;
+    }
+
+    /**
+     * First checks to see if the final king position is a legal move.
+     * Then if either:
+     *      castling is available,
+     *      king is in check,
+     *      the position the king moves through is illegal
+     *      
+     * It will remove the castling position out of onlyLegalMoves
+     *
+     * @param onlyLegalMoves all the legal moves the piece can make
+     * @param piece king piece that is being moved
+     */
+    private void checkIfCastlingIsLegal(ArrayList<Position> onlyLegalMoves, Piece piece){
+        boolean[] castling = getColouredCastling(piece.getIsWhite());
+        Position position = onlyLegalMoves.stream().filter(castlingPosition -> castlingPosition.getFile()==(piece.getPosition().getFile()+2)).findAny().orElse(null);
+        if (nonNull(position)){
+            if (!castling[0] || Check.isTheKingUnderAttack(this, whitesTurn) || onlyLegalMoves.stream().noneMatch(position1 -> position1.getFile()==5 && position1.getRank()==piece.getPosition().getRank())){
+                onlyLegalMoves.remove(onlyLegalMoves.stream().filter(position1 -> position1.getFile()==6).findAny().orElse(null));
+            }
+        }
+        position = onlyLegalMoves.stream().filter(castlingPosition -> castlingPosition.getFile()==(piece.getPosition().getFile()-2)).findAny().orElse(null);
+        if (nonNull(position)){
+            if (!castling[1] || Check.isTheKingUnderAttack(this, whitesTurn) || onlyLegalMoves.stream().noneMatch(position1 -> position1.getFile()==3 && position1.getRank()==piece.getPosition().getRank())){
+                onlyLegalMoves.remove(onlyLegalMoves.stream().filter(position1 -> position1.getFile()==2).findAny().orElse(null));
+            }
+        }
     }
 
 //endregion
@@ -353,6 +433,17 @@ public class Game {
         return whitesTurn;
     }
 
-//endregion
+    /**
+     * Get the boolean[] of intended colour for castling
+     *
+     * @param isWhite
+     * @return boolean[]
+     */
+    public boolean[] getColouredCastling(boolean isWhite) {
+        boolean[] castling = isWhite?whiteCastling:blackCastling;
+        return new boolean[]{castling[0],castling[1]};
+    }
+
+    //endregion
 
 }

@@ -296,6 +296,24 @@ public class PossibleMovesTest {
         checkForCorrectPositions(actualMoves, expectedMoves);
     }
 
+    @Test
+    @DisplayName("White king with both castling options available but in check")
+    public void KingWithCastlingTest9(){
+        Game game = Fen.convertFenToBoard("rnb1kbnr/pppp1ppp/8/4p3/7q/5P2/PPPPP1PP/R3K2R w KQkq - 0 1",null);
+        int[][] expectedMoves = new int[][] {{3,7},{5,7}};
+        ArrayList<Position> actualMoves = game.getLegalMoves(new Position(4,7));
+        checkForCorrectPositions(actualMoves, expectedMoves);
+    }
+
+    @Test
+    @DisplayName("Black king with both castling options available but in check")
+    public void KingWithCastlingTest10(){
+        Game game = Fen.convertFenToBoard("r3k2r/pppp2pp/5p2/4p2Q/8/5P2/PPPPP1PP/R4K1R b kq - 0 1",null);
+        int[][] expectedMoves = new int[][] {{3,0},{5,0},{4,1}};
+        ArrayList<Position> actualMoves = game.getLegalMoves(new Position(4,0));
+        checkForCorrectPositions(actualMoves, expectedMoves);
+    }
+
 
     private void checkForCorrectPositions(ArrayList<Position> actualMoves, int[][] expectedMoves){
         Assertions.assertEquals(expectedMoves.length,actualMoves.size());
