@@ -50,9 +50,9 @@ public class Controller implements Contract.Listener, Contract.Observer {
     }
 
     @Override
-    public void pawnPromotion(boolean isWhite) {
+    public void pawnPromotion() {
         update();
-        mainview.promotionPopup(isWhite);
+        mainview.promotionPopup(game.getWhitesTurn());
     }
 
     @Override

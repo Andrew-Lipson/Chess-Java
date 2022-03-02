@@ -19,7 +19,7 @@ public interface Contract {
 
         public void update();
 
-        public void pawnPromotion(boolean isWhite);
+        public void pawnPromotion();
 
     }
 }

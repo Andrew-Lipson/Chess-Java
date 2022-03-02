@@ -29,7 +29,7 @@ public class PromotionTest {
         game.makeAMove(new Position(3,1),new Position(3,0));
 
         // then
-        verify(mockObserver, times(1)).pawnPromotion(false);
+        verify(mockObserver, times(1)).pawnPromotion();
     }
 
     @Test
@@ -37,13 +37,13 @@ public class PromotionTest {
     public void promotionNotRecognisedCorrectly() {
         // given
         // TODO: provide a position and make a move where the promotion should not take place
-        Game game = Fen.convertFenToBoard("4n2k/3P4/8/8/K7/8/3p4/2Q5 w - - 0 1",mockObserver);
+        Game game = Fen.convertFenToBoard("4n2k/3P4/8/8/KB6/8/3p4/2Q5 w - - 0 1",mockObserver);
 
         // when
-        game.makeAMove(new Position(3,1),new Position(3,0));
+        game.makeAMove(new Position(2,4),new Position(2,3));
 
         // then
-        verify(mockObserver, never()).pawnPromotion(false);
+        verify(mockObserver, never()).pawnPromotion();
     }
 
     @Test
@@ -65,6 +65,7 @@ public class PromotionTest {
          * and call `makeAMove()` here, followed by `game.promotionPieceDecision(PieceType.Queen)`. Then at the end of the
          * test, verify the observer was called however many times you expect, and with which colours.
          */
+        game.makeAMove(new Position(3,1),new Position(3,0));
         game.promotionPieceDecision(PieceType.Queen);
         Assertions.assertEquals("3Qn2k/8/8/8/K7/8/3p4/2Q5 b - - 0 1",game.getCompleteFEN());
 
@@ -76,96 +77,103 @@ public class PromotionTest {
         game.promotionPieceDecision(PieceType.Queen);
         Assertions.assertEquals("3Qn2k/8/8/8/K7/8/8/2Qq4 w - - 0 2",game.getCompleteFEN());
     }
-//
-//    @Test
-//    @DisplayName("Pawn promotion to Rook, forward move")
-//    public void promotionTest2(){
-//        Game game = Fen.convertFenToBoard("4n2k/3P4/8/8/K7/8/3p4/2Q5 w - - 0 1",mockObserver);
-//        when(mockObserver.pawnPromotion()).thenReturn(PieceType.Rook);
-//
-//        game.makeAMove(new Position(3,1),new Position(3,0));
-//        Assertions.assertEquals("3Rn2k/8/8/8/K7/8/3p4/2Q5 b - - 0 1",game.getCompleteFEN());
-//
-//        game.makeAMove(new Position(3,6),new Position(3,7));
-//        Assertions.assertEquals("3Rn2k/8/8/8/K7/8/8/2Qr4 w - - 0 2",game.getCompleteFEN());
-//    }
-//
-//    @Test
-//    @DisplayName("Pawn promotion to Bishop, forward move")
-//    public void promotionTest3(){
-//        Game game = Fen.convertFenToBoard("4n2k/3P4/8/8/K7/8/3p4/2Q5 w - - 0 1",mockObserver);
-//        when(mockObserver.pawnPromotion()).thenReturn(PieceType.Bishop);
-//
-//        game.makeAMove(new Position(3,1),new Position(3,0));
-//        Assertions.assertEquals("3Bn2k/8/8/8/K7/8/3p4/2Q5 b - - 0 1",game.getCompleteFEN());
-//
-//        game.makeAMove(new Position(3,6),new Position(3,7));
-//        Assertions.assertEquals("3Bn2k/8/8/8/K7/8/8/2Qb4 w - - 0 2",game.getCompleteFEN());
-//    }
-//
-//    @Test
-//    @DisplayName("Pawn promotion to Knight, forward move")
-//    public void promotionTest4(){
-//        Game game = Fen.convertFenToBoard("4n2k/3P4/8/8/K7/8/3p4/2Q5 w - - 0 1",mockObserver);
-//        when(mockObserver.pawnPromotion()).thenReturn(PieceType.Knight);
-//
-//        game.makeAMove(new Position(3,1),new Position(3,0));
-//        Assertions.assertEquals("3Nn2k/8/8/8/K7/8/3p4/2Q5 b - - 0 1",game.getCompleteFEN());
-//
-//        game.makeAMove(new Position(3,6),new Position(3,7));
-//        Assertions.assertEquals("3Nn2k/8/8/8/K7/8/8/2Qn4 w - - 0 2",game.getCompleteFEN());
-//    }
-//
-//    @Test
-//    @DisplayName("Pawn promotion to Queen, forward move")
-//    public void promotionTest5(){
-//        Game game = Fen.convertFenToBoard("4n2k/3P4/8/8/K7/8/3p4/2Q5 b - - 0 1",mockObserver);
-//        when(mockObserver.pawnPromotion()).thenReturn(PieceType.Queen);
-//
-//        game.makeAMove(new Position(3,6),new Position(2,7));
-//        Assertions.assertEquals("4n2k/3P4/8/8/K7/8/8/2q5 w - - 0 2",game.getCompleteFEN());
-//
-//        game.makeAMove(new Position(3,1),new Position(4,0));
-//        Assertions.assertEquals("4Q2k/8/8/8/K7/8/8/2q5 b - - 0 2",game.getCompleteFEN());
-//    }
-//
-//    @Test
-//    @DisplayName("Pawn promotion to Rook, forward move")
-//    public void promotionTest6(){
-//        Game game = Fen.convertFenToBoard("4n2k/3P4/8/8/K7/8/3p4/2Q5 b - - 0 1",mockObserver);
-//        when(mockObserver.pawnPromotion()).
-//
-//        game.makeAMove(new Position(3,6),new Position(2,7));
-//        Assertions.assertEquals("4n2k/3P4/8/8/K7/8/8/2r5 w - - 0 2",game.getCompleteFEN());
-//
-//        game.makeAMove(new Position(3,1),new Position(4,0));
-//        Assertions.assertEquals("4R2k/8/8/8/K7/8/8/2r5 b - - 0 2",game.getCompleteFEN());
-//    }
-//
-//    @Test
-//    @DisplayName("Pawn promotion to Bishop, forward move")
-//    public void promotionTest7(){
-//        Game game = Fen.convertFenToBoard("4n2k/3P4/8/8/K7/8/3p4/2Q5 b - - 0 1",mockObserver);
-//        when(mockObserver.pawnPromotion()).thenReturn(PieceType.Bishop);
-//
-//        game.makeAMove(new Position(3,6),new Position(2,7));
-//        Assertions.assertEquals("4n2k/3P4/8/8/K7/8/8/2b5 w - - 0 2",game.getCompleteFEN());
-//
-//        game.makeAMove(new Position(3,1),new Position(4,0));
-//        Assertions.assertEquals("4B2k/8/8/8/K7/8/8/2b5 b - - 0 2",game.getCompleteFEN());
-//    }
-//
-//    @Test
-//    @DisplayName("Pawn promotion to Knight, forward move")
-//    public void promotionTest8(){
-//        Game game = Fen.convertFenToBoard("4n2k/3P4/8/8/K7/8/3p4/2Q5 b - - 0 1",mockObserver);
-//        when(mockObserver.pawnPromotion()).thenReturn()
-//        when( mockObserver.pawnPromotion();).thenCallRealMethod(game.promotionPieceDecision(PieceType.Queen));
-//
-//        game.makeAMove(new Position(3,6),new Position(2,7));
-//        Assertions.assertEquals("4n2k/3P4/8/8/K7/8/8/2n5 w - - 0 2",game.getCompleteFEN());
-//
-//        game.makeAMove(new Position(3,1),new Position(4,0));
-//        Assertions.assertEquals("4N2k/8/8/8/K7/8/8/2n5 b - - 0 2",game.getCompleteFEN());
-//    }
+
+    @Test
+    @DisplayName("Pawn promotion to Rook, forward move")
+    public void promotionTest2(){
+        Game game = Fen.convertFenToBoard("4n2k/3P4/8/8/K7/8/3p4/2Q5 w - - 0 1",mockObserver);
+
+        game.makeAMove(new Position(3,1),new Position(3,0));
+        game.promotionPieceDecision(PieceType.Rook);
+        Assertions.assertEquals("3Rn2k/8/8/8/K7/8/3p4/2Q5 b - - 0 1",game.getCompleteFEN());
+
+        game.makeAMove(new Position(3,6),new Position(3,7));
+        game.promotionPieceDecision(PieceType.Rook);
+        Assertions.assertEquals("3Rn2k/8/8/8/K7/8/8/2Qr4 w - - 0 2",game.getCompleteFEN());
+    }
+
+    @Test
+    @DisplayName("Pawn promotion to Bishop, forward move")
+    public void promotionTest3(){
+        Game game = Fen.convertFenToBoard("4n2k/3P4/8/8/K7/8/3p4/2Q5 w - - 0 1",mockObserver);
+
+
+        game.makeAMove(new Position(3,1),new Position(3,0));
+        game.promotionPieceDecision(PieceType.Bishop);
+        Assertions.assertEquals("3Bn2k/8/8/8/K7/8/3p4/2Q5 b - - 0 1",game.getCompleteFEN());
+
+        game.makeAMove(new Position(3,6),new Position(3,7));
+        game.promotionPieceDecision(PieceType.Bishop);
+        Assertions.assertEquals("3Bn2k/8/8/8/K7/8/8/2Qb4 w - - 0 2",game.getCompleteFEN());
+    }
+
+    @Test
+    @DisplayName("Pawn promotion to Knight, forward move")
+    public void promotionTest4(){
+        Game game = Fen.convertFenToBoard("4n2k/3P4/8/8/K7/8/3p4/2Q5 w - - 0 1",mockObserver);
+
+        game.makeAMove(new Position(3,1),new Position(3,0));
+        game.promotionPieceDecision(PieceType.Knight);
+        Assertions.assertEquals("3Nn2k/8/8/8/K7/8/3p4/2Q5 b - - 0 1",game.getCompleteFEN());
+
+        game.makeAMove(new Position(3,6),new Position(3,7));
+        game.promotionPieceDecision(PieceType.Knight);
+        Assertions.assertEquals("3Nn2k/8/8/8/K7/8/8/2Qn4 w - - 0 2",game.getCompleteFEN());
+    }
+
+    @Test
+    @DisplayName("Pawn promotion to Queen, via capture")
+    public void promotionTest5(){
+        Game game = Fen.convertFenToBoard("4n2k/3P4/8/8/K7/8/3p4/2Q5 b - - 0 1",mockObserver);
+
+        game.makeAMove(new Position(3,6),new Position(2,7));
+        game.promotionPieceDecision(PieceType.Queen);
+        Assertions.assertEquals("4n2k/3P4/8/8/K7/8/8/2q5 w - - 0 2",game.getCompleteFEN());
+
+        game.makeAMove(new Position(3,1),new Position(4,0));
+        game.promotionPieceDecision(PieceType.Queen);
+        Assertions.assertEquals("4Q2k/8/8/8/K7/8/8/2q5 b - - 0 2",game.getCompleteFEN());
+    }
+
+    @Test
+    @DisplayName("Pawn promotion to Rook, via capture")
+    public void promotionTest6(){
+        Game game = Fen.convertFenToBoard("4n2k/3P4/8/8/K7/8/3p4/2Q5 b - - 0 1",mockObserver);
+
+        game.makeAMove(new Position(3,6),new Position(2,7));
+        game.promotionPieceDecision(PieceType.Rook);
+        Assertions.assertEquals("4n2k/3P4/8/8/K7/8/8/2r5 w - - 0 2",game.getCompleteFEN());
+
+        game.makeAMove(new Position(3,1),new Position(4,0));
+        game.promotionPieceDecision(PieceType.Rook);
+        Assertions.assertEquals("4R2k/8/8/8/K7/8/8/2r5 b - - 0 2",game.getCompleteFEN());
+    }
+
+    @Test
+    @DisplayName("Pawn promotion to Bishop, via capture")
+    public void promotionTest7(){
+        Game game = Fen.convertFenToBoard("4n2k/3P4/8/8/K7/8/3p4/2Q5 b - - 0 1",mockObserver);
+
+        game.makeAMove(new Position(3,6),new Position(2,7));
+        game.promotionPieceDecision(PieceType.Bishop);
+        Assertions.assertEquals("4n2k/3P4/8/8/K7/8/8/2b5 w - - 0 2",game.getCompleteFEN());
+
+        game.makeAMove(new Position(3,1),new Position(4,0));
+        game.promotionPieceDecision(PieceType.Bishop);
+        Assertions.assertEquals("4B2k/8/8/8/K7/8/8/2b5 b - - 0 2",game.getCompleteFEN());
+    }
+
+    @Test
+    @DisplayName("Pawn promotion to Knight, via capture")
+    public void promotionTest8(){
+        Game game = Fen.convertFenToBoard("4n2k/3P4/8/8/K7/8/3p4/2Q5 b - - 0 1",mockObserver);
+
+        game.makeAMove(new Position(3,6),new Position(2,7));
+        game.promotionPieceDecision(PieceType.Knight);
+        Assertions.assertEquals("4n2k/3P4/8/8/K7/8/8/2n5 w - - 0 2",game.getCompleteFEN());
+
+        game.makeAMove(new Position(3,1),new Position(4,0));
+        game.promotionPieceDecision(PieceType.Knight);
+        Assertions.assertEquals("4N2k/8/8/8/K7/8/8/2n5 b - - 0 2",game.getCompleteFEN());
+    }
 }
