@@ -116,11 +116,13 @@ public class Game {
         }
 
         disableCastlingIfRequired(piece, previousPosition);
-        checkForPromotion(newPosition, piece);
-
-        endTurn();
-        updateView();
-
+        if(canPromote(newPosition, piece)) {
+            promotionPiece = piece;
+            _observer.pawnPromotion(whitesTurn);
+        } else {
+            endTurn();
+            updateView();
+        }
     }
 
     /**
@@ -242,21 +244,23 @@ public class Game {
      * @param newPosition of the piece
      * @param piece that just moved
      */
-    private void checkForPromotion(Position newPosition, Piece piece) {
+    private boolean canPromote(Position newPosition, Piece piece) {
         if(piece.getPieceType() != PieceType.Pawn) {
-            return;
+            return false;
         }
         int rank = piece.getIsWhite() ? 0 : 7;
         if(newPosition.getRank() != rank){
-            return;
+            return false;
         }
-        promotionPiece = piece;
-        _observer.pawnPromotion(whitesTurn);
+        return true;
     }
 
     public void promotionPieceDecision(PieceType pieceType){
         promotionPiece.pawnPromotion(pieceType);
         promotionPiece = null;
+
+        endTurn();
+        updateView();
     }
 
 
