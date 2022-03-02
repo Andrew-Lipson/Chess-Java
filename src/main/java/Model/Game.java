@@ -277,13 +277,12 @@ public class Game {
         gameOver();
     }
 
+    /**
+     * If there is no legal moves, call gameOver() in Observer to end the game
+     */
     private void gameOver(){
         if (Check.isThereALegalMove(this, whitesTurn)){
-            if (Check.isTheKingUnderAttack(this, whitesTurn)){
-                System.out.println("CHECKMATE BITCHES!!");
-            } else {
-                System.out.println("STALEMATE??");
-            }
+            _observer.gameOver(!Check.isTheKingUnderAttack(this, whitesTurn),!whitesTurn);
         }
     }
 

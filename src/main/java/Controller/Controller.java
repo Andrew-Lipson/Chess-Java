@@ -56,6 +56,12 @@ public class Controller implements Contract.Listener, Contract.Observer {
     }
 
     @Override
+    public void gameOver(boolean isStaleMate, boolean isWhite) {
+        update();
+        mainview.gameOverPopup(isStaleMate,isWhite);
+    }
+
+    @Override
     public void handlePieceClicked(PositionView positionView) {
         // Check if the piece clicked was just clicked, and remove the possible moves from the board
         Position position = new Position(positionView.getFile(), positionView.getRank());

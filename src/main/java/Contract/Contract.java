@@ -7,17 +7,20 @@ public interface Contract {
 
     interface Listener {
 
-        public void handlePieceClicked(PositionView positionView);
 
-        public void handleCircleClicked(PositionView positionView);
+        void handlePieceClicked(PositionView positionView);
+
+        void handleCircleClicked(PositionView positionView);
 
     }
 
     interface Observer {
 
-        public void update();
+        void update();
 
-        public String pawnPromotion(boolean isWhite);
+        String pawnPromotion(boolean isWhite);
+
+        void gameOver(boolean isStaleMate, boolean isWhite);
 
     }
 }

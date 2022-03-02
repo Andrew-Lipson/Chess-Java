@@ -152,6 +152,10 @@ public class MainView {
         return promotionView.showPromotionStage();
     }
 
+    public void gameOverPopup(boolean isStaleMate, boolean isWhite){
+        new GameOverView(isStaleMate,isWhite);
+    }
+
     private SquareView getSquareView(PositionView position) {
         return boardSquaresView.getSquareView(position);
     }
