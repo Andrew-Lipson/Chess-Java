@@ -118,7 +118,7 @@ public class Game {
         disableCastlingIfRequired(piece, previousPosition);
         if(canPromote(newPosition, piece)) {
             promotionPiece = piece;
-            _observer.pawnPromotion();
+            _observer.displayPromotionPopup();
         } else {
             endTurn();
             updateView();

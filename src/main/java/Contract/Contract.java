@@ -11,7 +11,7 @@ public interface Contract {
 
         public void handleCircleClicked(PositionView positionView);
 
-        public void handlePromotionClicked(String string);
+        public void onPromotionPieceDecided(String string);
 
     }
 
@@ -19,7 +19,7 @@ public interface Contract {
 
         public void update();
 
-        public void pawnPromotion();
+        public void displayPromotionPopup();
 
     }
 }

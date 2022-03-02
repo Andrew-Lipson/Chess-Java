@@ -32,8 +32,12 @@ public class PromotionView {
         promotionStage.addEventHandler(WindowEvent.WINDOW_CLOSE_REQUEST, windowEvent -> {
             Platform.exit();
         });
-        promotionStage.showAndWait();
 
+
+    }
+
+    public void show(){
+        promotionStage.showAndWait();
     }
 
 
@@ -49,19 +53,13 @@ public class PromotionView {
         Group root = new Group();
         Scene scene = new Scene(root);
 
-        root.setOnMousePressed(new EventHandler<MouseEvent>() {
-            @Override
-            public void handle(MouseEvent event) {
-                xOffset = event.getSceneX();
-                yOffset = event.getSceneY();
-            }
+        root.setOnMousePressed(event -> {
+            xOffset = event.getSceneX();
+            yOffset = event.getSceneY();
         });
-        root.setOnMouseDragged(new EventHandler<MouseEvent>() {
-            @Override
-            public void handle(MouseEvent event) {
-                promotionStage.setX(event.getScreenX() - xOffset);
-                promotionStage.setY(event.getScreenY() - yOffset);
-            }
+        root.setOnMouseDragged(event -> {
+            promotionStage.setX(event.getScreenX() - xOffset);
+            promotionStage.setY(event.getScreenY() - yOffset);
         });
 
         Rectangle rectangle = new Rectangle();
@@ -99,36 +97,15 @@ public class PromotionView {
         imageview.setFitHeight(80);
         imageview.setFitWidth(80);
         imageview.setPickOnBounds(true);
-        Image image = new Image( getPNGString(fenRep[i], isWhite));
+        char character = fenRep[i].charAt(0);
+        Image image = new Image( SquareView.getPNGString(character, isWhite));
         imageview.setImage(image);
 
         imageview.setOnMouseClicked(__ -> {
-            this.listener.handlePromotionClicked(fenRep[i]);
+            this.listener.onPromotionPieceDecided(fenRep[i]);
             promotionStage.close();
         });
         return imageview;
     }
 
-    private String getPNGString(String character, boolean isWhite) {
-        String output = "";
-        switch (character) {
-            case "q":
-                output += "Queen";
-                break;
-            case "r":
-                output += "Rook";
-                break;
-            case "n":
-                output += "Knight";
-                break;
-            case "b":
-                output += "Bishop";
-                break;
-        }
-
-        output += "-";
-        output += isWhite ? "White" : "Black";
-        output+=".png";
-        return output;
-    }
 }

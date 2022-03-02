@@ -124,7 +124,7 @@ public class SquareView extends Group {
      * @param isWhite
      * @return uri of the filename
      */
-    public String getPNGString(Character character, boolean isWhite) {
+    public static String getPNGString(Character character, boolean isWhite) {
         String output = "";
         switch (character) {
             case 'k':

@@ -8,7 +8,6 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
-import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
 
 import static org.mockito.Mockito.*;
@@ -29,7 +28,7 @@ public class PromotionTest {
         game.makeAMove(new Position(3,1),new Position(3,0));
 
         // then
-        verify(mockObserver, times(1)).pawnPromotion();
+        verify(mockObserver, times(1)).displayPromotionPopup();
     }
 
     @Test
@@ -43,7 +42,7 @@ public class PromotionTest {
         game.makeAMove(new Position(2,4),new Position(2,3));
 
         // then
-        verify(mockObserver, never()).pawnPromotion();
+        verify(mockObserver, never()).displayPromotionPopup();
     }
 
     @Test

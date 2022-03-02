@@ -50,7 +50,7 @@ public class Controller implements Contract.Listener, Contract.Observer {
     }
 
     @Override
-    public void pawnPromotion() {
+    public void displayPromotionPopup() {
         update();
         mainview.promotionPopup(game.getWhitesTurn());
     }
@@ -86,7 +86,7 @@ public class Controller implements Contract.Listener, Contract.Observer {
     }
 
     @Override
-    public void handlePromotionClicked(String string) {
+    public void onPromotionPieceDecided(String string) {
         game.promotionPieceDecision(PieceType.getPieceType(string));
     }
 
