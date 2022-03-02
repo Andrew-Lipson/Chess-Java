@@ -1,6 +1,7 @@
 package View;
 
 import Contract.Contract;
+import javafx.application.Platform;
 import javafx.event.EventHandler;
 import javafx.scene.Group;
 import javafx.scene.Scene;
@@ -12,6 +13,7 @@ import javafx.scene.shape.Rectangle;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
+import javafx.stage.WindowEvent;
 
 public class PromotionView {
 
@@ -26,6 +28,10 @@ public class PromotionView {
 
 
         promotionStage.setScene(setUpStage(promotionStage,isWhite));
+
+        promotionStage.addEventHandler(WindowEvent.WINDOW_CLOSE_REQUEST, windowEvent -> {
+            Platform.exit();
+        });
         promotionStage.showAndWait();
 
     }
