@@ -19,20 +19,63 @@ public class PromotionTest {
     @Mock
     private Contract.Observer mockObserver;
 
-//    @Test
-//    @DisplayName("Pawn promotion to Queen, forward move")
-//    public void promotionTest1(){
-//        Game game = Fen.convertFenToBoard("4n2k/3P4/8/8/K7/8/3p4/2Q5 w - - 0 1",mockObserver);
-//        doNothing().when(mockObserver);
-//
-//        game.makeAMove(new Position(3,1),new Position(3,0));
-//        game.promotionPieceDecision(PieceType.Queen);
-//        Assertions.assertEquals("3Qn2k/8/8/8/K7/8/3p4/2Q5 b - - 0 1",game.getCompleteFEN());
-//
-//        game.makeAMove(new Position(3,6),new Position(3,7));
-//        game.promotionPieceDecision(PieceType.Queen);
-//        Assertions.assertEquals("3Qn2k/8/8/8/K7/8/8/2Qq4 w - - 0 2",game.getCompleteFEN());
-//    }
+    @Test
+    @DisplayName("Test that when a pawn moves to a promotion spot, the observer is called to promote")
+    public void promotionRecognisedCorrectly() {
+        // given
+        Game game = Fen.convertFenToBoard("4n2k/3P4/8/8/K7/8/3p4/2Q5 w - - 0 1",mockObserver);
+
+        // when
+        game.makeAMove(new Position(3,1),new Position(3,0));
+
+        // then
+        verify(mockObserver, times(1)).pawnPromotion(false);
+    }
+
+    @Test
+    @DisplayName("Test that when a pawn moves to a non promotion spot, the obserer is not called to promote")
+    public void promotionNotRecognisedCorrectly() {
+        // given
+        // TODO: provide a position and make a move where the promotion should not take place
+        Game game = Fen.convertFenToBoard("4n2k/3P4/8/8/K7/8/3p4/2Q5 w - - 0 1",mockObserver);
+
+        // when
+        game.makeAMove(new Position(3,1),new Position(3,0));
+
+        // then
+        verify(mockObserver, never()).pawnPromotion(false);
+    }
+
+    @Test
+    @DisplayName("After promoting a piece, new FEN correctly generated")
+    public void promotionTest1(){
+        // given
+        // TODO: make this FEN place the pawn on the promotion square
+        Game game = Fen.convertFenToBoard("4n2k/3P4/8/8/K7/8/3p4/2Q5 w - - 0 1",mockObserver);
+
+        /**
+         * no need to call `makeAMove()` here, this has already been tested that it correctly
+         * calls the observer in the earlier tests. Once the observer is called, the view handles selecting promotion,
+         * and we just now want to test the handling of the selected promotion
+         *
+         * If you wanted to test what happens in between, that would need to be handled by testing the view itself.
+         * to including it here is in the same way you have not tested handlePieceClicked() or handleCircleClicked().
+         *
+         * Another option is to just merge the tests above into these tests, set the FEN at the top to the position pre promotion
+         * and call `makeAMove()` here, followed by `game.promotionPieceDecision(PieceType.Queen)`. Then at the end of the
+         * test, verify the observer was called however many times you expect, and with which colours.
+         */
+        game.promotionPieceDecision(PieceType.Queen);
+        Assertions.assertEquals("3Qn2k/8/8/8/K7/8/3p4/2Q5 b - - 0 1",game.getCompleteFEN());
+
+        /**
+         * Using this approach, you would not test a second move.. However if using last option mentioned
+         * above where you test it all in one big test, you can do that.
+         */
+        game.makeAMove(new Position(3,6),new Position(3,7));
+        game.promotionPieceDecision(PieceType.Queen);
+        Assertions.assertEquals("3Qn2k/8/8/8/K7/8/8/2Qq4 w - - 0 2",game.getCompleteFEN());
+    }
 //
 //    @Test
 //    @DisplayName("Pawn promotion to Rook, forward move")
