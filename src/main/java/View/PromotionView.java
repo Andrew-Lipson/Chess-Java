@@ -1,6 +1,7 @@
 package View;
 
 import Contract.Contract;
+import javafx.application.Platform;
 import javafx.event.EventHandler;
 import javafx.scene.Group;
 import javafx.scene.Scene;
@@ -12,23 +13,31 @@ import javafx.scene.shape.Rectangle;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
+import javafx.stage.WindowEvent;
 
 public class PromotionView {
 
+    private final Contract.Listener listener;
     private final Stage promotionStage;
     private double xOffset = 0;
     private double yOffset = 0;
-    private String fenRep = "x";
 
-    public PromotionView(boolean isWhite){
+    public PromotionView(Contract.Listener listener, boolean isWhite){
+        this.listener = listener;
         promotionStage = new Stage();
+
+
         promotionStage.setScene(setUpStage(promotionStage,isWhite));
+
+        promotionStage.addEventHandler(WindowEvent.WINDOW_CLOSE_REQUEST, windowEvent -> {
+            Platform.exit();
+        });
+
 
     }
 
-    public String showPromotionStage(){
+    public void show(){
         promotionStage.showAndWait();
-        return fenRep;
     }
 
 
@@ -44,19 +53,13 @@ public class PromotionView {
         Group root = new Group();
         Scene scene = new Scene(root);
 
-        root.setOnMousePressed(new EventHandler<MouseEvent>() {
-            @Override
-            public void handle(MouseEvent event) {
-                xOffset = event.getSceneX();
-                yOffset = event.getSceneY();
-            }
+        root.setOnMousePressed(event -> {
+            xOffset = event.getSceneX();
+            yOffset = event.getSceneY();
         });
-        root.setOnMouseDragged(new EventHandler<MouseEvent>() {
-            @Override
-            public void handle(MouseEvent event) {
-                promotionStage.setX(event.getScreenX() - xOffset);
-                promotionStage.setY(event.getScreenY() - yOffset);
-            }
+        root.setOnMouseDragged(event -> {
+            promotionStage.setX(event.getScreenX() - xOffset);
+            promotionStage.setY(event.getScreenY() - yOffset);
         });
 
         Rectangle rectangle = new Rectangle();
@@ -94,36 +97,15 @@ public class PromotionView {
         imageview.setFitHeight(80);
         imageview.setFitWidth(80);
         imageview.setPickOnBounds(true);
-        Image image = new Image( getPNGString(fenRep[i], isWhite));
+        char character = fenRep[i].charAt(0);
+        Image image = new Image( SquareView.getPNGString(character, isWhite));
         imageview.setImage(image);
 
         imageview.setOnMouseClicked(__ -> {
-            this.fenRep = fenRep[i];
+            this.listener.onPromotionPieceDecided(fenRep[i]);
             promotionStage.close();
         });
         return imageview;
     }
 
-    private String getPNGString(String character, boolean isWhite) {
-        String output = "";
-        switch (character) {
-            case "q":
-                output += "Queen";
-                break;
-            case "r":
-                output += "Rook";
-                break;
-            case "n":
-                output += "Knight";
-                break;
-            case "b":
-                output += "Bishop";
-                break;
-        }
-
-        output += "-";
-        output += isWhite ? "White" : "Black";
-        output+=".png";
-        return output;
-    }
 }

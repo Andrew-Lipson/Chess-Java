@@ -147,9 +147,9 @@ public class MainView {
         }
     }
 
-    public String promotionPopup(boolean isWhite){
-        PromotionView promotionView = new PromotionView(isWhite);
-        return promotionView.showPromotionStage();
+    public void promotionPopup(boolean isWhite){
+        PromotionView promotionView = new PromotionView(listener, isWhite);
+        promotionView.show();
     }
 
     public void gameOverPopup(boolean isStaleMate, boolean isWhite){

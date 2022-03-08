@@ -12,6 +12,8 @@ public interface Contract {
 
         void handleCircleClicked(PositionView positionView);
 
+        public void onPromotionPieceDecided(String string);
+
     }
 
     interface Observer {
