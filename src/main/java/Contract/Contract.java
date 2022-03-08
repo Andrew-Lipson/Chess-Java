@@ -7,9 +7,10 @@ public interface Contract {
 
     interface Listener {
 
-        public void handlePieceClicked(PositionView positionView);
 
-        public void handleCircleClicked(PositionView positionView);
+        void handlePieceClicked(PositionView positionView);
+
+        void handleCircleClicked(PositionView positionView);
 
         public void onPromotionPieceDecided(String string);
 
@@ -17,9 +18,11 @@ public interface Contract {
 
     interface Observer {
 
-        public void update();
+        void update();
 
-        public void displayPromotionPopup();
+        String pawnPromotion(boolean isWhite);
+
+        void gameOver(boolean isStaleMate, boolean isWhite);
 
     }
 }
