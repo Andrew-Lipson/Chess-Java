@@ -12,7 +12,7 @@ public interface Contract {
 
         void handleCircleClicked(PositionView positionView);
 
-        public void onPromotionPieceDecided(String string);
+        void onPromotionPieceDecided(String string);
 
     }
 
@@ -20,7 +20,7 @@ public interface Contract {
 
         void update();
 
-        String pawnPromotion(boolean isWhite);
+        void displayPromotionPopup();
 
         void gameOver(boolean isStaleMate, boolean isWhite);
 
