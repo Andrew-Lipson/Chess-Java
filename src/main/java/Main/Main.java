@@ -9,7 +9,6 @@ import javafx.stage.Stage;
 
 import java.io.IOException;
 
-import static java.util.Objects.isNull;
 
 public class Main extends Application {
 
@@ -18,7 +17,7 @@ public class Main extends Application {
 
         Controller controller = new Controller(); // Start up Controller
         MainView mainView = new MainView(stage, controller);// Start up View
-        Game game = startGame(controller, "k7/8/8/8/8/6q1/2p5/7K b - - 0 1"); // Start up Model
+        Game game = startGame(controller, "8/k2N4/p7/1pP5/4B3/8/3Q4/K7 w - b6 0 1"); // Start up Model
 //        Game game = startGame(controller);
         controller.startApplication(game,mainView);
     }

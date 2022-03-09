@@ -4,6 +4,7 @@ package View;
 import Contract.Contract;
 import javafx.scene.Group;
 import javafx.scene.Scene;
+import javafx.scene.control.Button;
 import javafx.scene.image.Image;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
@@ -39,6 +40,7 @@ public class MainView {
             fileNumbers(root,i);
         }
 
+        addStockFishButton(root);
         this.boardSquaresView = new BoardView(listener);
 
         for (int rank = 0; rank < 8; rank++) {
@@ -58,6 +60,16 @@ public class MainView {
         Scene scene = new Scene(root, Color.BROWN);
         stage.setScene(scene);
         stage.show();
+    }
+
+    private void addStockFishButton(Group root){
+        Button button = new Button("Stockfish");
+        button.setOnMouseClicked(__ -> {
+            this.listener.stockFish();
+        });
+        button.setLayoutX(650);
+        button.setLayoutY(670);
+        root.getChildren().add(button);
     }
 
     /**

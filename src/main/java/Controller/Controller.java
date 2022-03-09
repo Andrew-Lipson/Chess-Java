@@ -10,20 +10,21 @@ import View.PositionView;
 
 import java.util.ArrayList;
 
+import static java.util.Objects.isNull;
 import static java.util.Objects.nonNull;
 
 public class Controller implements Contract.Listener, Contract.Observer {
 
-    Game game;
-    MainView mainview;
-    Piece clickedPiece = null;
+    private Game game;
+    private MainView mainview;
+    private Piece clickedPiece = null;
 
     public void startApplication(Game game, MainView mainview) {
         this.game = game;
         this.mainview = mainview;
 
-        update();
-        update();
+        updateView();
+        updateView();
         showBoard();
     }
 
@@ -45,20 +46,34 @@ public class Controller implements Contract.Listener, Contract.Observer {
         return movesForMainView;
     }
 
-    @Override
-    public void update() {
-        mainview.updateView(game.getCompleteFEN());
+    public void stockFish(){
+        Stockfish stockfish = new Stockfish();
+        StockFishOutput stockFishOutput = stockfish.getStockfishMove(game.getCompleteFEN());
+        if(isNull(stockFishOutput.getPieceType())){
+            game.makeAMove(stockFishOutput.getPreviousPosition(),stockFishOutput.getNewPosition(), true);
+        } else{
+            game.makeAMove(stockFishOutput.getPreviousPosition(),stockFishOutput.getNewPosition(), true);
+            game.promotionPieceDecision(stockFishOutput.getPieceType());
+        }
     }
 
     @Override
-    public void displayPromotionPopup() {
-        update();
+    public void updateView(){
+        mainview.updateView(game.getCompleteFEN());
+    }
+
+
+
+
+    @Override
+    public void displayPromotionPopup(){
+        updateView();
         mainview.promotionPopup(game.getWhitesTurn());
     }
 
     @Override
-    public void gameOver(boolean isStaleMate, boolean isWhite) {
-        update();
+    public void gameOver(boolean isStaleMate, boolean isWhite){
+        updateView();
         mainview.gameOverPopup(isStaleMate,isWhite);
     }
 
@@ -88,7 +103,7 @@ public class Controller implements Contract.Listener, Contract.Observer {
     public void handleCircleClicked(PositionView positionView) {
         Position newPosition = new Position(positionView.getFile(), positionView.getRank());
         Position previousPosition = clickedPiece.getPosition();
-        game.makeAMove(previousPosition,newPosition);
+        game.makeAMove(previousPosition,newPosition,false);
         this.clickedPiece = null;
     }
 
@@ -100,7 +115,7 @@ public class Controller implements Contract.Listener, Contract.Observer {
     @Override
     public void newGame(){
         this.game = new Game(this);
-        update();
+        updateView();
 
     }
 }

@@ -1,12 +1,10 @@
 package Contract;
 
-import Model.Pieces.PieceType;
 import View.PositionView;
 
 public interface Contract {
 
     interface Listener {
-
 
         void handlePieceClicked(PositionView positionView);
 
@@ -16,11 +14,12 @@ public interface Contract {
 
         void newGame();
 
+        void stockFish();
     }
 
     interface Observer {
 
-        void update();
+        void updateView();
 
         void displayPromotionPopup();
 
