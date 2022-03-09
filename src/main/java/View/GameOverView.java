@@ -1,15 +1,14 @@
 package View;
 
-import javafx.event.EventHandler;
+import Contract.Contract;
 import javafx.geometry.Pos;
-import javafx.scene.Group;
 import javafx.scene.Scene;
+import javafx.scene.control.Button;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
-import javafx.scene.input.MouseEvent;
+import javafx.scene.layout.Background;
 import javafx.scene.layout.StackPane;
 import javafx.scene.paint.Color;
-import javafx.scene.shape.Rectangle;
 import javafx.scene.text.Font;
 import javafx.scene.text.Text;
 import javafx.scene.text.TextAlignment;
@@ -20,8 +19,10 @@ import javafx.stage.StageStyle;
 public class GameOverView {
 
     private final Stage gameOverStage;
+    private final Contract.Listener listener;
 
-    public GameOverView(boolean isStaleMate, boolean isWhite){
+    public GameOverView(Contract.Listener listener, boolean isStaleMate, boolean isWhite){
+        this.listener = listener;
         gameOverStage = new Stage();
         gameOverStage.setScene(setUpStage(gameOverStage,isStaleMate, isWhite));
         showGameOverStage();
@@ -32,37 +33,37 @@ public class GameOverView {
     }
 
 
-    private Scene setUpStage(Stage promotionStage, boolean isStaleMate, boolean isWhite){
+    private Scene setUpStage(Stage gameOverStage, boolean isStaleMate, boolean isWhite){
         Image icon = new Image("chess-icon.png");
-        promotionStage.getIcons().add(icon);
-        promotionStage.setTitle("GAME OVER");
-        promotionStage.setWidth(500);
-        promotionStage.setHeight(150);
-        promotionStage.setResizable(false);
-        promotionStage.initModality(Modality.APPLICATION_MODAL);
-        promotionStage.initStyle(StageStyle.UTILITY);
+        gameOverStage.getIcons().add(icon);
+        gameOverStage.setTitle("GAME OVER");
+        gameOverStage.setWidth(500);
+        gameOverStage.setHeight(150);
+        gameOverStage.setResizable(false);
+        gameOverStage.initModality(Modality.APPLICATION_MODAL);
+        gameOverStage.initStyle(StageStyle.UTILITY);
         StackPane root = new StackPane();
-        Scene scene = new Scene(root, Color.BROWN);
+        root.setBackground(Background.EMPTY);
 
         if (isStaleMate) {
-            staleMate(root);
+            addText(root, "STALEMATE!");
         } else {
-            checkMate(root, isWhite);
+            addCheckMateDisplays(root, isWhite);
         }
 
-        return scene;
+        addButton(root);
+
+        return new Scene(root, Color.BROWN);
     }
 
-    private void staleMate(StackPane root){
-        Text text = new Text("STALEMATE");
+    private void addText(StackPane root, String string){
+        Text text = new Text(string);
         text.setTextAlignment(TextAlignment.CENTER);
         text.setFont(Font.font(50));
         root.getChildren().add(text);
     }
 
-    private void checkMate(StackPane root, boolean isWhite){
-
-
+    private void addCheckMateDisplays(StackPane root, boolean isWhite){
         ImageView imageView1 = createImageView(isWhite);
         root.getChildren().add(imageView1);
         StackPane.setAlignment(imageView1, Pos.CENTER_LEFT);
@@ -73,12 +74,8 @@ public class GameOverView {
 
         String output = isWhite?"WHITE ":"BLACK ";
         output += "WINS!";
-        Text text = new Text(output);
-        text.setTextAlignment(TextAlignment.CENTER);
-        text.setFont(Font.font(50));
-        root.getChildren().add(text);
 
-
+        addText(root, output);
     }
 
     private ImageView createImageView(boolean isWhite){
@@ -95,5 +92,15 @@ public class GameOverView {
         output += isWhite ? "White" : "Black";
         output+=".png";
         return output;
+    }
+
+    private void addButton(StackPane root){
+        Button button = new Button("Play Again");
+        button.setOnMouseClicked(__ -> {
+            this.listener.newGame();
+            gameOverStage.close();
+        });
+        root.getChildren().add(button);
+        StackPane.setAlignment(button,Pos.BOTTOM_CENTER);
     }
 }

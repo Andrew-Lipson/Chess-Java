@@ -14,6 +14,8 @@ public interface Contract {
 
         void onPromotionPieceDecided(String string);
 
+        void newGame();
+
     }
 
     interface Observer {

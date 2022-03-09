@@ -164,7 +164,7 @@ public class MainView {
     }
 
     public void gameOverPopup(boolean isStaleMate, boolean isWhite){
-        new GameOverView(isStaleMate,isWhite);
+        new GameOverView(listener, isStaleMate,isWhite);
     }
 
     private SquareView getSquareView(PositionView position) {

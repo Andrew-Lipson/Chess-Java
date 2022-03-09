@@ -97,4 +97,10 @@ public class Controller implements Contract.Listener, Contract.Observer {
         game.promotionPieceDecision(PieceType.getPieceType(string));
     }
 
+    @Override
+    public void newGame(){
+        this.game = new Game(this);
+        update();
+
+    }
 }
