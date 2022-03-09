@@ -22,6 +22,7 @@ public class SquareView extends Group {
     private final Circle circle = new Circle();
     private final double heightWidth = 80;
     private Character FENPiece = 'x';
+    private SquareColour color;
 
     /**
      * Intilising the SquareView for X & Y coordinates, the colour, the shape (rectangle) and size
@@ -48,17 +49,18 @@ public class SquareView extends Group {
     }
 
     public void initialiseRectangle() {
-        this.rectangle.setFill(
+        color =
             (this.rank + this.file) % 2 == 0
-                ? Color.BEIGE
-                : Color.GREY
-        );
+                ? SquareColour.EVEN
+                : SquareColour.ODD;
+        changeSquareColour(color);
         this.rectangle.setWidth(heightWidth);
         this.rectangle.setHeight(heightWidth);
         this.rectangle.setX(xCoordinate);
         this.rectangle.setY(yCoordinate);
         getChildren().add(this.rectangle);
     }
+
 
     /**
      * Sets the ImageView's X & Y coordinates and it's height and width
@@ -88,6 +90,22 @@ public class SquareView extends Group {
     }
 
     /**
+     * Change the colour of the square to squareColour
+     *
+     * @param squareColour is the colour the Square will change to
+     */
+    public void changeSquareColour(SquareColour squareColour){
+        this.rectangle.setFill(squareColour.getSquareColor());
+    }
+
+    /**
+     * Change the colour of the square to the Square's normal colour
+     */
+    public void changeSquareColour(){
+        this.rectangle.setFill(color.getSquareColor());
+    }
+
+    /**
      * Update the FENPiece and then get the correct image from the resouces and add/remove the imageview from the Group.
      * 
      * @param charactor
@@ -95,16 +113,19 @@ public class SquareView extends Group {
     public void addPiece(Character charactor) {
         // check if the charactor is the same. If it is then return
         if(charactor == this.FENPiece) {
+            changeSquareColour(color);
             return;
         }
         // check if there was no piece previous on the spot. If so then add imageview to the Group
         if (this.FENPiece == 'x') {
+            changeSquareColour(SquareColour.MOVED);
             getChildren().add(imageview);
         }
         this.FENPiece = charactor;
         // if there is no longer a piece on this square, remove the imageview and return
         if (charactor == 'x') {
             getChildren().remove(imageview);
+            changeSquareColour(SquareColour.MOVED);
             return;
         }
         boolean isWhite = true;
@@ -112,6 +133,7 @@ public class SquareView extends Group {
             isWhite = false;
         }
 
+        changeSquareColour(SquareColour.MOVED);
         Image image = new Image(getPNGString(Character.toLowerCase(charactor), isWhite));
         this.imageview.setImage(image);
     }
@@ -165,14 +187,6 @@ public class SquareView extends Group {
      */
     public void removeCircle(){
         this.getChildren().remove(circle);
-    }
-
-    public ImageView getImageview() {
-        return imageview;
-    }
-
-    public Circle getCircle() {
-        return circle;
     }
 }
 

@@ -130,11 +130,22 @@ public class MainView {
      * 
      * @param possibleMoves
      */
-    public void addMoveOptionsCircles(ArrayList<PositionView> possibleMoves) {
+    public void addMoveOptionsCircles(PositionView positionView , ArrayList<PositionView> possibleMoves) {
+        boardSquaresView.getSquareView(positionView).changeSquareColour(SquareColour.CLICKED);
         for (PositionView position:possibleMoves) {
             SquareView squareView = boardSquaresView.getSquareView(position);
             squareView.addCircle();
             circlesActivated.add(squareView);
+        }
+    }
+
+    /**
+     * Removing the circles of the possible moves and return the clicked square back to its normal colour
+     */
+    public void removeMoveOptionsCircles(PositionView positionView) {
+        boardSquaresView.getSquareView(positionView).changeSquareColour();
+        for (SquareView squareview:this.circlesActivated) {
+            squareview.removeCircle();
         }
     }
 

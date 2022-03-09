@@ -23,6 +23,7 @@ public class Controller implements Contract.Listener, Contract.Observer {
         this.mainview = mainview;
 
         update();
+        update();
         showBoard();
     }
 
@@ -66,19 +67,19 @@ public class Controller implements Contract.Listener, Contract.Observer {
         // Check if the piece clicked was just clicked, and remove the possible moves from the board
         Position position = new Position(positionView.getFile(), positionView.getRank());
         if (nonNull(clickedPiece) && clickedPiece.getPosition().getFile() == position.getFile() && clickedPiece.getPosition().getRank() == position.getRank()) {
-            mainview.removeMoveOptionsCircles();
+            mainview.removeMoveOptionsCircles(positionView);
             this.clickedPiece = null;
         } else {
             // Check if another piece has been previously clicked and remove that piece's possible moves
             if(nonNull(clickedPiece)) {
-                mainview.removeMoveOptionsCircles();
+                mainview.removeMoveOptionsCircles(new PositionView(clickedPiece.getPosition().getFile(), clickedPiece.getPosition().getRank()));
             }
             // Add the Clicked piece's possible moves
             this.clickedPiece = game.getPiece(position);
             boolean isWhite = this.clickedPiece.getIsWhite();
             if (game.getWhitesTurn() == isWhite) {
                 ArrayList<Position> moves = game.getLegalMoves(position);
-                mainview.addMoveOptionsCircles(convertMovesFromPositiontoPositionView(moves));
+                mainview.addMoveOptionsCircles(positionView, convertMovesFromPositiontoPositionView(moves));
             }
         }
     }
