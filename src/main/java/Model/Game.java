@@ -271,7 +271,7 @@ public class Game {
      * Call updateView function in the observer
      */
     private void updateView(){
-        _observer.updateView();
+        _observer.update();
     }
 
 

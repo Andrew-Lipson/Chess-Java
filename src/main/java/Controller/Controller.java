@@ -7,10 +7,10 @@ import Model.Position;
 import Model.Pieces.Piece;
 import View.MainView;
 import View.PositionView;
+import javafx.application.Platform;
 
 import java.util.ArrayList;
 
-import static java.util.Objects.isNull;
 import static java.util.Objects.nonNull;
 
 public class Controller implements Contract.Listener, Contract.Observer {
@@ -46,24 +46,22 @@ public class Controller implements Contract.Listener, Contract.Observer {
         return movesForMainView;
     }
 
-    public void stockFish(){
-        Stockfish stockfish = new Stockfish();
-        StockFishOutput stockFishOutput = stockfish.getStockfishMove(game.getCompleteFEN());
-        if(isNull(stockFishOutput.getPieceType())){
-            game.makeAMove(stockFishOutput.getPreviousPosition(),stockFishOutput.getNewPosition(), true);
-        } else{
-            game.makeAMove(stockFishOutput.getPreviousPosition(),stockFishOutput.getNewPosition(), true);
-            game.promotionPieceDecision(stockFishOutput.getPieceType());
-        }
+    public void computerToMakeAMove(){
+        Stockfish stockfish = new Stockfish(game.getCompleteFEN(), game);
+        Platform.runLater(stockfish);
     }
 
-    @Override
     public void updateView(){
         mainview.updateView(game.getCompleteFEN());
     }
 
-
-
+    @Override
+    public void update(){
+        updateView();
+        if (!game.getWhitesTurn()){
+            computerToMakeAMove();
+        }
+    }
 
     @Override
     public void displayPromotionPopup(){

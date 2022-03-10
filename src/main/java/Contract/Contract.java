@@ -13,13 +13,11 @@ public interface Contract {
         void onPromotionPieceDecided(String string);
 
         void newGame();
-
-        void stockFish();
     }
 
     interface Observer {
 
-        void updateView();
+        void update();
 
         void displayPromotionPopup();
 
