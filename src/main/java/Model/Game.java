@@ -431,7 +431,7 @@ public class Game {
      *
      * @return whitesTurn
      */
-    public boolean getWhitesTurn() {
+    public Boolean getWhitesTurn() {
         return whitesTurn;
     }
 

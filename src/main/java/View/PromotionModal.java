@@ -2,12 +2,10 @@ package View;
 
 import Contract.Contract;
 import javafx.application.Platform;
-import javafx.event.EventHandler;
 import javafx.scene.Group;
 import javafx.scene.Scene;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
-import javafx.scene.input.MouseEvent;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
 import javafx.stage.Modality;
@@ -15,14 +13,14 @@ import javafx.stage.Stage;
 import javafx.stage.StageStyle;
 import javafx.stage.WindowEvent;
 
-public class PromotionView {
+public class PromotionModal {
 
     private final Contract.Listener listener;
     private final Stage promotionStage;
     private double xOffset = 0;
     private double yOffset = 0;
 
-    public PromotionView(Contract.Listener listener, boolean isWhite){
+    public PromotionModal(Contract.Listener listener, boolean isWhite){
         this.listener = listener;
         promotionStage = new Stage();
 

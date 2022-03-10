@@ -5,7 +5,7 @@ import Model.Game;
 import Model.Pieces.PieceType;
 import Model.Position;
 import Model.Pieces.Piece;
-import View.MainView;
+import View.MainStage;
 import View.PositionView;
 import javafx.application.Platform;
 
@@ -16,20 +16,20 @@ import static java.util.Objects.nonNull;
 public class Controller implements Contract.Listener, Contract.Observer {
 
     private Game game;
-    private MainView mainview;
+    private MainStage mainview;
     private Piece clickedPiece = null;
+    private Boolean computerIsWhite = null;
 
-    public void startApplication(Game game, MainView mainview) {
-        this.game = game;
+    public void startApplication(MainStage mainview) {
+        this.game = new Game(this);
         this.mainview = mainview;
+        mainview.createStage();
+        showMainMenu();
 
-        updateView();
-        updateView();
-        showBoard();
     }
 
-    private void showBoard() {
-        mainview.showBoard();
+    private void showMainMenu() {
+        mainview.showMainMenu();
     }
 
     /**
@@ -58,7 +58,7 @@ public class Controller implements Contract.Listener, Contract.Observer {
     @Override
     public void update(){
         updateView();
-        if (!game.getWhitesTurn()){
+        if (game.getWhitesTurn().equals(computerIsWhite)){
             computerToMakeAMove();
         }
     }
@@ -113,7 +113,27 @@ public class Controller implements Contract.Listener, Contract.Observer {
     @Override
     public void newGame(){
         this.game = new Game(this);
-        updateView();
+        mainview.showMainMenu();
 
+    }
+
+    @Override
+    public void numberOfPlayersDecision(boolean singlePlayer) {
+        if (singlePlayer){
+            mainview.showChooseColourMenu();
+        } else{
+            computerIsWhite = null;
+            mainview.showBoard(false);
+            updateView();
+            update();
+        }
+    }
+
+    @Override
+    public void colourToPlayAsDecision(boolean isWhite) {
+        computerIsWhite = !isWhite;
+        mainview.showBoard(!isWhite);
+        updateView();
+        update();
     }
 }

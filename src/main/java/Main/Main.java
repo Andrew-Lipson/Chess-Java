@@ -3,7 +3,7 @@ package Main;
 import Controller.Controller;
 import Model.Game;
 import Model.Utilities.Fen;
-import View.MainView;
+import View.MainStage;
 import javafx.application.Application;
 import javafx.stage.Stage;
 
@@ -16,10 +16,9 @@ public class Main extends Application {
     public void start(Stage stage) throws IOException {
 
         Controller controller = new Controller(); // Start up Controller
-        MainView mainView = new MainView(stage, controller);// Start up View
-        Game game = startGame(controller, "8/k2N4/p7/1pP5/4B3/8/3Q4/K7 w - b6 0 1"); // Start up Model
-//        Game game = startGame(controller);
-        controller.startApplication(game,mainView);
+        MainStage mainView = new MainStage(stage, controller);// Start up View
+//        Game game = startGame(controller, "8/k2N4/p7/1pP5/4B3/8/3Q4/K7 w - b6 0 1"); // Start up Model
+        controller.startApplication(mainView);
     }
 
     public static void main(String[] args) {

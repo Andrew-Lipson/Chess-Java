@@ -32,7 +32,7 @@ public class SquareView extends Group {
      * @param rank
      * @param listener
      */
-    public SquareView(int file, int rank, Contract.Listener listener) {
+    public SquareView(int file, int rank, Contract.Listener listener, boolean inverted) {
 
         this.file = file;
         this.rank = rank;
@@ -40,8 +40,11 @@ public class SquareView extends Group {
         this.positionView = new PositionView(file,rank);
         this.rectangle = new Rectangle();
 
-        this.xCoordinate = (10 + heightWidth * file);
-        this.yCoordinate = (10 + heightWidth * rank);
+        int startingCoordinate = inverted?570:10;
+        double changingCoordinate = inverted?(-heightWidth):heightWidth;
+
+        this.xCoordinate = (startingCoordinate + changingCoordinate * file);
+        this.yCoordinate = (startingCoordinate + changingCoordinate * rank);
 
         initialiseRectangle();
         initialiseImageView();
@@ -102,7 +105,9 @@ public class SquareView extends Group {
      * Change the colour of the square to the Square's normal colour
      */
     public void changeSquareColour(){
-        this.rectangle.setFill(color.getSquareColor());
+        if(this.rectangle.getFill()==SquareColour.CLICKED.getSquareColor()){
+            this.rectangle.setFill(color.getSquareColor());
+        }
     }
 
     /**

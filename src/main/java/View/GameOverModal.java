@@ -16,12 +16,12 @@ import javafx.stage.Modality;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
 
-public class GameOverView {
+public class GameOverModal {
 
     private final Stage gameOverStage;
     private final Contract.Listener listener;
 
-    public GameOverView(Contract.Listener listener, boolean isStaleMate, boolean isWhite){
+    public GameOverModal(Contract.Listener listener, boolean isStaleMate, boolean isWhite){
         this.listener = listener;
         gameOverStage = new Stage();
         gameOverStage.setScene(setUpStage(gameOverStage,isStaleMate, isWhite));

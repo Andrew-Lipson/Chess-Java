@@ -3,9 +3,7 @@ package View;
 
 import Contract.Contract;
 import javafx.scene.Group;
-import javafx.scene.Scene;
 import javafx.scene.image.Image;
-import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 import javafx.scene.text.Text;
 import javafx.stage.Stage;
@@ -15,12 +13,11 @@ import java.util.ArrayList;
 
 import static java.lang.Character.isDigit;
 
-public class MainView {
+public class MainStage {
 
     private final Stage stage;
     private final Contract.Listener listener;
-    private BoardView boardSquaresView;
-    private final Group root = new Group();
+    private BoardScene boardView;
     private ArrayList<SquareView> circlesActivated = new ArrayList<SquareView>();
 
     /**
@@ -30,34 +27,43 @@ public class MainView {
      * @param listener
      * @throws IOException
      */
-    public MainView(Stage stage, Contract.Listener listener) throws IOException {
+    public MainStage(Stage stage, Contract.Listener listener) throws IOException {
         this.stage = stage;
         this.listener = listener;
 
-        for (int i = 0; i < 8; i++) {
-            rankNumbers(root,i);
-            fileNumbers(root,i);
-        }
+//        for (int i = 0; i < 8; i++) {
+//            rankNumbers(root,i);
+//            fileNumbers(root,i);
+//        }
 
-        this.boardSquaresView = new BoardView(listener);
-
-        for (int rank = 0; rank < 8; rank++) {
-            for (int file = 0; file < 8; file++) {
-                root.getChildren().add(this.boardSquaresView.getSquareView(new PositionView(file,rank)));
-            }
-        }
     }
 
-    public void showBoard() {
+    public void createStage() {
         Image icon = new Image("chess-icon.png");
         stage.getIcons().add(icon);
         stage.setTitle("CHESS");
-        stage.setWidth(730);
-        stage.setHeight(750);
+        stage.setWidth(680); // plus 50 when wanted file and rank numbers
+        stage.setHeight(700); // plus 50 when wanted file and rank numbers
         stage.setResizable(false);
-        Scene scene = new Scene(root, Color.BROWN);
-        stage.setScene(scene);
         stage.show();
+    }
+
+    public void showMainMenu(){
+        MainMenuScene menuView = new MainMenuScene(listener);
+        menuView.PopulateScene();
+        stage.setScene(menuView);
+
+    }
+
+    public void showChooseColourMenu(){
+        ChooseColourScene chooseColourView = new ChooseColourScene(listener);
+        chooseColourView.PopulateScene();
+        stage.setScene(chooseColourView);
+    }
+
+    public void showBoard(boolean inverted){
+        this.boardView = new BoardScene(listener, inverted);
+        stage.setScene(boardView);
     }
 
     /**
@@ -131,9 +137,9 @@ public class MainView {
      * @param possibleMoves
      */
     public void addMoveOptionsCircles(PositionView positionView , ArrayList<PositionView> possibleMoves) {
-        boardSquaresView.getSquareView(positionView).changeSquareColour(SquareColour.CLICKED);
+        boardView.getSquareView(positionView).changeSquareColour(SquareColour.CLICKED);
         for (PositionView position:possibleMoves) {
-            SquareView squareView = boardSquaresView.getSquareView(position);
+            SquareView squareView = boardView.getSquareView(position);
             squareView.addCircle();
             circlesActivated.add(squareView);
         }
@@ -143,7 +149,7 @@ public class MainView {
      * Removing the circles of the possible moves and return the clicked square back to its normal colour
      */
     public void removeMoveOptionsCircles(PositionView positionView) {
-        boardSquaresView.getSquareView(positionView).changeSquareColour();
+        boardView.getSquareView(positionView).changeSquareColour();
         for (SquareView squareview:this.circlesActivated) {
             squareview.removeCircle();
         }
@@ -159,15 +165,15 @@ public class MainView {
     }
 
     public void promotionPopup(boolean isWhite){
-        PromotionView promotionView = new PromotionView(listener, isWhite);
+        PromotionModal promotionView = new PromotionModal(listener, isWhite);
         promotionView.show();
     }
 
     public void gameOverPopup(boolean isStaleMate, boolean isWhite){
-        new GameOverView(listener, isStaleMate,isWhite);
+        new GameOverModal(listener, isStaleMate,isWhite);
     }
 
     private SquareView getSquareView(PositionView position) {
-        return boardSquaresView.getSquareView(position);
+        return boardView.getSquareView(position);
     }
 }

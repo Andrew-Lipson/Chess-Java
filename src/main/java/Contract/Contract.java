@@ -13,6 +13,10 @@ public interface Contract {
         void onPromotionPieceDecided(String string);
 
         void newGame();
+
+        void numberOfPlayersDecision(boolean singlePlayer);
+
+        void colourToPlayAsDecision(boolean isWhite);
     }
 
     interface Observer {

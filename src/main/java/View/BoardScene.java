@@ -1,15 +1,21 @@
 package View;
 
 import Contract.Contract;
+import javafx.scene.Group;
+import javafx.scene.Scene;
+import javafx.scene.paint.Color;
 
-public class BoardView {
+public class BoardScene extends Scene {
 
     SquareView[][] squareView = new SquareView[8][8];
 
-    public BoardView(Contract.Listener listener) {
+    public BoardScene(Contract.Listener listener, boolean inverted) {
+        super(new Group(), Color.BROWN);
+        Group root = (Group) this.getRoot();
         for (int rank = 0; rank < 8; rank++) {
             for (int file = 0; file < 8; file++) {
-                squareView[file][rank] = new SquareView(file, rank, listener);
+                squareView[file][rank] = new SquareView(file, rank, listener, inverted);
+                root.getChildren().add(squareView[file][rank]);
             }
         }
     }

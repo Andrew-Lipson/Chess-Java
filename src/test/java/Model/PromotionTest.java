@@ -25,7 +25,7 @@ public class PromotionTest {
         Game game = Fen.convertFenToBoard("4n2k/3P4/8/8/K7/8/3p4/2Q5 w - - 0 1",mockObserver);
 
         // when
-        game.makeAMove(new Position(3,1),new Position(3,0), true);
+        game.makeAMove(new Position(3,1),new Position(3,0), false);
 
         // then
         verify(mockObserver, times(1)).displayPromotionPopup();
