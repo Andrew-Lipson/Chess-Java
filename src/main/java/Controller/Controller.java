@@ -28,7 +28,8 @@ public class Controller implements Contract.Listener, Contract.Observer {
 
     }
 
-    private void showMainMenu() {
+    @Override
+    public void showMainMenu() {
         mainview.showMainMenu();
     }
 
@@ -110,11 +111,12 @@ public class Controller implements Contract.Listener, Contract.Observer {
         game.promotionPieceDecision(PieceType.getPieceType(string));
     }
 
-    @Override
-    public void newGame(){
+    public void newGame(Boolean computerIsWhite, boolean inverted){
+        this.computerIsWhite = computerIsWhite;
+        mainview.showBoard(inverted);
         this.game = new Game(this);
-        mainview.showMainMenu();
-
+        updateView();
+        update();
     }
 
     @Override
@@ -122,18 +124,12 @@ public class Controller implements Contract.Listener, Contract.Observer {
         if (singlePlayer){
             mainview.showChooseColourMenu();
         } else{
-            computerIsWhite = null;
-            mainview.showBoard(false);
-            updateView();
-            update();
+            newGame(null,false);
         }
     }
 
     @Override
     public void colourToPlayAsDecision(boolean isWhite) {
-        computerIsWhite = !isWhite;
-        mainview.showBoard(!isWhite);
-        updateView();
-        update();
+        newGame(!isWhite, !isWhite);
     }
 }

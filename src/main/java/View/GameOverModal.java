@@ -97,7 +97,7 @@ public class GameOverModal {
     private void addButton(StackPane root){
         Button button = new Button("Play Again");
         button.setOnMouseClicked(__ -> {
-            this.listener.newGame();
+            this.listener.showMainMenu();
             gameOverStage.close();
         });
         root.getChildren().add(button);

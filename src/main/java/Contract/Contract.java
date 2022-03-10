@@ -12,7 +12,7 @@ public interface Contract {
 
         void onPromotionPieceDecided(String string);
 
-        void newGame();
+        void showMainMenu();
 
         void numberOfPlayersDecision(boolean singlePlayer);
 
