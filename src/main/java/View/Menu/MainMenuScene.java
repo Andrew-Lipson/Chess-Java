@@ -12,10 +12,9 @@ public class MainMenuScene extends Scene{
     public MainMenuScene(Contract.Listener listener) {
         super(new Group(), Color.BROWN);
         this.listener = listener;
-        chooseNumberOfPlayersMenu();
     }
 
-    private void chooseNumberOfPlayersMenu(){
+    public void chooseNumberOfPlayersMenu(){
         ChooseNumberOfPlayersRoot chooseNumberOfPlayersRoot = new ChooseNumberOfPlayersRoot(listener, this);
         this.setRoot(chooseNumberOfPlayersRoot);
     }

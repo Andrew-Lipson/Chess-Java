@@ -22,15 +22,18 @@ public class Controller implements Contract.Listener, Contract.Observer {
     private Piece clickedPiece = null;
     private Boolean computerIsWhite = null;
 
+    // why is this not member
+    Stockfish stockfish;
+
     public void startApplication(MainStage mainview) {
         this.mainview = mainview;
-        mainview.createStage();
+        this.mainview.createStage();
         showMainMenu();
 
     }
 
     public void showMainMenu() {
-        mainview.showMainMenu();
+        this.mainview.showMainMenu();
     }
 
     /**
@@ -49,7 +52,7 @@ public class Controller implements Contract.Listener, Contract.Observer {
 
     public void computerToMakeAMove(){
         Stockfish stockfish = new Stockfish(game.getFullFen(), game);
-        Platform.runLater(stockfish);
+        stockfish.run();
     }
 
     public void updateView(){
@@ -60,9 +63,10 @@ public class Controller implements Contract.Listener, Contract.Observer {
 
     @Override
     public void update(){
-        updateView();
+        this.updateView();
         if (game.getWhitesTurn().equals(computerIsWhite)){
-            computerToMakeAMove();
+            // runnable for that thread
+            new Thread(() -> computerToMakeAMove()).start();
         }
     }
 

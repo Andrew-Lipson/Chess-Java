@@ -55,10 +55,10 @@ public class MainStage {
         stage.show();
     }
 
-    public void showMainMenu(){
+    public void showMainMenu() {
         MainMenuScene menuView = new MainMenuScene(listener);
+        menuView.chooseNumberOfPlayersMenu();
         stage.setScene(menuView);
-
     }
 
     public void showBoard(boolean inverted){

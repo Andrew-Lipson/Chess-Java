@@ -33,16 +33,23 @@ public class Draws {
         return false;
     }
 
+    enum FinalMaterial {
+        KING,
+        KING_AND_BISHOP,
+        KING_AND_KNIGHT,
+        OTHER
+    }
+
     public boolean isThereInsufficientMaterial(ArrayList<Piece> whitePieces, ArrayList<Piece> blackPieces){
 
-        int whiteValue = getRemainingPiecesValue(whitePieces);
-        int blackValue = getRemainingPiecesValue(blackPieces);
+        FinalMaterial whiteValue = getRemainingPiecesValue(whitePieces);
+        FinalMaterial blackValue = getRemainingPiecesValue(blackPieces);
         
-        if (whiteValue==-1 || blackValue==-1){
+        if (whiteValue == FinalMaterial.OTHER || blackValue == FinalMaterial.OTHER) {
             return false;
-        } else if (whiteValue==0 || blackValue==0){
+        } else if (whiteValue == FinalMaterial.KING || blackValue == FinalMaterial.KING) {
             return true;
-        } else if (whiteValue==1 || blackValue==1){
+        } else if (whiteValue == FinalMaterial.KING_AND_BISHOP && blackValue == FinalMaterial.KING_AND_BISHOP) {
                 Piece whiteBishop = whitePieces.stream().filter(piece -> piece.getPieceType().equals(PieceType.Bishop)).findFirst().orElse(null);
                 Piece blackBishop = blackPieces.stream().filter(piece -> piece.getPieceType().equals(PieceType.Bishop)).findFirst().orElse(null);
                 return whiteBishop.isOnLightSquares() == blackBishop.isOnLightSquares();
@@ -53,27 +60,23 @@ public class Draws {
 
     /**
      * return a value depending on the remaining pieces:
-     *  0: Just a King
-     *  1: King and a Bishop
-     *  2: King and a Knight
-     *  -1: anything else
      *
      * @param colouredPieces
-     * @return
+     * @return {FinalMaterial}
      */
-    private int getRemainingPiecesValue(ArrayList<Piece> colouredPieces){
+    private FinalMaterial getRemainingPiecesValue(ArrayList<Piece> colouredPieces){
         if (colouredPieces.size()>2) {
-            return -1;
+            return FinalMaterial.OTHER;
         } else if (colouredPieces.size()==1){
-            return 0;
+            return FinalMaterial.KING;
         } else {
             Piece nonKingPiece = colouredPieces.stream().filter(piece -> !piece.getPieceType().equals(PieceType.King)).findFirst().orElse(null);
             if (nonKingPiece.getPieceType()==PieceType.Bishop){
-                return 1;
+                return FinalMaterial.KING_AND_BISHOP;
             } else if(nonKingPiece.getPieceType()==PieceType.Knight){
-                return 2;
+                return FinalMaterial.KING_AND_KNIGHT;
             } else {
-                return -1;
+                return FinalMaterial.OTHER;
             }
         }
     }

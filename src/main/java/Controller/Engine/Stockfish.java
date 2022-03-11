@@ -3,19 +3,20 @@ package Controller.Engine;
 import Model.Game;
 import Model.Pieces.PieceType;
 import Model.Position;
+import javafx.application.Platform;
 
 import java.io.*;
 import java.util.Objects;
 
 import static java.util.Objects.isNull;
 
-public class Stockfish implements Runnable{
+public class Stockfish {
 
     private Process process;
     private String command;
     private Game game;
 
-    public Stockfish(String fen, Game game){
+    public Stockfish(String fen, Game game) {
         this.game = game;
         ProcessBuilder builder = new ProcessBuilder();
         builder.command("stockfish_14.1_win_x64_avx2.exe");
@@ -28,9 +29,12 @@ public class Stockfish implements Runnable{
         command = "position fen " + fen +"\n";
     }
 
-    @Override
-    public void run(){
+    public void run() {
         StockFishOutput stockFishOutput = getStockfishMove();
+        Platform.runLater(() -> stockfishToMakeAMove(stockFishOutput));
+    }
+
+    public void stockfishToMakeAMove(StockFishOutput stockFishOutput) {
         if(isNull(stockFishOutput.getPieceType())){
             game.makeAMove(stockFishOutput.getPreviousPosition(),stockFishOutput.getNewPosition(), true);
         } else{
