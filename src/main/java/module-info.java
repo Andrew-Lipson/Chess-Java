@@ -13,4 +13,5 @@ module Model {
     exports View.Menu;
     exports View.Modals;
     exports View.Board;
+    exports Controller.Engine;
 }

@@ -1,6 +1,7 @@
 package Controller;
 
 import Contract.Contract;
+import Controller.Engine.Stockfish;
 import Model.Game;
 import Model.Pieces.PieceType;
 import Model.Position;
