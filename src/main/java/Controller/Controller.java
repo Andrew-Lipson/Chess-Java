@@ -6,7 +6,7 @@ import Model.Pieces.PieceType;
 import Model.Position;
 import Model.Pieces.Piece;
 import View.MainStage;
-import View.PositionView;
+import View.Board.PositionView;
 import javafx.application.Platform;
 
 import java.util.ArrayList;
@@ -21,14 +21,12 @@ public class Controller implements Contract.Listener, Contract.Observer {
     private Boolean computerIsWhite = null;
 
     public void startApplication(MainStage mainview) {
-        this.game = new Game(this);
         this.mainview = mainview;
         mainview.createStage();
         showMainMenu();
 
     }
 
-    @Override
     public void showMainMenu() {
         mainview.showMainMenu();
     }
@@ -56,6 +54,8 @@ public class Controller implements Contract.Listener, Contract.Observer {
         mainview.updateView(game.getCompleteFEN());
     }
 
+// region Observer Interface
+
     @Override
     public void update(){
         updateView();
@@ -75,6 +75,10 @@ public class Controller implements Contract.Listener, Contract.Observer {
         updateView();
         mainview.gameOverPopup(isStaleMate,isWhite);
     }
+
+//endregion
+
+//region Listener Interface
 
     @Override
     public void handlePieceClicked(PositionView positionView) {
@@ -111,25 +115,19 @@ public class Controller implements Contract.Listener, Contract.Observer {
         game.promotionPieceDecision(PieceType.getPieceType(string));
     }
 
-    public void newGame(Boolean computerIsWhite, boolean inverted){
-        this.computerIsWhite = computerIsWhite;
-        mainview.showBoard(inverted);
+    @Override
+    public void newGame(boolean singlePlayer, Boolean computerIsWhite){
+        if (singlePlayer){
+            this.computerIsWhite = computerIsWhite;
+            mainview.showBoard(computerIsWhite);
+        } else{
+            this.computerIsWhite = null;
+            mainview.showBoard(false);
+        }
         this.game = new Game(this);
         updateView();
         update();
     }
+//endregion
 
-    @Override
-    public void numberOfPlayersDecision(boolean singlePlayer) {
-        if (singlePlayer){
-            mainview.showChooseColourMenu();
-        } else{
-            newGame(null,false);
-        }
-    }
-
-    @Override
-    public void colourToPlayAsDecision(boolean isWhite) {
-        newGame(!isWhite, !isWhite);
-    }
 }

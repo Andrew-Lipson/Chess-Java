@@ -1,6 +1,7 @@
-package View;
+package View.Modals;
 
 import Contract.Contract;
+import View.Board.SquareNode;
 import javafx.application.Platform;
 import javafx.scene.Group;
 import javafx.scene.Scene;
@@ -96,7 +97,7 @@ public class PromotionModal {
         imageview.setFitWidth(80);
         imageview.setPickOnBounds(true);
         char character = fenRep[i].charAt(0);
-        Image image = new Image( SquareView.getPNGString(character, isWhite));
+        Image image = new Image( SquareNode.getPNGString(character, isWhite));
         imageview.setImage(image);
 
         imageview.setOnMouseClicked(__ -> {

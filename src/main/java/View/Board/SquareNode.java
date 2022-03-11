@@ -1,4 +1,4 @@
-package View;
+package View.Board;
 
 import Contract.Contract;
 import javafx.scene.Group;
@@ -8,7 +8,7 @@ import javafx.scene.paint.Color;
 import javafx.scene.shape.Circle;
 import javafx.scene.shape.Rectangle;
 
-public class SquareView extends Group {
+public class SquareNode extends Group {
 
     private final Contract.Listener listener;
     private final PositionView positionView;
@@ -32,7 +32,7 @@ public class SquareView extends Group {
      * @param rank
      * @param listener
      */
-    public SquareView(int file, int rank, Contract.Listener listener, boolean inverted) {
+    public SquareNode(int file, int rank, Contract.Listener listener, boolean inverted) {
 
         this.file = file;
         this.rank = rank;

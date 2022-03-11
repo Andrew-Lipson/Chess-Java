@@ -1,6 +1,5 @@
-package View;
+package View.Modals;
 
-import Contract.Contract;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
@@ -19,16 +18,14 @@ import javafx.stage.StageStyle;
 public class GameOverModal {
 
     private final Stage gameOverStage;
-    private final Contract.Listener listener;
+    private boolean newGame = false;
 
-    public GameOverModal(Contract.Listener listener, boolean isStaleMate, boolean isWhite){
-        this.listener = listener;
+    public GameOverModal(boolean isStaleMate, boolean isWhite){
         gameOverStage = new Stage();
         gameOverStage.setScene(setUpStage(gameOverStage,isStaleMate, isWhite));
-        showGameOverStage();
     }
 
-    public void showGameOverStage(){
+    public void show(){
         gameOverStage.showAndWait();
     }
 
@@ -97,10 +94,14 @@ public class GameOverModal {
     private void addButton(StackPane root){
         Button button = new Button("Play Again");
         button.setOnMouseClicked(__ -> {
-            this.listener.showMainMenu();
+            newGame = true;
             gameOverStage.close();
         });
         root.getChildren().add(button);
         StackPane.setAlignment(button,Pos.BOTTOM_CENTER);
+    }
+
+    public boolean isNewGame() {
+        return newGame;
     }
 }

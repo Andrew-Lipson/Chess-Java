@@ -1,23 +1,8 @@
 package Contract;
 
-import View.PositionView;
+import View.Board.PositionView;
 
 public interface Contract {
-
-    interface Listener {
-
-        void handlePieceClicked(PositionView positionView);
-
-        void handleCircleClicked(PositionView positionView);
-
-        void onPromotionPieceDecided(String string);
-
-        void showMainMenu();
-
-        void numberOfPlayersDecision(boolean singlePlayer);
-
-        void colourToPlayAsDecision(boolean isWhite);
-    }
 
     interface Observer {
 
@@ -28,4 +13,17 @@ public interface Contract {
         void gameOver(boolean isStaleMate, boolean isWhite);
 
     }
+
+    interface Listener {
+
+        void handlePieceClicked(PositionView positionView);
+
+        void handleCircleClicked(PositionView positionView);
+
+        void onPromotionPieceDecided(String string);
+
+        void newGame(boolean singlePlayer, Boolean computerIsWhite);
+    }
+
+
 }

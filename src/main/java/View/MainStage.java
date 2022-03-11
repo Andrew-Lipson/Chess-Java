@@ -2,6 +2,13 @@ package View;
 
 
 import Contract.Contract;
+import View.Board.BoardScene;
+import View.Board.PositionView;
+import View.Board.SquareColour;
+import View.Board.SquareNode;
+import View.Menu.MainMenuScene;
+import View.Modals.GameOverModal;
+import View.Modals.PromotionModal;
 import javafx.scene.Group;
 import javafx.scene.image.Image;
 import javafx.scene.text.Font;
@@ -18,7 +25,7 @@ public class MainStage {
     private final Stage stage;
     private final Contract.Listener listener;
     private BoardScene boardView;
-    private ArrayList<SquareView> circlesActivated = new ArrayList<SquareView>();
+    private ArrayList<SquareNode> circlesActivated = new ArrayList<SquareNode>();
 
     /**
      * Setting up the JAVAFX stage that will be used for the display
@@ -50,15 +57,8 @@ public class MainStage {
 
     public void showMainMenu(){
         MainMenuScene menuView = new MainMenuScene(listener);
-        menuView.PopulateScene();
         stage.setScene(menuView);
 
-    }
-
-    public void showChooseColourMenu(){
-        ChooseColourScene chooseColourView = new ChooseColourScene(listener);
-        chooseColourView.PopulateScene();
-        stage.setScene(chooseColourView);
     }
 
     public void showBoard(boolean inverted){
@@ -139,7 +139,7 @@ public class MainStage {
     public void addMoveOptionsCircles(PositionView positionView , ArrayList<PositionView> possibleMoves) {
         boardView.getSquareView(positionView).changeSquareColour(SquareColour.CLICKED);
         for (PositionView position:possibleMoves) {
-            SquareView squareView = boardView.getSquareView(position);
+            SquareNode squareView = boardView.getSquareView(position);
             squareView.addCircle();
             circlesActivated.add(squareView);
         }
@@ -150,7 +150,7 @@ public class MainStage {
      */
     public void removeMoveOptionsCircles(PositionView positionView) {
         boardView.getSquareView(positionView).changeSquareColour();
-        for (SquareView squareview:this.circlesActivated) {
+        for (SquareNode squareview:this.circlesActivated) {
             squareview.removeCircle();
         }
     }
@@ -159,7 +159,7 @@ public class MainStage {
      * Removing the circles of the possible moves
      */
     public void removeMoveOptionsCircles() {
-        for (SquareView squareview:this.circlesActivated) {
+        for (SquareNode squareview:this.circlesActivated) {
             squareview.removeCircle();
         }
     }
@@ -170,10 +170,14 @@ public class MainStage {
     }
 
     public void gameOverPopup(boolean isStaleMate, boolean isWhite){
-        new GameOverModal(listener, isStaleMate,isWhite);
+        GameOverModal gameOverModal = new GameOverModal(isStaleMate,isWhite);
+        gameOverModal.show();
+        if (gameOverModal.isNewGame()){
+            showMainMenu();
+        }
     }
 
-    private SquareView getSquareView(PositionView position) {
+    private SquareNode getSquareView(PositionView position) {
         return boardView.getSquareView(position);
     }
 }
