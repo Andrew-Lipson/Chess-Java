@@ -15,14 +15,16 @@ import javafx.stage.Modality;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
 
+import java.util.Objects;
+
 public class GameOverModal {
 
     private final Stage gameOverStage;
     private boolean newGame = false;
 
-    public GameOverModal(boolean isStaleMate, boolean isWhite){
+    public GameOverModal(boolean isADraw, String string){
         gameOverStage = new Stage();
-        gameOverStage.setScene(setUpStage(gameOverStage,isStaleMate, isWhite));
+        gameOverStage.setScene(setUpStage(gameOverStage,isADraw, string));
     }
 
     public void show(){
@@ -30,7 +32,7 @@ public class GameOverModal {
     }
 
 
-    private Scene setUpStage(Stage gameOverStage, boolean isStaleMate, boolean isWhite){
+    private Scene setUpStage(Stage gameOverStage, boolean isADraw, String string){
         Image icon = new Image("chess-icon.png");
         gameOverStage.getIcons().add(icon);
         gameOverStage.setTitle("GAME OVER");
@@ -42,10 +44,10 @@ public class GameOverModal {
         StackPane root = new StackPane();
         root.setBackground(Background.EMPTY);
 
-        if (isStaleMate) {
-            addText(root, "STALEMATE!");
+        if (isADraw) {
+            addDrawDisplay(root, string);
         } else {
-            addCheckMateDisplays(root, isWhite);
+            addCheckMateDisplays(root, string);
         }
 
         addButton(root);
@@ -53,26 +55,36 @@ public class GameOverModal {
         return new Scene(root, Color.BROWN);
     }
 
-    private void addText(StackPane root, String string){
+    private void addDrawDisplay(StackPane root, String string){
         Text text = new Text(string);
         text.setTextAlignment(TextAlignment.CENTER);
-        text.setFont(Font.font(50));
+        text.setFont(Font.font(36));
         root.getChildren().add(text);
+
+        Text text2 = new Text("DRAW by");
+        text2.setTextAlignment(TextAlignment.CENTER);
+        text2.setFont(Font.font(24));
+        root.getChildren().add(text2);
+
+        StackPane.setAlignment(text2, Pos.TOP_CENTER);
     }
 
-    private void addCheckMateDisplays(StackPane root, boolean isWhite){
-        ImageView imageView1 = createImageView(isWhite);
+    private void addCheckMateDisplays(StackPane root, String string){
+        ImageView imageView1 = createImageView(Objects.equals(string, "WHITE"));
         root.getChildren().add(imageView1);
         StackPane.setAlignment(imageView1, Pos.CENTER_LEFT);
 
-        ImageView imageView2 = createImageView(isWhite);
+        ImageView imageView2 = createImageView(Objects.equals(string, "WHITE"));
         root.getChildren().add(imageView2);
         StackPane.setAlignment(imageView2, Pos.CENTER_RIGHT);
 
-        String output = isWhite?"WHITE ":"BLACK ";
-        output += "WINS!";
+        String output = string;
+        output += " WINS!";
 
-        addText(root, output);
+        Text text = new Text(output);
+        text.setTextAlignment(TextAlignment.CENTER);
+        text.setFont(Font.font(50));
+        root.getChildren().add(text);
     }
 
     private ImageView createImageView(boolean isWhite){

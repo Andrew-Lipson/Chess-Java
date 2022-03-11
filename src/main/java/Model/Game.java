@@ -2,12 +2,10 @@ package Model;
 
 import Contract.Contract;
 import Model.Utilities.Check;
-import Model.Utilities.Fen;
 import Model.Utilities.Moves;
 import Model.Pieces.*;
 
 import java.util.ArrayList;
-import java.util.concurrent.TimeUnit;
 
 import static java.lang.Math.abs;
 import static java.util.Objects.isNull;
@@ -27,6 +25,8 @@ public class Game {
     private int halfMove;
     private int fullMove;
     private Piece promotionPiece;
+    private final Fen fen = new Fen();
+    private Draws draws = new Draws();
 
     public Game(Contract.Observer observer) {
         board = new Board();
@@ -38,6 +38,7 @@ public class Game {
         whitesTurn = true;
         halfMove = 0;
         fullMove = 1;
+        fen.updateFen(exportBoardPositionForFEN(), whitesTurn, whiteCastling, blackCastling, enPassantPositionForFen, halfMove, fullMove);
     }
 
     public Game(Contract.Observer observer, Board board, ArrayList<Piece> whitePieces, ArrayList<Piece> blackPieces, boolean[] whiteCastling, boolean[] blackCastling, boolean whitesTurn, Position enPassantPosition, int halfmove, int fullmove){
@@ -56,6 +57,7 @@ public class Game {
             Position position = new Position(enPassantPosition.getFile(),rank);
             enableEnPassant(position, !whitesTurn);
         }
+        fen.updateFen(exportBoardPositionForFEN(), whitesTurn, whiteCastling, blackCastling, enPassantPositionForFen, halfMove, fullMove);
     }
 
 
@@ -283,16 +285,30 @@ public class Game {
     private void endTurn() {
         whitesTurn = !whitesTurn;
         fullMove +=whitesTurn?1:0;
-
+        fen.updateFen(exportBoardPositionForFEN(), whitesTurn, whiteCastling, blackCastling, enPassantPositionForFen, halfMove, fullMove);
         gameOver();
     }
 
     /**
      * If there is no legal moves, call gameOver() in Observer to end the game
      */
-    private void gameOver(){
+    public void gameOver(){
         if (Check.isThereALegalMove(this, whitesTurn)){
-            _observer.gameOver(!Check.isTheKingUnderAttack(this, whitesTurn),!whitesTurn);
+            if (Check.isTheKingUnderAttack(this, whitesTurn)){
+                _observer.gameOver(false,whitesTurn?"BLACK":"WHITE");
+            } else {
+                _observer.gameOver(true,"STALEMATE");
+            }
+
+        }
+        if (halfMove>=50){
+            _observer.gameOver(true,"50 Rule Move!");
+        }
+        if (draws.isThreefoldRepetition(fen.getFenForRepetitionCheck(), halfMove)){
+            _observer.gameOver(true,"Repetition!");
+        }
+        if (draws.isThereInsufficientMaterial(getClonedColouredPieces(true), getClonedColouredPieces(false))){
+            _observer.gameOver(true,"Insufficient Material!");
         }
     }
 
@@ -399,8 +415,8 @@ public class Game {
     /**
      * @return Full Fen string
      */
-    public String getCompleteFEN() {
-        return Fen.convertBoardToFen(exportBoardPositionForFEN(), whitesTurn, whiteCastling, blackCastling, enPassantPositionForFen, halfMove, fullMove);
+    public String getFullFen() {
+        return fen.getFullFen();
     }
 
     /**

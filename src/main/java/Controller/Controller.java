@@ -6,6 +6,7 @@ import Model.Game;
 import Model.Pieces.PieceType;
 import Model.Position;
 import Model.Pieces.Piece;
+import Model.Fen;
 import View.MainStage;
 import View.Board.PositionView;
 import javafx.application.Platform;
@@ -47,12 +48,12 @@ public class Controller implements Contract.Listener, Contract.Observer {
     }
 
     public void computerToMakeAMove(){
-        Stockfish stockfish = new Stockfish(game.getCompleteFEN(), game);
+        Stockfish stockfish = new Stockfish(game.getFullFen(), game);
         Platform.runLater(stockfish);
     }
 
     public void updateView(){
-        mainview.updateView(game.getCompleteFEN());
+        mainview.updateView(game.getFullFen());
     }
 
 // region Observer Interface
@@ -72,9 +73,9 @@ public class Controller implements Contract.Listener, Contract.Observer {
     }
 
     @Override
-    public void gameOver(boolean isStaleMate, boolean isWhite){
+    public void gameOver(boolean isADraw, String string){
         updateView();
-        mainview.gameOverPopup(isStaleMate,isWhite);
+        mainview.gameOverPopup(isADraw,string);
     }
 
 //endregion
@@ -126,7 +127,9 @@ public class Controller implements Contract.Listener, Contract.Observer {
             mainview.showBoard(false);
         }
         this.game = new Game(this);
+//        this.game = Fen.convertFenToBoard("k1K1b3/8/8/3B4/8/8/8/8 b - - 0 1", this);
         updateView();
+        this.game.gameOver();
         update();
     }
 //endregion

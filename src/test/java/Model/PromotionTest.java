@@ -2,7 +2,6 @@ package Model;
 
 import Contract.Contract;
 import Model.Pieces.PieceType;
-import Model.Utilities.Fen;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -66,7 +65,7 @@ public class PromotionTest {
          */
         game.makeAMove(new Position(3,1),new Position(3,0), true);
         game.promotionPieceDecision(PieceType.Queen);
-        Assertions.assertEquals("3Qn2k/8/8/8/K7/8/3p4/2Q5 b - - 0 1",game.getCompleteFEN());
+        Assertions.assertEquals("3Qn2k/8/8/8/K7/8/3p4/2Q5 b - - 0 1",game.getFullFen());
 
         /**
          * Using this approach, you would not test a second move.. However if using last option mentioned
@@ -74,7 +73,7 @@ public class PromotionTest {
          */
         game.makeAMove(new Position(3,6),new Position(3,7), true);
         game.promotionPieceDecision(PieceType.Queen);
-        Assertions.assertEquals("3Qn2k/8/8/8/K7/8/8/2Qq4 w - - 0 2",game.getCompleteFEN());
+        Assertions.assertEquals("3Qn2k/8/8/8/K7/8/8/2Qq4 w - - 0 2",game.getFullFen());
     }
 
     @Test
@@ -84,11 +83,11 @@ public class PromotionTest {
 
         game.makeAMove(new Position(3,1),new Position(3,0), true);
         game.promotionPieceDecision(PieceType.Rook);
-        Assertions.assertEquals("3Rn2k/8/8/8/K7/8/3p4/2Q5 b - - 0 1",game.getCompleteFEN());
+        Assertions.assertEquals("3Rn2k/8/8/8/K7/8/3p4/2Q5 b - - 0 1",game.getFullFen());
 
         game.makeAMove(new Position(3,6),new Position(3,7), true);
         game.promotionPieceDecision(PieceType.Rook);
-        Assertions.assertEquals("3Rn2k/8/8/8/K7/8/8/2Qr4 w - - 0 2",game.getCompleteFEN());
+        Assertions.assertEquals("3Rn2k/8/8/8/K7/8/8/2Qr4 w - - 0 2",game.getFullFen());
     }
 
     @Test
@@ -99,11 +98,11 @@ public class PromotionTest {
 
         game.makeAMove(new Position(3,1),new Position(3,0), true);
         game.promotionPieceDecision(PieceType.Bishop);
-        Assertions.assertEquals("3Bn2k/8/8/8/K7/8/3p4/2Q5 b - - 0 1",game.getCompleteFEN());
+        Assertions.assertEquals("3Bn2k/8/8/8/K7/8/3p4/2Q5 b - - 0 1",game.getFullFen());
 
         game.makeAMove(new Position(3,6),new Position(3,7), true);
         game.promotionPieceDecision(PieceType.Bishop);
-        Assertions.assertEquals("3Bn2k/8/8/8/K7/8/8/2Qb4 w - - 0 2",game.getCompleteFEN());
+        Assertions.assertEquals("3Bn2k/8/8/8/K7/8/8/2Qb4 w - - 0 2",game.getFullFen());
     }
 
     @Test
@@ -113,11 +112,11 @@ public class PromotionTest {
 
         game.makeAMove(new Position(3,1),new Position(3,0), true);
         game.promotionPieceDecision(PieceType.Knight);
-        Assertions.assertEquals("3Nn2k/8/8/8/K7/8/3p4/2Q5 b - - 0 1",game.getCompleteFEN());
+        Assertions.assertEquals("3Nn2k/8/8/8/K7/8/3p4/2Q5 b - - 0 1",game.getFullFen());
 
         game.makeAMove(new Position(3,6),new Position(3,7), true);
         game.promotionPieceDecision(PieceType.Knight);
-        Assertions.assertEquals("3Nn2k/8/8/8/K7/8/8/2Qn4 w - - 0 2",game.getCompleteFEN());
+        Assertions.assertEquals("3Nn2k/8/8/8/K7/8/8/2Qn4 w - - 0 2",game.getFullFen());
     }
 
     @Test
@@ -127,11 +126,11 @@ public class PromotionTest {
 
         game.makeAMove(new Position(3,6),new Position(2,7), true);
         game.promotionPieceDecision(PieceType.Queen);
-        Assertions.assertEquals("4n2k/3P4/8/8/K7/8/8/2q5 w - - 0 2",game.getCompleteFEN());
+        Assertions.assertEquals("4n2k/3P4/8/8/K7/8/8/2q5 w - - 0 2",game.getFullFen());
 
         game.makeAMove(new Position(3,1),new Position(4,0), true);
         game.promotionPieceDecision(PieceType.Queen);
-        Assertions.assertEquals("4Q2k/8/8/8/K7/8/8/2q5 b - - 0 2",game.getCompleteFEN());
+        Assertions.assertEquals("4Q2k/8/8/8/K7/8/8/2q5 b - - 0 2",game.getFullFen());
     }
 
     @Test
@@ -141,11 +140,11 @@ public class PromotionTest {
 
         game.makeAMove(new Position(3,6),new Position(2,7), true);
         game.promotionPieceDecision(PieceType.Rook);
-        Assertions.assertEquals("4n2k/3P4/8/8/K7/8/8/2r5 w - - 0 2",game.getCompleteFEN());
+        Assertions.assertEquals("4n2k/3P4/8/8/K7/8/8/2r5 w - - 0 2",game.getFullFen());
 
         game.makeAMove(new Position(3,1),new Position(4,0), true);
         game.promotionPieceDecision(PieceType.Rook);
-        Assertions.assertEquals("4R2k/8/8/8/K7/8/8/2r5 b - - 0 2",game.getCompleteFEN());
+        Assertions.assertEquals("4R2k/8/8/8/K7/8/8/2r5 b - - 0 2",game.getFullFen());
     }
 
     @Test
@@ -155,11 +154,11 @@ public class PromotionTest {
 
         game.makeAMove(new Position(3,6),new Position(2,7), true);
         game.promotionPieceDecision(PieceType.Bishop);
-        Assertions.assertEquals("4n2k/3P4/8/8/K7/8/8/2b5 w - - 0 2",game.getCompleteFEN());
+        Assertions.assertEquals("4n2k/3P4/8/8/K7/8/8/2b5 w - - 0 2",game.getFullFen());
 
         game.makeAMove(new Position(3,1),new Position(4,0), true);
         game.promotionPieceDecision(PieceType.Bishop);
-        Assertions.assertEquals("4B2k/8/8/8/K7/8/8/2b5 b - - 0 2",game.getCompleteFEN());
+        Assertions.assertEquals("4B2k/8/8/8/K7/8/8/2b5 b - - 0 2",game.getFullFen());
     }
 
     @Test
@@ -169,10 +168,10 @@ public class PromotionTest {
 
         game.makeAMove(new Position(3,6),new Position(2,7), true);
         game.promotionPieceDecision(PieceType.Knight);
-        Assertions.assertEquals("4n2k/3P4/8/8/K7/8/8/2n5 w - - 0 2",game.getCompleteFEN());
+        Assertions.assertEquals("4n2k/3P4/8/8/K7/8/8/2n5 w - - 0 2",game.getFullFen());
 
         game.makeAMove(new Position(3,1),new Position(4,0), true);
         game.promotionPieceDecision(PieceType.Knight);
-        Assertions.assertEquals("4N2k/8/8/8/K7/8/8/2n5 b - - 0 2",game.getCompleteFEN());
+        Assertions.assertEquals("4N2k/8/8/8/K7/8/8/2n5 b - - 0 2",game.getFullFen());
     }
 }

@@ -17,4 +17,8 @@ public final class Position {
     public int getRank() {
         return this.rank;
     }
+
+    public boolean isOnLightSquares(){
+        return (file+rank)%2==1;
+    }
 }

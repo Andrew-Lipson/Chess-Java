@@ -10,7 +10,7 @@ public interface Contract {
 
         void displayPromotionPopup();
 
-        void gameOver(boolean isStaleMate, boolean isWhite);
+        void gameOver(boolean isADraw, String string);
 
     }
 

@@ -72,4 +72,8 @@ public class Piece {
     public Integer getEnPassantAvailableToTakeFile() {
         return enPassantAvailableToTakeFile;
     }
+
+    public boolean isOnLightSquares(){
+        return this.position.isOnLightSquares();
+    }
 }

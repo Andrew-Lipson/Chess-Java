@@ -169,8 +169,8 @@ public class MainStage {
         promotionView.show();
     }
 
-    public void gameOverPopup(boolean isStaleMate, boolean isWhite){
-        GameOverModal gameOverModal = new GameOverModal(isStaleMate,isWhite);
+    public void gameOverPopup(boolean isADraw, String string){
+        GameOverModal gameOverModal = new GameOverModal(isADraw,string);
         gameOverModal.show();
         if (gameOverModal.isNewGame()){
             showMainMenu();

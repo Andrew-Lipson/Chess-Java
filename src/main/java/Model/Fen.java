@@ -1,11 +1,9 @@
-package Model.Utilities;
+package Model;
 
 import Contract.Contract;
-import Model.Board;
-import Model.Game;
-import Model.Position;
 import Model.Pieces.Piece;
 import Model.Pieces.PieceType;
+import Model.Utilities.Check;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -15,7 +13,16 @@ import static java.lang.Character.isDigit;
 import static java.util.Objects.isNull;
 import static java.util.Objects.nonNull;
 
-public final class Fen {
+public class Fen {
+
+    private String fullFen;
+    private String fenForRepetitionCheck;
+    private String[] fenBreaks = {"/","/","/","/","/","/","/"," ",};
+
+    public void updateFen(Piece[][] piece2DArray, boolean whitesTurn, boolean[] whiteCastling, boolean[] blackCastling, Position enPassantPosition, int halfmove, int fullmove){
+        convertBoardToFen(piece2DArray, whitesTurn, whiteCastling, blackCastling, enPassantPosition, halfmove, fullmove);
+        convertBoardToFenForCheckingRepetition(piece2DArray, whitesTurn, whiteCastling, blackCastling, enPassantPosition);
+    }
 
 
     /** Giving all necessary information to create a FEN string that represents the current state of the board
@@ -29,9 +36,8 @@ public final class Fen {
      * @param fullmove is the current fullmove count
      * @return the full FEN string
      */
-    public static String convertBoardToFen(Piece[][] piece2DArray, boolean whitesTurn, boolean[] whiteCastling, boolean[] blackCastling, Position enPassantPosition, int halfmove, int fullmove){
+    public void convertBoardToFen(Piece[][] piece2DArray, boolean whitesTurn, boolean[] whiteCastling, boolean[] blackCastling, Position enPassantPosition, int halfmove, int fullmove){
 
-        String[] fenBreaks = {"/","/","/","/","/","/","/"," ",};
         StringBuilder output = new StringBuilder();
 
         for (int rank = 0; rank < 8; rank++) {
@@ -53,7 +59,40 @@ public final class Fen {
 
         output.append(" ").append(halfmove).append(" ").append(fullmove);
 
-        return output.toString();
+        fullFen = output.toString();
+    }
+
+    /**
+     *  Giving all necessary information minus the number of moves to create a FEN string
+     *  that can be checked against other Fen strings for repetition
+     *
+     * @param piece2DArray is the Board but in a friendlier version to read
+     * @param whitesTurn is who's turn it is
+     * @param whiteCastling is the ability for white to castle
+     * @param blackCastling is the ability for black to castle
+     * @return the full FEN string
+     */
+    public void convertBoardToFenForCheckingRepetition(Piece[][] piece2DArray, boolean whitesTurn, boolean[] whiteCastling, boolean[] blackCastling, Position enPassantPosition){
+
+        StringBuilder output = new StringBuilder();
+
+        for (int rank = 0; rank < 8; rank++) {
+            output.append(updateFENPosition(piece2DArray[rank], rank));
+            output.append(fenBreaks[rank]);
+        }
+
+        if (whitesTurn){
+            output.append("w ");
+        } else{
+            output.append("b ");
+        }
+
+
+        output.append(castlingToString(whiteCastling, blackCastling));
+
+        output.append(enPassantToString(enPassantPosition));
+
+        fenForRepetitionCheck = output.toString();
     }
 
 
@@ -163,6 +202,13 @@ public final class Fen {
         return true;
     }
 
+    public String getFullFen() {
+        return fullFen;
+    }
+
+    public String getFenForRepetitionCheck() {
+        return fenForRepetitionCheck;
+    }
 
     /** Go through the inputed fenString and create the correct state of the Game. Returning null if the game is impossible
      *
@@ -192,6 +238,8 @@ public final class Fen {
         char[] chars = str[0].toCharArray();
         int rank = 0;
         int file = 0;
+        boolean whiteKing = false;
+        boolean blackKing = false;
         for (Character character:chars) {
             if (character.equals('/')) {
                 if(file!=8){
@@ -211,6 +259,21 @@ public final class Fen {
                     return null;
                 }
                 PieceType pieceType = PieceType.getPieceType(lowerCase);
+                if (pieceType == PieceType.King){
+                    if (isWhite){
+                        if (whiteKing){
+                            return null;
+                        } else {
+                            whiteKing = true;
+                        }
+                    } else{
+                        if (blackKing){
+                            return null;
+                        } else {
+                            blackKing = true;
+                        }
+                    }
+                }
                 Piece piece = new Piece(isWhite,pieceType);
                 piece.setPosition(new Position(file,rank));
                 boardSquares.addPiece(new Position(file,rank),piece);
@@ -223,6 +286,9 @@ public final class Fen {
             }
         }
         if(file != 8 || rank != 7){
+            return null;
+        }
+        if (!whiteKing || !blackKing){
             return null;
         }
 
