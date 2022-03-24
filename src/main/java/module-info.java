@@ -10,4 +10,8 @@ module Model {
     exports Controller;
     exports View;
     exports Model.Utilities;
+    exports View.Menu;
+    exports View.Modals;
+    exports View.Board;
+    exports Controller.Engine;
 }

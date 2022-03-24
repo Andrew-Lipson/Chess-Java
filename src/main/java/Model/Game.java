@@ -7,6 +7,7 @@ import Model.Utilities.Moves;
 import Model.Pieces.*;
 
 import java.util.ArrayList;
+import java.util.concurrent.TimeUnit;
 
 import static java.lang.Math.abs;
 import static java.util.Objects.isNull;
@@ -97,7 +98,7 @@ public class Game {
      * @param previousPosition current position of the piece
      * @param newPosition where the piece will be moving to
      */
-    public void makeAMove(Position previousPosition, Position newPosition) {
+    public void makeAMove(Position previousPosition, Position newPosition, boolean computerMove) {
         if (isNull(getPiece(previousPosition)) || getPiece(previousPosition).getIsWhite() != whitesTurn){
             return;
         }
@@ -118,7 +119,9 @@ public class Game {
         disableCastlingIfRequired(piece, previousPosition);
         if(canPromote(newPosition, piece)) {
             promotionPiece = piece;
-            _observer.displayPromotionPopup();
+            if (!computerMove){
+                _observer.displayPromotionPopup();
+            }
         } else {
             endTurn();
             updateView();
@@ -267,7 +270,7 @@ public class Game {
     /**
      * Call updateView function in the observer
      */
-    private void updateView() {
+    private void updateView(){
         _observer.update();
     }
 
@@ -428,7 +431,7 @@ public class Game {
      *
      * @return whitesTurn
      */
-    public boolean getWhitesTurn() {
+    public Boolean getWhitesTurn() {
         return whitesTurn;
     }
 
