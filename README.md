@@ -1,8 +1,8 @@
 # Chess-Java
 
-DESCRIBE THE PROGRAM AND WHAT I DID
+I have created a Chess game which follows all the rules according to FIDE (The International Chess Federation). The game has been written in Java and uses JavaFX to display the visuals. I have implemented a MVC (Model View Controller) architecture so that the Model and the View have no dependancies between them, meaning that theoretically I can change the View or the Model without changing the other.  
 
-
+You can play 2 player with both the White and Black Pieces being controlled by the user. You can also play 1 Player against StockFish, the best Chess engine in the world (https://stockfishchess.org/about/)
 
 START GAME:
 
