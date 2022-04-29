@@ -64,14 +64,9 @@ public class Fen {
     }
 
     /**
-     *  Giving all necessary information minus the number of moves to create a FEN string
-     *  that can be checked against other Fen strings for repetition
+     * With all the pieces in the rank, update the appropriate FEN rank in FENPosition
      *
-     * @param piece2DArray is the Board but in a friendlier version to read
-     * @param whitesTurn is who's turn it is
-     * @param whiteCastling is the ability for white to castle
-     * @param blackCastling is the ability for black to castle
-     * @return the full FEN string
+     * @param pieceRank all the pieces on a specific rank
      */
     private static String updateFENPosition(Piece[] pieceRank) {
         StringBuilder output = new StringBuilder();
@@ -123,7 +118,7 @@ public class Fen {
     /**
      * Returns the correct enPassant notation
      *
-     * @param position
+     * @param position the position of the en passant square
      * @return enPassant notation
      */
     private static String enPassantToString(Position position) {

@@ -55,7 +55,13 @@ public class GameOverModal extends Stage{
         this.setScene(new Scene(root, Color.BROWN));
     }
 
-    private void addDrawDisplay(StackPane root, String string){
+    /**
+     * Add the text for the Draw Display
+     *
+     * @param root Root node
+     * @param string String to be displayed
+     */
+    private void addDrawDisplay(StackPane root, String string) {
         Text text = new Text(string);
         text.setTextAlignment(TextAlignment.CENTER);
         text.setFont(Font.font(36));
@@ -69,7 +75,13 @@ public class GameOverModal extends Stage{
         StackPane.setAlignment(text2, Pos.TOP_CENTER);
     }
 
-    private void addCheckMateDisplays(StackPane root, String string){
+    /**
+     * Add the Display for when someone wins
+     *
+     * @param root Root node
+     * @param string String to be displayed
+     */
+    private void addCheckMateDisplays(StackPane root, String string) {
         ImageView imageView1 = createImageView(Objects.equals(string, "WHITE"));
         root.getChildren().add(imageView1);
         StackPane.setAlignment(imageView1, Pos.CENTER_LEFT);
@@ -87,14 +99,25 @@ public class GameOverModal extends Stage{
         root.getChildren().add(text);
     }
 
-    private ImageView createImageView(boolean isWhite){
+    /**
+     * return the imageview of the piece being displayed
+     *
+     * @param isWhite if the image is white or black
+     * @return the imageview
+     */
+    private ImageView createImageView(boolean isWhite) {
         ImageView imageView = new ImageView(getPNGString(isWhite));
         imageView.setFitHeight(80);
         imageView.setFitWidth(80);
         return imageView;
     }
 
-
+    /**
+     * get the correct string name for the image
+     *
+     * @param isWhite if the image is white or black
+     * @return correct string name
+     */
     private String getPNGString(boolean isWhite) {
         String output = "King";
         output += "-";
@@ -103,7 +126,12 @@ public class GameOverModal extends Stage{
         return output;
     }
 
-    private void addButton(StackPane root){
+    /**
+     * add the play again button
+     *
+     * @param root Root node
+     */
+    private void addButton(StackPane root) {
         Button button = new Button("Play Again");
         button.setOnMouseClicked(__ -> {
             this.newGame = true;

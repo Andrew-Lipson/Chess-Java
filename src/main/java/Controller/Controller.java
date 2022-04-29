@@ -22,13 +22,21 @@ public class Controller implements Contract.Listener, Contract.Observer {
     private Piece clickedPiece = null;
     private Boolean computerIsWhite = null;
 
-    public void startApplication(MainStage mainview) {
-        this.mainview = mainview;
-        mainview.createStage();
+    /**
+     * Starting running the application by creating the View and showing the main menu
+     *
+     * @param mainStage The View component
+     */
+    public void startApplication(MainStage mainStage) {
+        this.mainStage = mainStage;
+        this.mainStage.createStage();
         showMainMenu();
 
     }
 
+    /**
+     * Get the View to show the Main Menu
+     */
     public void showMainMenu() {
         mainview.showMainMenu();
     }
@@ -36,8 +44,8 @@ public class Controller implements Contract.Listener, Contract.Observer {
     /**
      * Convert the Position to PositionView for the View component
      * 
-     * @param moves
-     * @return
+     * @param moves An ArrayList of Position
+     * @return An ArrayList of PositionView
      */
     private ArrayList<PositionView> convertMovesFromPositiontoPositionView(ArrayList<Position> moves) {
         ArrayList<PositionView> movesForMainView = new ArrayList<>();
@@ -54,8 +62,11 @@ public class Controller implements Contract.Listener, Contract.Observer {
         this.stockfish.stockfishsTurn();
     }
 
-    public void updateView(){
-        mainview.updateView(game.getFullFen());
+    /**
+     * Update the View component
+     */
+    public void updateView() {
+        this.mainStage.updateView(game.getFullFen());
     }
 
 // region Observer Interface

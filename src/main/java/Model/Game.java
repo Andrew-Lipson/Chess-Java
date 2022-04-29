@@ -123,10 +123,8 @@ public class Game {
 
         disableCastlingIfRequired(piece, previousPosition);
         if(canPromote(newPosition, piece)) {
-            promotionPiece = piece;
-            if (!computerMove){
-                _observer.displayPromotionPopup();
-            }
+            this.promotionPiece = piece;
+            this._observer.requiresPromotionOptions();
         } else {
             endTurn();
             updateView();

@@ -9,13 +9,26 @@ public class StockFishOutput {
     private final Position newPosition;
     private PieceType pieceType = null;
 
-    public StockFishOutput(Position previousPosition, Position newPosition, PieceType pieceType){
+    /**
+     * Constructs a StockFishOutput with the Previous Position, New Position, and PieceType for Promotion
+     *
+     * @param previousPosition Position that the Piece will move from
+     * @param newPosition Position that the Piece will move too
+     * @param pieceType On promotion, what the Piece will be promoted too
+     */
+    public StockFishOutput(Position previousPosition, Position newPosition, PieceType pieceType) {
         this.previousPosition = previousPosition;
         this.newPosition = newPosition;
         this.pieceType = pieceType;
     }
 
-    public StockFishOutput(Position previousPosition, Position newPosition){
+    /**
+     * Constructs a StockFishOutput with the Previous Position, New Position
+     *
+     * @param previousPosition Position that the Piece will move from
+     * @param newPosition Position that the Piece will move too
+     */
+    public StockFishOutput(Position previousPosition, Position newPosition) {
         this.previousPosition = previousPosition;
         this.newPosition = newPosition;
     }

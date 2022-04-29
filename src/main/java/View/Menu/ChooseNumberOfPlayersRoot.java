@@ -27,7 +27,14 @@ public class ChooseNumberOfPlayersRoot extends Group{
         placeButton(p2Button,1);
     }
 
-    private void placeButton(Button button, int placement){
+
+    /**
+     * Place the button in the correct spot
+     *
+     * @param button button to be placed
+     * @param placement the placement spot of the button
+     */
+    private void placeButton(Button button, int placement) {
         button.setLayoutX(150+placement*200);
         button.setLayoutY(300);
         button.setFont(new Font(24));

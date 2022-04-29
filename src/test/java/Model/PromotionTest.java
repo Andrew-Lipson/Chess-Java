@@ -41,7 +41,7 @@ public class PromotionTest {
         game.makeAMove(new Position(2,4),new Position(2,3), true);
 
         // then
-        verify(mockObserver, never()).displayPromotionPopup();
+        verify(mockObserver, times(1)).requiresPromotionOptions();
     }
 
     @Test

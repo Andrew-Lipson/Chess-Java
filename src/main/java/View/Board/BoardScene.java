@@ -23,7 +23,7 @@ public class BoardScene extends Scene {
     /**
      * Return a SquareView from the specific File and Rank
      * 
-     * @param position
+     * @param position the position of the required square
      * @return the square view
      */
     public SquareNode getSquareView(PositionView position) {

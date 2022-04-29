@@ -24,14 +24,6 @@ public class SquareNode extends Group {
     private Character FENPiece = 'x';
     private SquareColour color;
 
-    /**
-     * Intilising the SquareView for X & Y coordinates, the colour, the shape (rectangle) and size
-     * seeting the ImageView and the Circle
-     * 
-     * @param file
-     * @param rank
-     * @param listener
-     */
     public SquareNode(int file, int rank, Contract.Listener listener, boolean inverted) {
 
         this.file = file;
@@ -51,6 +43,9 @@ public class SquareNode extends Group {
         initialiseCircle();
     }
 
+    /**
+     * Sets the Rectangle's colour, X & Y coordinates, and it's height and width
+     */
     public void initialiseRectangle() {
         color =
             (this.rank + this.file) % 2 == 0
@@ -66,7 +61,7 @@ public class SquareNode extends Group {
 
 
     /**
-     * Sets the ImageView's X & Y coordinates and it's height and width
+     * Sets the ImageView's X & Y coordinates, and it's height and width
      */
     public void initialiseImageView(){
         this.imageview.setX(xCoordinate);
@@ -113,7 +108,7 @@ public class SquareNode extends Group {
     /**
      * Update the FENPiece and then get the correct image from the resouces and add/remove the imageview from the Group.
      * 
-     * @param charactor
+     * @param character fen character that represents the piece going onto the square
      */
     public void addPiece(Character charactor) {
         // check if the charactor is the same. If it is then return
@@ -147,8 +142,8 @@ public class SquareNode extends Group {
     /**
      * Returns the correct uri (String) that the piece requires
      * 
-     * @param character
-     * @param isWhite
+     * @param character fen character that represents the piece going onto the square
+     * @param isWhite true if the piece is white
      * @return uri of the filename
      */
     public static String getPNGString(Character character, boolean isWhite) {

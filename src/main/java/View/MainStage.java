@@ -45,6 +45,9 @@ public class MainStage {
 
     }
 
+    /**
+     * Set up the stage with the necessary settings
+     */
     public void createStage() {
         Image icon = new Image("chess-icon.png");
         stage.getIcons().add(icon);
@@ -65,25 +68,14 @@ public class MainStage {
 
     }
 
-    public void showBoard(boolean inverted){
-        this.boardView = new BoardScene(listener, inverted);
-        stage.setScene(boardView);
-    }
-
     /**
-     * Adding Rank numbers to make it easier for me to see what file and rank each square is.
-     * DELETE ONCE PROJECT IS COMPLETE
-
-     * @param root
-     * @param rank
+     * Show the board, and invert it if necessary
+     *
+     * @param inverted should the board be displayed inverted
      */
-    private void rankNumbers(Group root, Integer rank) {
-        Text text = new Text();
-        text.setText(rank.toString());
-        text.setX(660);
-        text.setY(65+80*rank);
-        text.setFont(Font.font(50));
-        root.getChildren().add(text);
+    public void showBoard(boolean inverted) {
+        this.boardView = new BoardScene(this.listener, inverted);
+        this.stage.setScene(this.boardView);
     }
 
     /**
@@ -106,7 +98,7 @@ public class MainStage {
     /**
      * Using the FEN string, update the view to match the FEN input
      * 
-     * @param FENPosition
+     * @param FENPosition string that is the FEN position to be displayed
      */
     public void updateView(String FENPosition) {
         System.out.println(FENPosition);
@@ -138,7 +130,7 @@ public class MainStage {
     /**
      * Adding circles to squares after a piece has been clicked to show what moves are available
      * 
-     * @param possibleMoves
+     * @param possibleMoves List of PositionView that circles need to be added to
      */
     public void addMoveOptionsCircles(PositionView positionView , ArrayList<PositionView> possibleMoves) {
         boardView.getSquareView(positionView).changeSquareColour(SquareColour.CLICKED);
@@ -178,7 +170,13 @@ public class MainStage {
         promotionView.showAndWait();
     }
 
-    public void gameOverPopup(boolean isADraw, String string){
+    /**
+     * Show the Game Over popup
+     *
+     * @param isADraw Was it a draw
+     * @param string String to be displayed
+     */
+    public void gameOverPopup(boolean isADraw, String string) {
         GameOverModal gameOverModal = new GameOverModal(isADraw,string);
         gameOverModal.showAndWait();
         if (gameOverModal.isNewGame()) {

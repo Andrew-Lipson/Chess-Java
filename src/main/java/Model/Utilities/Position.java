@@ -18,7 +18,12 @@ public final class Position {
         return this.rank;
     }
 
-    public boolean isOnLightSquares(){
-        return (file+rank)%2==1;
+    /**
+     * Is the square a light square
+     *
+     * @return true if on a light square, false otherwise
+     */
+    public boolean isALightSquares() {
+        return (this.file+this.rank)%2==1;
     }
 }

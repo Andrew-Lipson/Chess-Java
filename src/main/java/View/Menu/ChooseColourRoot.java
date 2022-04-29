@@ -32,7 +32,13 @@ public class ChooseColourRoot extends Group {
         placeButton(whiteButton, 1);
     }
 
-    private ImageView getPawnIcon(boolean isWhite){
+    /**
+     * Return the correct coloured Pawn icon
+     *
+     * @param isWhite is the colour white
+     * @return the correct coloured ImageView of a Pawn
+     */
+    private ImageView getPawnIcon(boolean isWhite) {
         String string = "Pawn-";
         string+=isWhite?"White":"Black";
         string+=".png";
@@ -43,7 +49,13 @@ public class ChooseColourRoot extends Group {
         return imageView;
     }
 
-    private void placeButton(Button button, int placement){
+    /**
+     * Place the button in the correct spot
+     *
+     * @param button button to be placed
+     * @param placement the placement spot of the button
+     */
+    private void placeButton(Button button, int placement) {
         button.setLayoutX(150+placement*200);
         button.setLayoutY(300);
         button.setFont(new Font(24));

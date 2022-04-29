@@ -9,6 +9,12 @@ public class Piece {
     private PieceType pieceType;
     private Integer enPassantAvailableToTakeFile = null;
 
+    /**
+     * Constructs a Piece
+     *
+     * @param isWhite Is the Piece white
+     * @param pieceType Is the PieceType of the Piece
+     */
     public Piece(boolean isWhite, PieceType pieceType) {
         this.isWhite = isWhite;
         this.pieceType = pieceType;
@@ -17,7 +23,7 @@ public class Piece {
     /**
      * Use to Clone a previous Piece
      * 
-     * @param piece
+     * @param piece The piece that is required to clone
      */
     public Piece(Piece piece) {
         this.isWhite = piece.getIsWhite();
@@ -29,7 +35,7 @@ public class Piece {
     /**
      * add the file and rank position to the Piece
      * 
-     * @param position
+     * @param position The Position that Piece is on
      */
     public void setPosition(Position position) {
         this.position = position;
@@ -38,7 +44,7 @@ public class Piece {
     /**
      * Set the enPassantAvailableToTakeFile to the File that the piece will move to after the en Passant
      * 
-     * @param file
+     * @param file The file that the pawn will move to if it En Passants
      */
     public void setEnPassantAvailableToTakeFile(Integer file) {
         this.enPassantAvailableToTakeFile = file;
@@ -47,7 +53,7 @@ public class Piece {
     /**
      * Change the PieceType for when a Pawn get promoted
      * 
-     * @param pieceType
+     * @param pieceType Is the PieceType the pawn will promote too
      */
     public void pawnPromotion(PieceType pieceType) {
         this.pieceType = pieceType;

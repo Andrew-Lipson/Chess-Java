@@ -62,7 +62,12 @@ public class PromotionModal extends Stage{
 
     }
 
-
+    /**
+     * Initialising the 4 rectangles that the 4 promotion piece will be chosen from
+     *
+     * @param i position on the Scene
+     * @return rectangle with the right settings
+     */
     private Rectangle initialiseRectangle(int i) {
         Rectangle rectangle = new Rectangle();
         rectangle.setFill(Color.SANDYBROWN);
@@ -73,7 +78,14 @@ public class PromotionModal extends Stage{
         return rectangle;
     }
 
-    private ImageView initialiseImageView(int i, boolean isWhite){
+    /**
+     * Get the correct image with the right settings
+     *
+     * @param i position on the Scene
+     * @param isWhite is the piece white
+     * @return ImageView of the correct piece
+     */
+    private ImageView initialiseImageView(int i, boolean isWhite) {
         String[] fenRep = {"q","r","b","n"};
         ImageView imageview = new ImageView();
         imageview.setX(20+90*i);

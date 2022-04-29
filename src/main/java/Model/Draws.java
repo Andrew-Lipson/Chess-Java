@@ -14,6 +14,13 @@ public class Draws {
         hashmap = new HashMap<>();
     }
 
+    /**
+     * Check to see if it's a draw by repetition
+     *
+     * @param fenForRepetitionCheck The FEN string without moves
+     * @param halfMove halfMove value
+     * @return true if it's a draw via repetition, false otherwise
+     */
     public boolean isThreefoldRepetition(String fenForRepetitionCheck, int halfMove) {
         if (halfMove==0){
             hashmap.clear();

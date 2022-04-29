@@ -11,12 +11,12 @@ import static java.util.Objects.isNull;
 
 public final class Check {
 
-
     /**
+     * With the Game provided, is the king of colour whitesTurn under attack
      *
-     * @param game
-     * @param whitesTurn
-     * @return
+     * @param game The game that is being used
+     * @param whitesTurn the colour of the king that might be under attack
+     * @return true if the king is under attack, false otherwise
      */
     public static boolean isTheKingUnderAttack(Game game, boolean whitesTurn){
         ArrayList<Piece> attackingPieces = game.getClonedColouredPieces(!whitesTurn);
@@ -37,10 +37,11 @@ public final class Check {
 
 
     /**
+     * With the Game provided, is there any legal moves for the whitesTurn pieces
      *
-     * @param game
-     * @param whitesTurn
-     * @return
+     * @param game The game that is being used
+     * @param whitesTurn Is it white's turn
+     * @return true if there is a legal move, false otherwise
      */
     public static boolean isThereALegalMove(Game game, boolean whitesTurn){
         ArrayList<Piece> defendingPieces = game.getClonedColouredPieces(whitesTurn);
