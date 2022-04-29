@@ -56,6 +56,7 @@ public class Fen {
 
         output.append(enPassantToString(enPassantPosition));
 
+        this.fenForRepetitionCheck = output.toString();
 
         output.append(" ").append(halfmove).append(" ").append(fullmove);
 
@@ -72,55 +73,25 @@ public class Fen {
      * @param blackCastling is the ability for black to castle
      * @return the full FEN string
      */
-    public void convertBoardToFenForCheckingRepetition(Piece[][] piece2DArray, boolean whitesTurn, boolean[] whiteCastling, boolean[] blackCastling, Position enPassantPosition){
-
+    private static String updateFENPosition(Piece[] pieceRank) {
         StringBuilder output = new StringBuilder();
-
-        for (int rank = 0; rank < 8; rank++) {
-            output.append(updateFENPosition(piece2DArray[rank], rank));
-            output.append(fenBreaks[rank]);
-        }
-
-        if (whitesTurn){
-            output.append("w ");
-        } else{
-            output.append("b ");
-        }
-
-
-        output.append(castlingToString(whiteCastling, blackCastling));
-
-        output.append(enPassantToString(enPassantPosition));
-
-        fenForRepetitionCheck = output.toString();
-    }
-
-
-    /**
-     * With all the pieces in the rank, update the appropriate FEN rank in FENPosition
-     *
-     * @param pieceRank
-     * @param rank
-     */
-    private static String updateFENPosition(Piece[] pieceRank, int rank) {
-        String output = "";
         int emptySquare = 0;
         for (Piece piece:pieceRank) {
             if (isNull(piece)) {
                 emptySquare += 1;
             } else {
                 if (!(emptySquare == 0)) {
-                    output += emptySquare;
+                    output.append(emptySquare);
                     emptySquare = 0;
                 }
-                output += piece.getFenRepresentation();
+                output.append(piece.getFenRepresentation());
 
             }
         }
         if (!(emptySquare == 0)) {
-            output += emptySquare;
+            output.append(emptySquare);
         }
-        return output;
+        return output.toString();
     }
 
     /**
@@ -190,16 +161,11 @@ public class Fen {
         }
         if (enPassantPosition.getRank()==2){
             Piece piece = board.getPiece(new Position(enPassantPosition.getFile(),3));
-            if (isNull(piece) || piece.getPieceType() != PieceType.Pawn || piece.getIsWhite()){
-                return false;
-            }
+            return !isNull(piece) && piece.getPieceType() == PieceType.Pawn && !piece.getIsWhite();
         } else {
             Piece piece = board.getPiece(new Position(enPassantPosition.getFile(),4));
-            if (isNull(piece) || piece.getPieceType() != PieceType.Pawn || !piece.getIsWhite()){
-                return false;
-            }
+            return !isNull(piece) && piece.getPieceType() == PieceType.Pawn && piece.getIsWhite();
         }
-        return true;
     }
 
     public String getFullFen() {

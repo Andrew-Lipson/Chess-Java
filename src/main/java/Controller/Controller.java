@@ -47,9 +47,11 @@ public class Controller implements Contract.Listener, Contract.Observer {
         return movesForMainView;
     }
 
-    public void computerToMakeAMove(){
-        Stockfish stockfish = new Stockfish(game.getFullFen(), game);
-        Platform.runLater(stockfish);
+    /**
+     * Get the computer to make a move
+     */
+    public void computerToMakeAMove() {
+        this.stockfish.stockfishsTurn();
     }
 
     public void updateView(){
@@ -61,15 +63,17 @@ public class Controller implements Contract.Listener, Contract.Observer {
     @Override
     public void update(){
         updateView();
-        if (game.getWhitesTurn().equals(computerIsWhite)){
-            computerToMakeAMove();
+        if (this.game.getWhitesTurn().equals(this.computerIsWhite)) {
+            new Thread(this::computerToMakeAMove).start();
         }
     }
 
     @Override
     public void displayPromotionPopup(){
         updateView();
-        mainview.promotionPopup(game.getWhitesTurn());
+        if (!this.game.getWhitesTurn().equals(this.computerIsWhite)) {
+            this.mainStage.promotionPopup(game.getWhitesTurn());
+        }
     }
 
     @Override
@@ -127,7 +131,7 @@ public class Controller implements Contract.Listener, Contract.Observer {
             mainview.showBoard(false);
         }
         this.game = new Game(this);
-//        this.game = Fen.convertFenToBoard("k1K1b3/8/8/3B4/8/8/8/8 b - - 0 1", this);
+        this.stockfish = new Stockfish(this.game);
         updateView();
         this.game.gameOver();
         update();

@@ -17,9 +17,8 @@ import javafx.stage.StageStyle;
 
 import java.util.Objects;
 
-public class GameOverModal {
+public class GameOverModal extends Stage{
 
-    private final Stage gameOverStage;
     private boolean newGame = false;
 
     public GameOverModal(boolean isADraw, String string){
@@ -34,13 +33,13 @@ public class GameOverModal {
 
     private Scene setUpStage(Stage gameOverStage, boolean isADraw, String string){
         Image icon = new Image("chess-icon.png");
-        gameOverStage.getIcons().add(icon);
-        gameOverStage.setTitle("GAME OVER");
-        gameOverStage.setWidth(500);
-        gameOverStage.setHeight(150);
-        gameOverStage.setResizable(false);
-        gameOverStage.initModality(Modality.APPLICATION_MODAL);
-        gameOverStage.initStyle(StageStyle.UTILITY);
+        this.getIcons().add(icon);
+        this.setTitle("GAME OVER");
+        this.setWidth(500);
+        this.setHeight(150);
+        this.setResizable(false);
+        this.initModality(Modality.APPLICATION_MODAL);
+        this.initStyle(StageStyle.UTILITY);
         StackPane root = new StackPane();
         root.setBackground(Background.EMPTY);
 
@@ -52,7 +51,8 @@ public class GameOverModal {
 
         addButton(root);
 
-        return new Scene(root, Color.BROWN);
+
+        this.setScene(new Scene(root, Color.BROWN));
     }
 
     private void addDrawDisplay(StackPane root, String string){
@@ -106,8 +106,8 @@ public class GameOverModal {
     private void addButton(StackPane root){
         Button button = new Button("Play Again");
         button.setOnMouseClicked(__ -> {
-            newGame = true;
-            gameOverStage.close();
+            this.newGame = true;
+            this.close();
         });
         root.getChildren().add(button);
         StackPane.setAlignment(button,Pos.BOTTOM_CENTER);

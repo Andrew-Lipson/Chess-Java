@@ -14,41 +14,23 @@ import javafx.stage.Stage;
 import javafx.stage.StageStyle;
 import javafx.stage.WindowEvent;
 
-public class PromotionModal {
+public class PromotionModal extends Stage{
 
     private final Contract.Listener listener;
-    private final Stage promotionStage;
     private double xOffset = 0;
     private double yOffset = 0;
 
     public PromotionModal(Contract.Listener listener, boolean isWhite){
         this.listener = listener;
-        promotionStage = new Stage();
 
-
-        promotionStage.setScene(setUpStage(promotionStage,isWhite));
-
-        promotionStage.addEventHandler(WindowEvent.WINDOW_CLOSE_REQUEST, windowEvent -> {
-            Platform.exit();
-        });
-
-
-    }
-
-    public void show(){
-        promotionStage.showAndWait();
-    }
-
-
-    private Scene setUpStage(Stage promotionStage, boolean isWhite){
         Image icon = new Image("chess-icon.png");
-        promotionStage.getIcons().add(icon);
-        promotionStage.setTitle("PAWN PROMOTION");
-        promotionStage.setWidth(400);
-        promotionStage.setHeight(120);
-        promotionStage.setResizable(false);
-        promotionStage.initModality(Modality.APPLICATION_MODAL);
-        promotionStage.initStyle(StageStyle.UNDECORATED);
+        this.getIcons().add(icon);
+        this.setTitle("PAWN PROMOTION");
+        this.setWidth(400);
+        this.setHeight(120);
+        this.setResizable(false);
+        this.initModality(Modality.APPLICATION_MODAL);
+        this.initStyle(StageStyle.UNDECORATED);
         Group root = new Group();
         Scene scene = new Scene(root);
 
@@ -57,8 +39,8 @@ public class PromotionModal {
             yOffset = event.getSceneY();
         });
         root.setOnMouseDragged(event -> {
-            promotionStage.setX(event.getScreenX() - xOffset);
-            promotionStage.setY(event.getScreenY() - yOffset);
+            this.setX(event.getScreenX() - this.xOffset);
+            this.setY(event.getScreenY() - this.yOffset);
         });
 
         Rectangle rectangle = new Rectangle();
@@ -74,7 +56,10 @@ public class PromotionModal {
             root.getChildren().add(initialiseImageView(i, isWhite));
         }
 
-        return scene;
+        this.setScene(scene);
+
+        this.addEventHandler(WindowEvent.WINDOW_CLOSE_REQUEST, windowEvent -> Platform.exit());
+
     }
 
 
@@ -101,8 +86,8 @@ public class PromotionModal {
         imageview.setImage(image);
 
         imageview.setOnMouseClicked(__ -> {
-            this.listener.onPromotionPieceDecided(fenRep[i]);
-            promotionStage.close();
+            this.listener.handlePromotionDecision(fenRep[i]);
+            this.close();
         });
         return imageview;
     }

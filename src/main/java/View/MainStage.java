@@ -55,9 +55,13 @@ public class MainStage {
         stage.show();
     }
 
-    public void showMainMenu(){
-        MainMenuScene menuView = new MainMenuScene(listener);
-        stage.setScene(menuView);
+    /**
+     * Show the Main Menu
+     */
+    public void showMainMenu() {
+        MainMenuScene menuView = new MainMenuScene(this.listener);
+        menuView.setChooseNumberOfPlayersMenu();
+        this.stage.setScene(menuView);
 
     }
 
@@ -164,15 +168,20 @@ public class MainStage {
         }
     }
 
-    public void promotionPopup(boolean isWhite){
-        PromotionModal promotionView = new PromotionModal(listener, isWhite);
-        promotionView.show();
+    /**
+     * Show the promotion popup
+     *
+     * @param isWhite is the promoted piece White
+     */
+    public void promotionPopup(boolean isWhite) {
+        PromotionModal promotionView = new PromotionModal(this.listener, isWhite);
+        promotionView.showAndWait();
     }
 
     public void gameOverPopup(boolean isADraw, String string){
         GameOverModal gameOverModal = new GameOverModal(isADraw,string);
-        gameOverModal.show();
-        if (gameOverModal.isNewGame()){
+        gameOverModal.showAndWait();
+        if (gameOverModal.isNewGame()) {
             showMainMenu();
         }
     }

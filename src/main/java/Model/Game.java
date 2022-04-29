@@ -108,6 +108,9 @@ public class Game {
         if (getLegalMoves(previousPosition).stream().noneMatch(position -> position.getFile()== newPosition.getFile() && position.getRank()== newPosition.getRank())){ // making sure the newPosition is a legal move
             return;
         }
+        if (nonNull(promotionPiece)) { // making sure the newPosition is a legal move
+            return;
+        }
         this.movePieceOnBoard(previousPosition, newPosition);
         disableEnPassant();
 
@@ -283,32 +286,37 @@ public class Game {
      * check to see if it's a checkmate or stalemate
      */
     private void endTurn() {
-        whitesTurn = !whitesTurn;
-        fullMove +=whitesTurn?1:0;
-        fen.updateFen(exportBoardPositionForFEN(), whitesTurn, whiteCastling, blackCastling, enPassantPositionForFen, halfMove, fullMove);
-        gameOver();
+        this.whitesTurn = !this.whitesTurn;
+        this.fullMove +=this.whitesTurn?1:0;
+        this.fen.updateFen(exportBoardPositionForFEN(), this.whitesTurn, this.whiteCastling, this.blackCastling, this.enPassantPositionForFen, this.halfMove, this.fullMove);
+        if (!gameOver()){
+            this._observer.update();
+        }
     }
 
     /**
      * If there is no legal moves, call gameOver() in Observer to end the game
      */
-    public void gameOver(){
-        if (Check.isThereALegalMove(this, whitesTurn)){
-            if (Check.isTheKingUnderAttack(this, whitesTurn)){
-                _observer.gameOver(false,whitesTurn?"BLACK":"WHITE");
+    public boolean gameOver() {
+        if (Check.isThereALegalMove(this, this.whitesTurn)) {
+            if (Check.isTheKingUnderAttack(this, this.whitesTurn)) {
+                this._observer.gameOver(false,this.whitesTurn?"BLACK":"WHITE");
             } else {
                 _observer.gameOver(true,"STALEMATE");
             }
-
+            return true;
         }
-        if (halfMove>=50){
-            _observer.gameOver(true,"50 Rule Move!");
-        }
-        if (draws.isThreefoldRepetition(fen.getFenForRepetitionCheck(), halfMove)){
-            _observer.gameOver(true,"Repetition!");
-        }
-        if (draws.isThereInsufficientMaterial(getClonedColouredPieces(true), getClonedColouredPieces(false))){
-            _observer.gameOver(true,"Insufficient Material!");
+        if (this.halfMove>=50) {
+            this._observer.gameOver(true,"50 Rule Move!");
+            return true;
+        } else if (this.draws.isThreefoldRepetition(this.fen.getFenForRepetitionCheck(), this.halfMove)) {
+            this._observer.gameOver(true,"Repetition!");
+            return true;
+        } else if (this.draws.isThereInsufficientMaterial(getClonedColouredPieces(true), getClonedColouredPieces(false))) {
+            this._observer.gameOver(true,"Insufficient Material!");
+            return true;
+        } else {
+            return false;
         }
     }
 

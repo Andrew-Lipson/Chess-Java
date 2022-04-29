@@ -53,6 +53,15 @@ public class Piece {
         this.pieceType = pieceType;
     }
 
+    /**
+     * returns if the Piece is positioned on a lightSquare or not
+     *
+     * @return true if the Piece is on a lightSquare
+     */
+    public boolean isOnLightSquares() {
+        return this.position.isALightSquares();
+    }
+
     public Position getPosition() {
         return position;
     }
@@ -73,7 +82,4 @@ public class Piece {
         return enPassantAvailableToTakeFile;
     }
 
-    public boolean isOnLightSquares(){
-        return this.position.isOnLightSquares();
-    }
 }
