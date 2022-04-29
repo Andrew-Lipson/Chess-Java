@@ -4,6 +4,7 @@ import Contract.Contract;
 import Model.Pieces.Piece;
 import Model.Pieces.PieceType;
 import Model.Utilities.Check;
+import Model.Utilities.Position;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -17,11 +18,10 @@ public class Fen {
 
     private String fullFen;
     private String fenForRepetitionCheck;
-    private String[] fenBreaks = {"/","/","/","/","/","/","/"," ",};
+    private final String[] fenBreaks = {"/","/","/","/","/","/","/"," ",};
 
-    public void updateFen(Piece[][] piece2DArray, boolean whitesTurn, boolean[] whiteCastling, boolean[] blackCastling, Position enPassantPosition, int halfmove, int fullmove){
+    public void updateFen(Piece[][] piece2DArray, boolean whitesTurn, boolean[] whiteCastling, boolean[] blackCastling, Position enPassantPosition, int halfmove, int fullmove) {
         convertBoardToFen(piece2DArray, whitesTurn, whiteCastling, blackCastling, enPassantPosition, halfmove, fullmove);
-        convertBoardToFenForCheckingRepetition(piece2DArray, whitesTurn, whiteCastling, blackCastling, enPassantPosition);
     }
 
 
@@ -34,20 +34,19 @@ public class Fen {
      * @param enPassantPosition is the position of any piece that just double moved
      * @param halfmove is the current halfmove count
      * @param fullmove is the current fullmove count
-     * @return the full FEN string
      */
-    public void convertBoardToFen(Piece[][] piece2DArray, boolean whitesTurn, boolean[] whiteCastling, boolean[] blackCastling, Position enPassantPosition, int halfmove, int fullmove){
+    public void convertBoardToFen(Piece[][] piece2DArray, boolean whitesTurn, boolean[] whiteCastling, boolean[] blackCastling, Position enPassantPosition, int halfmove, int fullmove) {
 
         StringBuilder output = new StringBuilder();
 
         for (int rank = 0; rank < 8; rank++) {
-            output.append(updateFENPosition(piece2DArray[rank], rank));
-            output.append(fenBreaks[rank]);
+            output.append(updateFENPosition(piece2DArray[rank]));
+            output.append(this.fenBreaks[rank]);
         }
 
-        if (whitesTurn){
+        if (whitesTurn) {
             output.append("w ");
-        } else{
+        } else {
             output.append("b ");
         }
 
@@ -60,7 +59,7 @@ public class Fen {
 
         output.append(" ").append(halfmove).append(" ").append(fullmove);
 
-        fullFen = output.toString();
+        this.fullFen = output.toString();
     }
 
     /**
@@ -125,7 +124,7 @@ public class Fen {
 
         String output = "";
 
-        if (isNull(position)){
+        if (isNull(position)) {
             return "-";
         }
 
@@ -138,23 +137,23 @@ public class Fen {
         return output;
     }
 
-    private static boolean checkCastlingIsPossible(Board board, Position kingPosition, Position rookPosition){
+    private static boolean checkCastlingIsPossible(Board board, Position kingPosition, Position rookPosition) {
         Piece kingPiece = board.getPiece(kingPosition);
         Piece rookPiece = board.getPiece(rookPosition);
-        if (isNull(rookPiece)||isNull(kingPiece)){
+        if (isNull(rookPiece)||isNull(kingPiece)) {
             return false;
         }
         return (kingPiece.getPieceType() == PieceType.King && rookPiece.getPieceType() == PieceType.Rook);
     }
 
-    private static boolean checkEnPassantIsPossible(Board board, Position enPassantPosition){
-        if (!Arrays.asList(new Integer[]{2,5}).contains(enPassantPosition.getRank())){
+    private static boolean checkEnPassantIsPossible(Board board, Position enPassantPosition) {
+        if (!Arrays.asList(new Integer[]{2,5}).contains(enPassantPosition.getRank())) {
             return false;
         }
-        if(nonNull(board.getPiece(enPassantPosition))){
+        if(nonNull(board.getPiece(enPassantPosition))) {
             return false;
         }
-        if (enPassantPosition.getRank()==2){
+        if (enPassantPosition.getRank()==2) {
             Piece piece = board.getPiece(new Position(enPassantPosition.getFile(),3));
             return !isNull(piece) && piece.getPieceType() == PieceType.Pawn && !piece.getIsWhite();
         } else {
@@ -164,11 +163,11 @@ public class Fen {
     }
 
     public String getFullFen() {
-        return fullFen;
+        return this.fullFen;
     }
 
     public String getFenForRepetitionCheck() {
-        return fenForRepetitionCheck;
+        return this.fenForRepetitionCheck;
     }
 
     /** Go through the inputed fenString and create the correct state of the Game. Returning null if the game is impossible
@@ -177,7 +176,7 @@ public class Fen {
      * @param observer that will be injected into the Game
      * @return a Game in the same state as the FEN, or null if game is impossible (Fen error, castling error, en passant error)
      */
-    public static Game convertFenToBoard(String fenString, Contract.Observer observer){
+    public static Game convertFenToBoard(String fenString, Contract.Observer observer) {
 
         final Board boardSquares = new Board();
         ArrayList<Piece> whitePieces = new ArrayList<>();
@@ -190,7 +189,7 @@ public class Fen {
         int fullmove;
 
         String[] str = fenString.split(" ");
-        if (str.length!=6){
+        if (str.length!=6) {
             return null;
         }
 
@@ -203,7 +202,7 @@ public class Fen {
         boolean blackKing = false;
         for (Character character:chars) {
             if (character.equals('/')) {
-                if(file!=8){
+                if(file!=8) {
                     return null;
                 }
                 rank += 1;
@@ -216,19 +215,19 @@ public class Fen {
             } else {
                 boolean isWhite = Character.isUpperCase(character);
                 String lowerCase = character.toString().toLowerCase();
-                if (!Arrays.asList(new String[]{"k","q","r","n","b","p"}).contains(lowerCase)){
+                if (!Arrays.asList(new String[]{"k","q","r","n","b","p"}).contains(lowerCase)) {
                     return null;
                 }
                 PieceType pieceType = PieceType.getPieceType(lowerCase);
-                if (pieceType == PieceType.King){
-                    if (isWhite){
-                        if (whiteKing){
+                if (pieceType == PieceType.King) {
+                    if (isWhite) {
+                        if (whiteKing) {
                             return null;
                         } else {
                             whiteKing = true;
                         }
-                    } else{
-                        if (blackKing){
+                    } else {
+                        if (blackKing) {
                             return null;
                         } else {
                             blackKing = true;
@@ -238,7 +237,7 @@ public class Fen {
                 Piece piece = new Piece(isWhite,pieceType);
                 piece.setPosition(new Position(file,rank));
                 boardSquares.addPiece(new Position(file,rank),piece);
-                if (isWhite){
+                if (isWhite) {
                     whitePieces.add(piece);
                 } else {
                     blackPieces.add(piece);
@@ -246,15 +245,15 @@ public class Fen {
                 file += 1;
             }
         }
-        if(file != 8 || rank != 7){
+        if(file != 8 || rank != 7) {
             return null;
         }
-        if (!whiteKing || !blackKing){
+        if (!whiteKing || !blackKing) {
             return null;
         }
 
         //str[1] whose turn
-        if (!Arrays.asList(new String[]{"w", "b"}).contains(str[1])){
+        if (!Arrays.asList(new String[]{"w", "b"}).contains(str[1])) {
             return null;
         }
         whitesTurn = Objects.equals(str[1], "w");
@@ -264,28 +263,28 @@ public class Fen {
         for (char character: chars) {
             switch (character) {
                 case 'K':
-                    if (checkCastlingIsPossible(boardSquares, new Position(4,7),new Position(7,7))){
+                    if (checkCastlingIsPossible(boardSquares, new Position(4,7),new Position(7,7))) {
                         whiteCastling[0] = true;
                     } else {
                         return null;
                     }
                     break;
                 case 'Q':
-                    if (checkCastlingIsPossible(boardSquares, new Position(4,7),new Position(0,7))){
+                    if (checkCastlingIsPossible(boardSquares, new Position(4,7),new Position(0,7))) {
                         whiteCastling[1] = true;
                     } else {
                         return null;
                     }
                     break;
                 case 'k':
-                    if (checkCastlingIsPossible(boardSquares, new Position(4,0),new Position(7,0))){
+                    if (checkCastlingIsPossible(boardSquares, new Position(4,0),new Position(7,0))) {
                         blackCastling[0] = true;
                     } else {
                         return null;
                     }
                     break;
                 case 'q':
-                    if (checkCastlingIsPossible(boardSquares, new Position(4,0),new Position(0,0))){
+                    if (checkCastlingIsPossible(boardSquares, new Position(4,0),new Position(0,0))) {
                         blackCastling[1] = true;
                     } else {
                         return null;
@@ -299,11 +298,11 @@ public class Fen {
         }
 
         // str[3] is en Passant
-        if(!Objects.equals(str[3], "-")){
+        if(!Objects.equals(str[3], "-")) {
             chars = str[3].toCharArray();
             int enPassantFile = chars[0];
             enPassantPosition = new Position(enPassantFile-97,8-Character.getNumericValue(chars[1]));
-            if (!checkEnPassantIsPossible(boardSquares,enPassantPosition)){
+            if (!checkEnPassantIsPossible(boardSquares,enPassantPosition)) {
                 return null;
             }
         } else {
@@ -312,13 +311,13 @@ public class Fen {
 
         // str[4] is halfmove
         halfmove = Integer.parseInt(str[4]);
-        if (halfmove<0){
+        if (halfmove<0) {
             return null;
         }
 
         // str[5] is fullmove
         fullmove = Integer.parseInt(str[5]);
-        if (fullmove<1){
+        if (fullmove<1) {
             return null;
         }
 

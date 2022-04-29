@@ -1,9 +1,9 @@
-package Model;
+package Model.Utilities;
 
 public final class Position {
 
-    private int file;
-    private int rank;
+    private final int file;
+    private final int rank;
 
     public Position(int file, int rank) {
         this.file = file;

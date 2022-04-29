@@ -20,7 +20,7 @@ public class PromotionModal extends Stage{
     private double xOffset = 0;
     private double yOffset = 0;
 
-    public PromotionModal(Contract.Listener listener, boolean isWhite){
+    public PromotionModal(Contract.Listener listener, boolean isWhite) {
         this.listener = listener;
 
         Image icon = new Image("chess-icon.png");
@@ -35,8 +35,8 @@ public class PromotionModal extends Stage{
         Scene scene = new Scene(root);
 
         root.setOnMousePressed(event -> {
-            xOffset = event.getSceneX();
-            yOffset = event.getSceneY();
+            this.xOffset = event.getSceneX();
+            this.yOffset = event.getSceneY();
         });
         root.setOnMouseDragged(event -> {
             this.setX(event.getScreenX() - this.xOffset);

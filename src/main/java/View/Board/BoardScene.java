@@ -14,8 +14,8 @@ public class BoardScene extends Scene {
         Group root = (Group) this.getRoot();
         for (int rank = 0; rank < 8; rank++) {
             for (int file = 0; file < 8; file++) {
-                squareView[file][rank] = new SquareNode(file, rank, listener, inverted);
-                root.getChildren().add(squareView[file][rank]);
+                this.squareView[file][rank] = new SquareNode(file, rank, listener, inverted);
+                root.getChildren().add(this.squareView[file][rank]);
             }
         }
     }
@@ -27,6 +27,6 @@ public class BoardScene extends Scene {
      * @return the square view
      */
     public SquareNode getSquareView(PositionView position) {
-        return squareView[position.getFile()][position.getRank()];
+        return this.squareView[position.getFile()][position.getRank()];
     }
 }

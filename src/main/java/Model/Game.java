@@ -4,6 +4,7 @@ import Contract.Contract;
 import Model.Utilities.Check;
 import Model.Utilities.Moves;
 import Model.Pieces.*;
+import Model.Utilities.Position;
 
 import java.util.ArrayList;
 
@@ -26,22 +27,22 @@ public class Game {
     private int fullMove;
     private Piece promotionPiece;
     private final Fen fen = new Fen();
-    private Draws draws = new Draws();
+    private final Draws draws = new Draws();
 
     public Game(Contract.Observer observer) {
-        board = new Board();
-        createPieces(whitePieces, true);
-        createPieces(blackPieces, false);
-        whiteCastling = new boolean[]{true, true};
-        blackCastling = new boolean[]{true, true};
+        this.board = new Board();
+        createPieces(this.whitePieces, true);
+        createPieces(this.blackPieces, false);
+        this.whiteCastling = new boolean[]{true, true};
+        this.blackCastling = new boolean[]{true, true};
         this._observer = observer;
-        whitesTurn = true;
-        halfMove = 0;
-        fullMove = 1;
-        fen.updateFen(exportBoardPositionForFEN(), whitesTurn, whiteCastling, blackCastling, enPassantPositionForFen, halfMove, fullMove);
+        this.whitesTurn = true;
+        this.halfMove = 0;
+        this.fullMove = 1;
+        this.fen.updateFen(exportBoardPositionForFEN(), this.whitesTurn, this.whiteCastling, this.blackCastling, this.enPassantPositionForFen, this.halfMove, this.fullMove);
     }
 
-    public Game(Contract.Observer observer, Board board, ArrayList<Piece> whitePieces, ArrayList<Piece> blackPieces, boolean[] whiteCastling, boolean[] blackCastling, boolean whitesTurn, Position enPassantPosition, int halfmove, int fullmove){
+    public Game(Contract.Observer observer, Board board, ArrayList<Piece> whitePieces, ArrayList<Piece> blackPieces, boolean[] whiteCastling, boolean[] blackCastling, boolean whitesTurn, Position enPassantPosition, int halfmove, int fullmove) {
         this._observer = observer;
         this.board = board;
         this.whitePieces = whitePieces;
@@ -57,7 +58,7 @@ public class Game {
             Position position = new Position(enPassantPosition.getFile(),rank);
             enableEnPassant(position, !whitesTurn);
         }
-        fen.updateFen(exportBoardPositionForFEN(), whitesTurn, whiteCastling, blackCastling, enPassantPositionForFen, halfMove, fullMove);
+        this.fen.updateFen(exportBoardPositionForFEN(), whitesTurn, whiteCastling, blackCastling, this.enPassantPositionForFen, this.halfMove, this.fullMove);
     }
 
 
@@ -70,9 +71,9 @@ public class Game {
      */
     private void createPieces(ArrayList<Piece> colouredPiecesArray, boolean isWhite) {
         int rank = isWhite ? 6 : 1;
-        for(int i = 0; i < 8; i++){
+        for(int i = 0; i < 8; i++) {
             colouredPiecesArray.add(new Piece(isWhite, PieceType.Pawn));
-            board.addPiece(new Position(i,rank), colouredPiecesArray.get(i));
+            this.board.addPiece(new Position(i,rank), colouredPiecesArray.get(i));
         }
 
         rank = isWhite ? 7 : 0;
@@ -87,7 +88,7 @@ public class Game {
         colouredPiecesArray.add(new Piece(isWhite, PieceType.Rook));
 
         for(int i = 8; i < 16; i++) {
-            board.addPiece(new Position(i-8, rank), colouredPiecesArray.get(i));
+            this.board.addPiece(new Position(i-8, rank), colouredPiecesArray.get(i));
         }
     }
 
@@ -100,12 +101,12 @@ public class Game {
      * @param previousPosition current position of the piece
      * @param newPosition where the piece will be moving to
      */
-    public void makeAMove(Position previousPosition, Position newPosition, boolean computerMove) {
-        if (isNull(getPiece(previousPosition)) || getPiece(previousPosition).getIsWhite() != whitesTurn){
+    public void makeAMove(Position previousPosition, Position newPosition) {
+        if (isNull(getPiece(previousPosition)) || getPiece(previousPosition).getIsWhite() != this.whitesTurn) {
             return;
         }
 
-        if (getLegalMoves(previousPosition).stream().noneMatch(position -> position.getFile()== newPosition.getFile() && position.getRank()== newPosition.getRank())){ // making sure the newPosition is a legal move
+        if (getLegalMoves(previousPosition).stream().noneMatch(position -> position.getFile()== newPosition.getFile() && position.getRank()== newPosition.getRank())) { // making sure the newPosition is a legal move
             return;
         }
         if (nonNull(promotionPiece)) { // making sure the newPosition is a legal move
@@ -115,7 +116,7 @@ public class Game {
         disableEnPassant();
 
         // check if a pawn double moved and do what is needed
-        Piece piece = board.getPiece(newPosition);
+        Piece piece = this.board.getPiece(newPosition);
         if(piece.getPieceType() == PieceType.Pawn && abs(previousPosition.getRank() - newPosition.getRank()) == 2) {
             this.enPassantPositionForFen = new Position(newPosition.getFile(),(newPosition.getRank()+previousPosition.getRank())/2);
             enableEnPassant(newPosition, piece.getIsWhite());
@@ -127,7 +128,6 @@ public class Game {
             this._observer.requiresPromotionOptions();
         } else {
             endTurn();
-            updateView();
         }
     }
 
@@ -140,37 +140,37 @@ public class Game {
      * @param newPosition where the piece will be moving to
      */
     private void movePieceOnBoard(Position previousPosition, Position newPosition) {
-        Piece capturedPiece = board.getPiece(newPosition);
-        Piece movedPiece = board.getPiece(previousPosition);
-        if (nonNull(capturedPiece)){
+        Piece capturedPiece = this.board.getPiece(newPosition);
+        Piece movedPiece = this.board.getPiece(previousPosition);
+        if (nonNull(capturedPiece)) {
             getColouredPieces(capturedPiece.getIsWhite()).remove(capturedPiece);
-            halfMove = 0;
+            this.halfMove = 0;
         } else if(movedPiece.getPieceType() == PieceType.Pawn) {
             if(newPosition.getFile() != previousPosition.getFile()) {
                 Position enPassantPosition = new Position(newPosition.getFile(), previousPosition.getRank());
-                getColouredPieces(board.getPiece(enPassantPosition).getIsWhite()).remove(board.getPiece(enPassantPosition));
-                board.removePiece(enPassantPosition);
+                getColouredPieces(this.board.getPiece(enPassantPosition).getIsWhite()).remove(this.board.getPiece(enPassantPosition));
+                this.board.removePiece(enPassantPosition);
             }
-            halfMove = 0;
+            this.halfMove = 0;
         } else if(movedPiece.getPieceType() == PieceType.King) {
             if (abs(previousPosition.getFile() - newPosition.getFile()) == 2) {
-                if (newPosition.getFile()>4){
-                    Piece rookCastlingPiece = board.getPiece(new Position(7, previousPosition.getRank()));
-                    board.removePiece(rookCastlingPiece.getPosition());
-                    board.addPiece(new Position(5, previousPosition.getRank()),rookCastlingPiece);
+                if (newPosition.getFile()>4) {
+                    Piece rookCastlingPiece = this.board.getPiece(new Position(7, previousPosition.getRank()));
+                    this.board.removePiece(rookCastlingPiece.getPosition());
+                    this.board.addPiece(new Position(5, previousPosition.getRank()),rookCastlingPiece);
                 } else {
-                    Piece rookCastlingPiece = board.getPiece(new Position(0, previousPosition.getRank()));
-                    board.removePiece(rookCastlingPiece.getPosition());
-                    board.addPiece(new Position(3, previousPosition.getRank()),rookCastlingPiece);
+                    Piece rookCastlingPiece = this.board.getPiece(new Position(0, previousPosition.getRank()));
+                    this.board.removePiece(rookCastlingPiece.getPosition());
+                    this.board.addPiece(new Position(3, previousPosition.getRank()),rookCastlingPiece);
                 }
             }
-            halfMove += 1;
+            this.halfMove += 1;
         } else {
-            halfMove += 1;
+            this.halfMove += 1;
         }
 
-        board.removePiece(previousPosition);
-        board.addPiece(newPosition,movedPiece);
+        this.board.removePiece(previousPosition);
+        this.board.addPiece(newPosition,movedPiece);
 
     }
 
@@ -180,8 +180,8 @@ public class Game {
      * @param isWhite white pieces or black pieces
      * @return whitePieces or blackPieces
      */
-    private ArrayList<Piece> getColouredPieces(boolean isWhite){
-        return isWhite?whitePieces:blackPieces;
+    private ArrayList<Piece> getColouredPieces(boolean isWhite) {
+        return isWhite?this.whitePieces:this.blackPieces;
     }
 
 
@@ -190,11 +190,11 @@ public class Game {
      * Remove the availability to en Passant from all the necessary pieces
      */
     private void disableEnPassant() {
-        for (Piece piece:enPassantAvailablePieces) {
+        for (Piece piece:this.enPassantAvailablePieces) {
             piece.setEnPassantAvailableToTakeFile(null);
         }
         this.enPassantPositionForFen = null;
-        enPassantAvailablePieces.clear();
+        this.enPassantAvailablePieces.clear();
     }
 
 
@@ -209,11 +209,11 @@ public class Game {
         int tempFile;
         for (int iFile = -1; iFile < 2; iFile+=2) {
             tempFile = newPosition.getFile() + iFile;
-            if (tempFile >= 0 && tempFile < 8){
-                Piece piece = board.getPiece(new Position(tempFile,newPosition.getRank()));
-                if(nonNull(piece) && piece.getPieceType() == PieceType.Pawn && piece.getIsWhite() != isWhite){
+            if (tempFile >= 0 && tempFile < 8) {
+                Piece piece = this.board.getPiece(new Position(tempFile,newPosition.getRank()));
+                if(nonNull(piece) && piece.getPieceType() == PieceType.Pawn && piece.getIsWhite() != isWhite) {
                     piece.setEnPassantAvailableToTakeFile(newPosition.getFile());
-                    enPassantAvailablePieces.add(piece);
+                    this.enPassantAvailablePieces.add(piece);
                 }
             }
         }
@@ -225,18 +225,18 @@ public class Game {
      * @param piece that just moved
      * @param previousPosition that the piece was on
      */
-    private void disableCastlingIfRequired(Piece piece, Position previousPosition){
-        boolean[] castling = whitesTurn?whiteCastling:blackCastling;
-        if (!castling[0] && !castling[1]){
+    private void disableCastlingIfRequired(Piece piece, Position previousPosition) {
+        boolean[] castling = this.whitesTurn?this.whiteCastling:this.blackCastling;
+        if (!castling[0] && !castling[1]) {
             return;
         }
-        if (piece.getPieceType()==PieceType.King){
+        if (piece.getPieceType()==PieceType.King) {
             castling[0]=false;
             castling[1]=false;
-        } else if (piece.getPieceType()==PieceType.Rook){
-            if (previousPosition.getFile()==7){
+        } else if (piece.getPieceType()==PieceType.Rook) {
+            if (previousPosition.getFile()==7) {
                 castling[0]=false;
-            } else if (previousPosition.getFile()==0){
+            } else if (previousPosition.getFile()==0) {
                 castling[1]=false;
             }
         }
@@ -255,28 +255,15 @@ public class Game {
             return false;
         }
         int rank = piece.getIsWhite() ? 0 : 7;
-        if(newPosition.getRank() != rank){
-            return false;
-        }
-        return true;
+        return newPosition.getRank() == rank;
     }
 
-    public void promotionPieceDecision(PieceType pieceType){
-        promotionPiece.pawnPromotion(pieceType);
-        promotionPiece = null;
+    public void promotionPieceDecision(PieceType pieceType) {
+        this.promotionPiece.pawnPromotion(pieceType);
+        this.promotionPiece = null;
 
         endTurn();
-        updateView();
     }
-
-
-    /**
-     * Call updateView function in the observer
-     */
-    private void updateView(){
-        _observer.update();
-    }
-
 
     /**
      * Change whose turn it is
@@ -300,7 +287,7 @@ public class Game {
             if (Check.isTheKingUnderAttack(this, this.whitesTurn)) {
                 this._observer.gameOver(false,this.whitesTurn?"BLACK":"WHITE");
             } else {
-                _observer.gameOver(true,"STALEMATE");
+                this._observer.gameOver(true,"STALEMATE");
             }
             return true;
         }
@@ -336,12 +323,12 @@ public class Game {
         for (Position movePosition:movesIncludingIllegalMoves) {
             Game tempGame = cloneGame();
             tempGame.movePieceOnBoard(position, movePosition);
-            if(!Check.isTheKingUnderAttack(tempGame,whitesTurn)){
+            if(!Check.isTheKingUnderAttack(tempGame,this.whitesTurn)) {
                 onlyLegalMoves.add(movePosition);
             }
         }
         Piece piece = getPiece(position);
-        if (nonNull(piece) && piece.getPieceType()==PieceType.King){
+        if (nonNull(piece) && piece.getPieceType()==PieceType.King) {
             checkIfCastlingIsLegal(onlyLegalMoves, piece);
         }
         return onlyLegalMoves;
@@ -352,15 +339,15 @@ public class Game {
      *
      * @return a Game that has been deep cloned
      */
-    private Game cloneGame(){
+    private Game cloneGame() {
         ArrayList<Piece> clonedWhitePieces = getClonedColouredPieces(true);
         ArrayList<Piece> clonedBlackPieces = getClonedColouredPieces(false);
-        Position tempEnPassantPosition = isNull(enPassantPositionForFen)?null:new Position(enPassantPositionForFen.getFile(), enPassantPositionForFen.getRank());
-        return new Game(null, createCloneBoard(clonedWhitePieces, clonedBlackPieces), clonedWhitePieces, clonedBlackPieces, new boolean[]{whiteCastling[0], whiteCastling[1]}, new boolean[] {blackCastling[0],blackCastling[1]}, whitesTurn, tempEnPassantPosition, halfMove, fullMove);
+        Position tempEnPassantPosition = isNull(this.enPassantPositionForFen)?null:new Position(this.enPassantPositionForFen.getFile(), this.enPassantPositionForFen.getRank());
+        return new Game(null, createCloneBoard(clonedWhitePieces, clonedBlackPieces), clonedWhitePieces, clonedBlackPieces, new boolean[]{this.whiteCastling[0], this.whiteCastling[1]}, new boolean[] {this.blackCastling[0],this.blackCastling[1]}, this.whitesTurn, tempEnPassantPosition, this.halfMove, this.fullMove);
     }
 
-    public ArrayList<Piece> getClonedColouredPieces(boolean isWhite){
-        ArrayList<Piece> originalPieces = isWhite?whitePieces:blackPieces;
+    public ArrayList<Piece> getClonedColouredPieces(boolean isWhite) {
+        ArrayList<Piece> originalPieces = isWhite?this.whitePieces:this.blackPieces;
         ArrayList<Piece> clonedPieces = new ArrayList<>();
         for (Piece piece:originalPieces) {
             clonedPieces.add(new Piece(piece));
@@ -375,7 +362,7 @@ public class Game {
      * @param clonedBlackPieces an ArrayList<Pieces> of all the black pieces still in the game
      * @return clone of the board
      */
-    private Board createCloneBoard(ArrayList<Piece> clonedWhitePieces, ArrayList<Piece> clonedBlackPieces){
+    private Board createCloneBoard(ArrayList<Piece> clonedWhitePieces, ArrayList<Piece> clonedBlackPieces) {
         Board tempBoard = new Board();
         for (Piece piece:clonedWhitePieces) {
             tempBoard.addPiece(piece.getPosition(),piece);
@@ -398,17 +385,17 @@ public class Game {
      * @param onlyLegalMoves all the legal moves the piece can make
      * @param piece king piece that is being moved
      */
-    private void checkIfCastlingIsLegal(ArrayList<Position> onlyLegalMoves, Piece piece){
+    private void checkIfCastlingIsLegal(ArrayList<Position> onlyLegalMoves, Piece piece) {
         boolean[] castling = getColouredCastling(piece.getIsWhite());
         Position position = onlyLegalMoves.stream().filter(castlingPosition -> castlingPosition.getFile()==(piece.getPosition().getFile()+2)).findAny().orElse(null);
-        if (nonNull(position)){
-            if (!castling[0] || Check.isTheKingUnderAttack(this, whitesTurn) || onlyLegalMoves.stream().noneMatch(position1 -> position1.getFile()==5 && position1.getRank()==piece.getPosition().getRank())){
+        if (nonNull(position)) {
+            if (!castling[0] || Check.isTheKingUnderAttack(this, this.whitesTurn) || onlyLegalMoves.stream().noneMatch(position1 -> position1.getFile()==5 && position1.getRank()==piece.getPosition().getRank())) {
                 onlyLegalMoves.remove(onlyLegalMoves.stream().filter(position1 -> position1.getFile()==6).findAny().orElse(null));
             }
         }
         position = onlyLegalMoves.stream().filter(castlingPosition -> castlingPosition.getFile()==(piece.getPosition().getFile()-2)).findAny().orElse(null);
-        if (nonNull(position)){
-            if (!castling[1] || Check.isTheKingUnderAttack(this, whitesTurn) || onlyLegalMoves.stream().noneMatch(position1 -> position1.getFile()==3 && position1.getRank()==piece.getPosition().getRank())){
+        if (nonNull(position)) {
+            if (!castling[1] || Check.isTheKingUnderAttack(this, this.whitesTurn) || onlyLegalMoves.stream().noneMatch(position1 -> position1.getFile()==3 && position1.getRank()==piece.getPosition().getRank())) {
                 onlyLegalMoves.remove(onlyLegalMoves.stream().filter(position1 -> position1.getFile()==2).findAny().orElse(null));
             }
         }
@@ -422,7 +409,7 @@ public class Game {
      * @return Full Fen string
      */
     public String getFullFen() {
-        return fen.getFullFen();
+        return this.fen.getFullFen();
     }
 
     /**
@@ -433,7 +420,7 @@ public class Game {
     private Piece[][] exportBoardPositionForFEN() {
         Piece[][] piece2DArray = new Piece[8][8];
         for (int rank = 0; rank < 8; rank++) {
-            piece2DArray[rank] = board.getRankPiece(rank);
+            piece2DArray[rank] = this.board.getRankPiece(rank);
         }
         return piece2DArray;
     }
@@ -445,7 +432,7 @@ public class Game {
      * @return a clone of the required piece
      */
     public Piece getPiece(Position position) {
-        return board.getPieceClone(position);
+        return this.board.getPieceClone(position);
     }
 
     /**
@@ -454,17 +441,17 @@ public class Game {
      * @return whitesTurn
      */
     public Boolean getWhitesTurn() {
-        return whitesTurn;
+        return this.whitesTurn;
     }
 
     /**
      * Get the boolean[] of intended colour for castling
      *
-     * @param isWhite
+     * @param isWhite what colour is required
      * @return boolean[]
      */
     public boolean[] getColouredCastling(boolean isWhite) {
-        boolean[] castling = isWhite?whiteCastling:blackCastling;
+        boolean[] castling = isWhite?this.whiteCastling:this.blackCastling;
         return new boolean[]{castling[0],castling[1]};
     }
 

@@ -21,17 +21,7 @@ public class GameOverModal extends Stage{
 
     private boolean newGame = false;
 
-    public GameOverModal(boolean isADraw, String string){
-        gameOverStage = new Stage();
-        gameOverStage.setScene(setUpStage(gameOverStage,isADraw, string));
-    }
-
-    public void show(){
-        gameOverStage.showAndWait();
-    }
-
-
-    private Scene setUpStage(Stage gameOverStage, boolean isADraw, String string){
+    public GameOverModal(boolean isADraw, String string) {
         Image icon = new Image("chess-icon.png");
         this.getIcons().add(icon);
         this.setTitle("GAME OVER");
@@ -142,6 +132,6 @@ public class GameOverModal extends Stage{
     }
 
     public boolean isNewGame() {
-        return newGame;
+        return this.newGame;
     }
 }

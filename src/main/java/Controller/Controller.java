@@ -2,14 +2,13 @@ package Controller;
 
 import Contract.Contract;
 import Controller.Engine.Stockfish;
+import Model.Fen;
 import Model.Game;
 import Model.Pieces.PieceType;
-import Model.Position;
+import Model.Utilities.Position;
 import Model.Pieces.Piece;
-import Model.Fen;
 import View.MainStage;
 import View.Board.PositionView;
-import javafx.application.Platform;
 
 import java.util.ArrayList;
 
@@ -18,9 +17,10 @@ import static java.util.Objects.nonNull;
 public class Controller implements Contract.Listener, Contract.Observer {
 
     private Game game;
-    private MainStage mainview;
-    private Piece clickedPiece = null;
-    private Boolean computerIsWhite = null;
+    private MainStage mainStage;
+    private Piece clickedPiece;
+    private Boolean computerIsWhite;
+    private Stockfish stockfish;
 
     /**
      * Starting running the application by creating the View and showing the main menu
@@ -38,7 +38,7 @@ public class Controller implements Contract.Listener, Contract.Observer {
      * Get the View to show the Main Menu
      */
     public void showMainMenu() {
-        mainview.showMainMenu();
+        this.mainStage.showMainMenu();
     }
 
     /**
@@ -72,7 +72,7 @@ public class Controller implements Contract.Listener, Contract.Observer {
 // region Observer Interface
 
     @Override
-    public void update(){
+    public void update() {
         updateView();
         if (this.game.getWhitesTurn().equals(this.computerIsWhite)) {
             new Thread(this::computerToMakeAMove).start();
@@ -80,7 +80,7 @@ public class Controller implements Contract.Listener, Contract.Observer {
     }
 
     @Override
-    public void displayPromotionPopup(){
+    public void requiresPromotionOptions() {
         updateView();
         if (!this.game.getWhitesTurn().equals(this.computerIsWhite)) {
             this.mainStage.promotionPopup(game.getWhitesTurn());
@@ -88,9 +88,9 @@ public class Controller implements Contract.Listener, Contract.Observer {
     }
 
     @Override
-    public void gameOver(boolean isADraw, String string){
+    public void gameOver(boolean isADraw, String string) {
         updateView();
-        mainview.gameOverPopup(isADraw,string);
+        this.mainStage.gameOverPopup(isADraw,string);
     }
 
 //endregion
@@ -101,20 +101,20 @@ public class Controller implements Contract.Listener, Contract.Observer {
     public void handlePieceClicked(PositionView positionView) {
         // Check if the piece clicked was just clicked, and remove the possible moves from the board
         Position position = new Position(positionView.getFile(), positionView.getRank());
-        if (nonNull(clickedPiece) && clickedPiece.getPosition().getFile() == position.getFile() && clickedPiece.getPosition().getRank() == position.getRank()) {
-            mainview.removeMoveOptionsCircles(positionView);
+        if (nonNull(this.clickedPiece) && this.clickedPiece.getPosition().getFile() == position.getFile() && this.clickedPiece.getPosition().getRank() == position.getRank()) {
+            this.mainStage.removeMoveOptionsCircles(positionView);
             this.clickedPiece = null;
         } else {
             // Check if another piece has been previously clicked and remove that piece's possible moves
-            if(nonNull(clickedPiece)) {
-                mainview.removeMoveOptionsCircles(new PositionView(clickedPiece.getPosition().getFile(), clickedPiece.getPosition().getRank()));
+            if(nonNull(this.clickedPiece)) {
+                this.mainStage.removeMoveOptionsCircles(new PositionView(this.clickedPiece.getPosition().getFile(), this.clickedPiece.getPosition().getRank()));
             }
             // Add the Clicked piece's possible moves
-            this.clickedPiece = game.getPiece(position);
+            this.clickedPiece = this.game.getPiece(position);
             boolean isWhite = this.clickedPiece.getIsWhite();
-            if (game.getWhitesTurn() == isWhite) {
-                ArrayList<Position> moves = game.getLegalMoves(position);
-                mainview.addMoveOptionsCircles(positionView, convertMovesFromPositiontoPositionView(moves));
+            if (this.game.getWhitesTurn() == isWhite) {
+                ArrayList<Position> moves = this.game.getLegalMoves(position);
+                this.mainStage.addMoveOptionsCircles(positionView, convertMovesFromPositiontoPositionView(moves));
             }
         }
     }
@@ -122,24 +122,24 @@ public class Controller implements Contract.Listener, Contract.Observer {
     @Override
     public void handleCircleClicked(PositionView positionView) {
         Position newPosition = new Position(positionView.getFile(), positionView.getRank());
-        Position previousPosition = clickedPiece.getPosition();
-        game.makeAMove(previousPosition,newPosition,false);
+        Position previousPosition = this.clickedPiece.getPosition();
+        this.game.makeAMove(previousPosition,newPosition);
         this.clickedPiece = null;
     }
 
     @Override
-    public void onPromotionPieceDecided(String string) {
-        game.promotionPieceDecision(PieceType.getPieceType(string));
+    public void handlePromotionDecision(String string) {
+        this.game.promotionPieceDecision(PieceType.getPieceType(string));
     }
 
     @Override
-    public void newGame(boolean singlePlayer, Boolean computerIsWhite){
-        if (singlePlayer){
+    public void newGame(boolean singlePlayer, Boolean computerIsWhite) {
+        if (singlePlayer) {
             this.computerIsWhite = computerIsWhite;
-            mainview.showBoard(computerIsWhite);
-        } else{
+            this.mainStage.showBoard(computerIsWhite);
+        } else {
             this.computerIsWhite = null;
-            mainview.showBoard(false);
+            this.mainStage.showBoard(false);
         }
         this.game = new Game(this);
         this.stockfish = new Stockfish(this.game);

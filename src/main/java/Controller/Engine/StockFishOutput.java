@@ -1,7 +1,7 @@
 package Controller.Engine;
 
 import Model.Pieces.PieceType;
-import Model.Position;
+import Model.Utilities.Position;
 
 public class StockFishOutput {
 
@@ -34,14 +34,14 @@ public class StockFishOutput {
     }
 
     public Position getPreviousPosition() {
-        return previousPosition;
+        return this.previousPosition;
     }
 
     public Position getNewPosition() {
-        return newPosition;
+        return this.newPosition;
     }
 
     public PieceType getPieceType() {
-        return pieceType;
+        return this.pieceType;
     }
 }

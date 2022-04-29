@@ -1,6 +1,7 @@
 package Model;
 
 import Contract.Contract;
+import Model.Utilities.Position;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -118,23 +119,34 @@ public class DrawTest {
     }
 
     @Test
+    @DisplayName("Sufficient Material: King & bishop vs King knight")
+    public void SufficientMaterialTest4(){
+
+        game = Fen.convertFenToBoard("8/6Nk/8/8/8/8/8/6bK b - - 0 4",mockObserver);
+
+        game.gameOver();
+
+        verify(mockObserver,never()).gameOver(true, "Insufficient Material!");
+    }
+
+    @Test
     @DisplayName("Simple repetition")
     public void RepetitionTest1(){
 
         game = Fen.convertFenToBoard("rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1",mockObserver);
         game.gameOver();
 
-        game.makeAMove(new Position(1,7),new Position(0,5),true);
-        game.makeAMove(new Position(1,0),new Position(0,2),true);
-        game.makeAMove(new Position(0,5),new Position(1,7),true);
-        game.makeAMove(new Position(0,2),new Position(1,0),true);
-        game.makeAMove(new Position(1,7),new Position(0,5),true);
-        game.makeAMove(new Position(1,0),new Position(0,2),true);
-        game.makeAMove(new Position(0,5),new Position(1,7),true);
+        game.makeAMove(new Position(1,7),new Position(0,5));
+        game.makeAMove(new Position(1,0),new Position(0,2));
+        game.makeAMove(new Position(0,5),new Position(1,7));
+        game.makeAMove(new Position(0,2),new Position(1,0));
+        game.makeAMove(new Position(1,7),new Position(0,5));
+        game.makeAMove(new Position(1,0),new Position(0,2));
+        game.makeAMove(new Position(0,5),new Position(1,7));
 
         verify(mockObserver,never()).gameOver(true, "Repetition!");
 
-        game.makeAMove(new Position(0,2),new Position(1,0),true);
+        game.makeAMove(new Position(0,2),new Position(1,0));
 
 
         verify(mockObserver,times(1)).gameOver(true, "Repetition!");
@@ -147,19 +159,19 @@ public class DrawTest {
         game = Fen.convertFenToBoard("r3kbnr/p1pppppp/bqn5/1p6/6P1/7N/PPPPPPBP/RNBQK2R w KQkq - 7 6",mockObserver);
         game.gameOver();
 
-        game.makeAMove(new Position(7,7),new Position(6,7),true);
-        game.makeAMove(new Position(0,0),new Position(2,0),true);
-        game.makeAMove(new Position(6,7),new Position(7,7),true);
-        game.makeAMove(new Position(2,0),new Position(0,0),true);
-        game.makeAMove(new Position(7,7),new Position(6,7),true);
-        game.makeAMove(new Position(0,0),new Position(2,0),true);
-        game.makeAMove(new Position(6,7),new Position(7,7),true);
-        game.makeAMove(new Position(2,0),new Position(0,0),true);
+        game.makeAMove(new Position(7,7),new Position(6,7));
+        game.makeAMove(new Position(0,0),new Position(2,0));
+        game.makeAMove(new Position(6,7),new Position(7,7));
+        game.makeAMove(new Position(2,0),new Position(0,0));
+        game.makeAMove(new Position(7,7),new Position(6,7));
+        game.makeAMove(new Position(0,0),new Position(2,0));
+        game.makeAMove(new Position(6,7),new Position(7,7));
+        game.makeAMove(new Position(2,0),new Position(0,0));
 
         verify(mockObserver,never()).gameOver(true, "Repetition!");
 
-        game.makeAMove(new Position(7,7),new Position(6,7),true);
-        game.makeAMove(new Position(0,0),new Position(2,0),true);
+        game.makeAMove(new Position(7,7),new Position(6,7));
+        game.makeAMove(new Position(0,0),new Position(2,0));
 
         verify(mockObserver,times(1)).gameOver(true, "Repetition!");
     }
@@ -172,21 +184,21 @@ public class DrawTest {
         game.gameOver();
 
 
-        game.makeAMove(new Position(5,6),new Position(5,4),true); // en Passant now available
+        game.makeAMove(new Position(5,6),new Position(5,4)); // en Passant now available
 
 
-        game.makeAMove(new Position(1,0),new Position(0,2),true);
-        game.makeAMove(new Position(1,7),new Position(0,5),true);
-        game.makeAMove(new Position(0,2),new Position(1,0),true);
-        game.makeAMove(new Position(0,5),new Position(1,7),true);
-        game.makeAMove(new Position(1,0),new Position(0,2),true);
-        game.makeAMove(new Position(1,7),new Position(0,5),true);
-        game.makeAMove(new Position(0,2),new Position(1,0),true);
-        game.makeAMove(new Position(0,5),new Position(1,7),true);
+        game.makeAMove(new Position(1,0),new Position(0,2));
+        game.makeAMove(new Position(1,7),new Position(0,5));
+        game.makeAMove(new Position(0,2),new Position(1,0));
+        game.makeAMove(new Position(0,5),new Position(1,7));
+        game.makeAMove(new Position(1,0),new Position(0,2));
+        game.makeAMove(new Position(1,7),new Position(0,5));
+        game.makeAMove(new Position(0,2),new Position(1,0));
+        game.makeAMove(new Position(0,5),new Position(1,7));
 
         verify(mockObserver,never()).gameOver(true, "Repetition!");
 
-        game.makeAMove(new Position(1,0),new Position(0,2),true);
+        game.makeAMove(new Position(1,0),new Position(0,2));
 
         verify(mockObserver,times(1)).gameOver(true, "Repetition!");
     }
@@ -198,11 +210,11 @@ public class DrawTest {
         game = Fen.convertFenToBoard("rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 48 1",mockObserver);
         game.gameOver();
 
-        game.makeAMove(new Position(1,7),new Position(0,5),true);
+        game.makeAMove(new Position(1,7),new Position(0,5));
 
         verify(mockObserver,never()).gameOver(true, "50 Rule Move!");
 
-        game.makeAMove(new Position(1,0),new Position(0,2),true);
+        game.makeAMove(new Position(1,0),new Position(0,2));
 
         verify(mockObserver,times(1)).gameOver(true, "50 Rule Move!");
     }

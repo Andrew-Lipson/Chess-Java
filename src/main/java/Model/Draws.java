@@ -8,10 +8,10 @@ import java.util.HashMap;
 
 public class Draws {
 
-    private HashMap<String, Integer> hashmap;
+    private final HashMap<String, Integer> hashmap;
 
-    public Draws(){
-        hashmap = new HashMap<>();
+    public Draws() {
+        this.hashmap = new HashMap<>();
     }
 
     /**
@@ -22,20 +22,20 @@ public class Draws {
      * @return true if it's a draw via repetition, false otherwise
      */
     public boolean isThreefoldRepetition(String fenForRepetitionCheck, int halfMove) {
-        if (halfMove==0){
-            hashmap.clear();
-            hashmap.put(fenForRepetitionCheck,1);
+        if (halfMove==0) {
+            this.hashmap.clear();
+            this.hashmap.put(fenForRepetitionCheck,1);
             return false;
         }
-        if (hashmap.containsKey(fenForRepetitionCheck)){
-            int tempValue = hashmap.get(fenForRepetitionCheck) + 1;
-            if (tempValue == 3){
+        if (this.hashmap.containsKey(fenForRepetitionCheck)) {
+            int tempValue = this.hashmap.get(fenForRepetitionCheck) + 1;
+            if (tempValue == 3) {
                 return true;
-            } else{
-                hashmap.replace(fenForRepetitionCheck,tempValue);
+            } else {
+                this.hashmap.replace(fenForRepetitionCheck,tempValue);
             }
-        } else{
-           hashmap.put(fenForRepetitionCheck,1);
+        } else {
+            this.hashmap.put(fenForRepetitionCheck,1);
         }
         return false;
     }

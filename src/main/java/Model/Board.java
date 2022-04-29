@@ -1,6 +1,7 @@
 package Model;
 
 import Model.Pieces.Piece;
+import Model.Utilities.Position;
 
 import static java.util.Objects.isNull;
 
@@ -11,7 +12,7 @@ public class Board {
     public Board() {
         for (int rank = 0; rank < 8; rank++) {
             for (int file = 0; file < 8; file++) {
-                board[file][rank] = null;
+                this.board[file][rank] = null;
             }
         }
     }
@@ -24,7 +25,7 @@ public class Board {
      * @return the piece
      */
     public Piece getPiece(Position position) {
-        return board[position.getRank()][position.getFile()];
+        return this.board[position.getRank()][position.getFile()];
     }
 
     /**
@@ -46,10 +47,10 @@ public class Board {
      * @param position The position of the piece to remove
      */
     public void removePiece(Position position) {
-        Piece piece = board[position.getRank()][position.getFile()];
+        Piece piece = this.board[position.getRank()][position.getFile()];
         if(!isNull(piece)) {
             piece.setPosition(null);
-            board[position.getRank()][position.getFile()] = null;
+            this.board[position.getRank()][position.getFile()] = null;
         }
 
     }
@@ -61,7 +62,7 @@ public class Board {
      * @param piece The Piece that is being added
      */
     public void addPiece(Position position, Piece piece) {
-        board[position.getRank()][position.getFile()] = piece;
+        this.board[position.getRank()][position.getFile()] = piece;
         piece.setPosition(position);
     }
 

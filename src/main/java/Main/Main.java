@@ -5,13 +5,10 @@ import View.MainStage;
 import javafx.application.Application;
 import javafx.stage.Stage;
 
-import java.io.IOException;
-
-
 public class Main extends Application {
 
     @Override
-    public void start(Stage stage) throws IOException {
+    public void start(Stage stage) {
 
         Controller controller = new Controller(); // Start up Controller
         MainStage mainView = new MainStage(stage, controller);// Start up View

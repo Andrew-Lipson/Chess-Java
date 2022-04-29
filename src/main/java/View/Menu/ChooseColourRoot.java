@@ -11,22 +11,14 @@ public class ChooseColourRoot extends Group {
 
     private final Contract.Listener listener;
 
-    public ChooseColourRoot(Contract.Listener listener){
+    public ChooseColourRoot(Contract.Listener listener) {
         this.listener = listener;
-        populateScene();
-    }
-
-    public void populateScene() {
         Button blackButton = new Button();
         Button whiteButton = new Button();
         blackButton.setGraphic(getPawnIcon(false));
         whiteButton.setGraphic(getPawnIcon(true));
-        blackButton.setOnMouseClicked(__ -> {
-            this.listener.newGame(true, true);
-        });
-        whiteButton.setOnMouseClicked(__ -> {
-            this.listener.newGame(true,false);
-        });
+        blackButton.setOnMouseClicked(__ -> this.listener.newGame(true, true));
+        whiteButton.setOnMouseClicked(__ -> this.listener.newGame(true,false));
 
         placeButton(blackButton, 0);
         placeButton(whiteButton, 1);

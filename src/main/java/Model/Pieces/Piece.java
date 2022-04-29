@@ -1,10 +1,10 @@
 package Model.Pieces;
 
-import Model.Position;
+import Model.Utilities.Position;
 
 public class Piece {
 
-    private boolean isWhite;
+    private final boolean isWhite;
     private Position position;
     private PieceType pieceType;
     private Integer enPassantAvailableToTakeFile = null;
@@ -69,23 +69,23 @@ public class Piece {
     }
 
     public Position getPosition() {
-        return position;
+        return this.position;
     }
 
     public PieceType getPieceType() {
-        return pieceType;
+        return this.pieceType;
     }
 
     public String getFenRepresentation() {
-        return pieceType.getFenRepresentation(isWhite);
+        return this.pieceType.getFenRepresentation(this.isWhite);
     }
 
     public boolean getIsWhite() {
-        return isWhite;
+        return this.isWhite;
     }
 
     public Integer getEnPassantAvailableToTakeFile() {
-        return enPassantAvailableToTakeFile;
+        return this.enPassantAvailableToTakeFile;
     }
 
 }

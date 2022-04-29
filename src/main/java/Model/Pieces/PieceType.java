@@ -12,7 +12,7 @@ public enum PieceType {
 
     public final String fenRepresentation;
 
-    private PieceType(String fenRepresentation) {
+    PieceType(String fenRepresentation) {
         this.fenRepresentation = fenRepresentation;
     }
 

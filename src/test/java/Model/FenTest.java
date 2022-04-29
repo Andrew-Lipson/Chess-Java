@@ -1,5 +1,6 @@
 package Model;
 
+import Model.Utilities.Position;
 import Utility.CreateBoard;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.DisplayName;

@@ -5,14 +5,13 @@ import javafx.scene.Group;
 import javafx.scene.Scene;
 import javafx.scene.paint.Color;
 
-public class MainMenuScene extends Scene{
+public class MainMenuScene extends Scene {
 
     private final Contract.Listener listener;
 
     public MainMenuScene(Contract.Listener listener) {
         super(new Group(), Color.BROWN);
         this.listener = listener;
-        chooseNumberOfPlayersMenu();
     }
 
     /**
