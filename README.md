@@ -4,6 +4,13 @@ I have created a Chess game which follows all the rules according to FIDE (The I
 
 You can play 2 player with both the White and Black Pieces being controlled by the user. You can also play 1 Player against StockFish, the best Chess engine in the world (https://stockfishchess.org/about/)
 
+
+Setting up the code:
+  
+  You must configure your IDE for use Java 11 and JavaFX. The program also uses a Stockfish commandline application which I have removed from the github.
+  To add stockfish you must download the necessary application from here (https://stockfishchess.org/download/), then move the execuatble (.exe) into the src file and rename the file to 'stockfish.exe'  
+
+
 START GAME:
 
 
