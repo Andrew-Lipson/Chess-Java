@@ -24,7 +24,8 @@ public class Stockfish {
     public Stockfish(Game game) {
         this.game = game;
         ProcessBuilder builder = new ProcessBuilder();
-        builder.command("Stockfish/stockfish.exe");
+        builder.command("Stockfish/stockfish.exe"); // For Windows
+//        builder.command("stockfish"); // For Mac
         builder.redirectErrorStream(true);
         try {
             Process process = builder.start();
