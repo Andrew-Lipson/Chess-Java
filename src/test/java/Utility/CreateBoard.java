@@ -1,7 +1,7 @@
 package Utility;
 
 import Model.Board;
-import Model.Position;
+import Model.Utilities.Position;
 import Model.Pieces.Piece;
 import Model.Pieces.PieceType;
 

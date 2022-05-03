@@ -2,19 +2,19 @@ package View.Board;
 
 public class PositionView {
 
-    private int file;
-    private int rank;
+    private final int file;
+    private final int rank;
 
-    public PositionView(int file, int rank){
+    public PositionView(int file, int rank) {
         this.file = file;
         this.rank = rank;
     }
 
-    public int getFile(){
+    public int getFile() {
         return this.file;
     }
 
-    public int getRank(){
+    public int getRank() {
         return this.rank;
     }
 }

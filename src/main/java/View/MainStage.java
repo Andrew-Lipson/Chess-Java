@@ -9,13 +9,9 @@ import View.Board.SquareNode;
 import View.Menu.MainMenuScene;
 import View.Modals.GameOverModal;
 import View.Modals.PromotionModal;
-import javafx.scene.Group;
 import javafx.scene.image.Image;
-import javafx.scene.text.Font;
-import javafx.scene.text.Text;
 import javafx.stage.Stage;
 
-import java.io.IOException;
 import java.util.ArrayList;
 
 import static java.lang.Character.isDigit;
@@ -25,84 +21,50 @@ public class MainStage {
     private final Stage stage;
     private final Contract.Listener listener;
     private BoardScene boardView;
-    private ArrayList<SquareNode> circlesActivated = new ArrayList<SquareNode>();
+    private final ArrayList<SquareNode> circlesActivated = new ArrayList<>();
 
-    /**
-     * Setting up the JAVAFX stage that will be used for the display
-     * 
-     * @param stage
-     * @param listener
-     * @throws IOException
-     */
-    public MainStage(Stage stage, Contract.Listener listener) throws IOException {
+    public MainStage(Stage stage, Contract.Listener listener) {
         this.stage = stage;
         this.listener = listener;
-
-//        for (int i = 0; i < 8; i++) {
-//            rankNumbers(root,i);
-//            fileNumbers(root,i);
-//        }
-
     }
 
+    /**
+     * Set up the stage with the necessary settings
+     */
     public void createStage() {
         Image icon = new Image("chess-icon.png");
-        stage.getIcons().add(icon);
-        stage.setTitle("CHESS");
-        stage.setWidth(680); // plus 50 when wanted file and rank numbers
-        stage.setHeight(700); // plus 50 when wanted file and rank numbers
-        stage.setResizable(false);
-        stage.show();
-    }
-
-    public void showMainMenu(){
-        MainMenuScene menuView = new MainMenuScene(listener);
-        stage.setScene(menuView);
-
-    }
-
-    public void showBoard(boolean inverted){
-        this.boardView = new BoardScene(listener, inverted);
-        stage.setScene(boardView);
+        this.stage.getIcons().add(icon);
+        this.stage.setTitle("CHESS");
+        this.stage.setWidth(680); // plus 50 when wanted file and rank numbers
+        this.stage.setHeight(700); // plus 50 when wanted file and rank numbers
+        this.stage.setResizable(false);
+        this.stage.show();
     }
 
     /**
-     * Adding Rank numbers to make it easier for me to see what file and rank each square is.
-     * DELETE ONCE PROJECT IS COMPLETE
-
-     * @param root
-     * @param rank
+     * Show the Main Menu
      */
-    private void rankNumbers(Group root, Integer rank) {
-        Text text = new Text();
-        text.setText(rank.toString());
-        text.setX(660);
-        text.setY(65+80*rank);
-        text.setFont(Font.font(50));
-        root.getChildren().add(text);
+    public void showMainMenu() {
+        MainMenuScene menuView = new MainMenuScene(this.listener);
+        menuView.setChooseNumberOfPlayersMenu();
+        this.stage.setScene(menuView);
+
     }
 
     /**
-     * Adding File numbers to make it easier for me to see what file and rank each square is.
-     * DELETE ONCE PROJECT IS COMPLETE
-
-     * @param root
-     * @param file
+     * Show the board, and invert it if necessary
+     *
+     * @param inverted should the board be displayed inverted
      */
-    private void fileNumbers(Group root, Integer file) {
-        Text text = new Text();
-        text.setText(file.toString());
-        text.setX(40+80*file);
-        text.setY(700);
-        text.setFont(Font.font(50));
-        root.getChildren().add(text);
+    public void showBoard(boolean inverted) {
+        this.boardView = new BoardScene(this.listener, inverted);
+        this.stage.setScene(this.boardView);
     }
-
 
     /**
      * Using the FEN string, update the view to match the FEN input
      * 
-     * @param FENPosition
+     * @param FENPosition string that is the FEN position to be displayed
      */
     public void updateView(String FENPosition) {
         System.out.println(FENPosition);
@@ -111,16 +73,16 @@ public class MainStage {
         int rank = 0;
         int file = 0;
         for (Character character:chars) {
-            if(character.equals('/')){
+            if(character.equals('/')) {
                 rank += 1;
                 file = 0;
             } else if(isDigit(character)) {
-                for(int i = 0; i < Character.getNumericValue(character); i++){
+                for(int i = 0; i < Character.getNumericValue(character); i++) {
                     getSquareView(new PositionView(file,rank)).addPiece('x');
                     file += 1;
                 }
 
-            } else{
+            } else {
                 getSquareView(new PositionView(file,rank)).addPiece(character);
                 file += 1;
             }
@@ -134,14 +96,14 @@ public class MainStage {
     /**
      * Adding circles to squares after a piece has been clicked to show what moves are available
      * 
-     * @param possibleMoves
+     * @param possibleMoves List of PositionView that circles need to be added to
      */
     public void addMoveOptionsCircles(PositionView positionView , ArrayList<PositionView> possibleMoves) {
-        boardView.getSquareView(positionView).changeSquareColour(SquareColour.CLICKED);
+        this.boardView.getSquareView(positionView).changeSquareColour(SquareColour.CLICKED);
         for (PositionView position:possibleMoves) {
-            SquareNode squareView = boardView.getSquareView(position);
+            SquareNode squareView = this.boardView.getSquareView(position);
             squareView.addCircle();
-            circlesActivated.add(squareView);
+            this.circlesActivated.add(squareView);
         }
     }
 
@@ -149,7 +111,7 @@ public class MainStage {
      * Removing the circles of the possible moves and return the clicked square back to its normal colour
      */
     public void removeMoveOptionsCircles(PositionView positionView) {
-        boardView.getSquareView(positionView).changeSquareColour();
+        this.boardView.getSquareView(positionView).changeSquareColour();
         for (SquareNode squareview:this.circlesActivated) {
             squareview.removeCircle();
         }
@@ -164,20 +126,31 @@ public class MainStage {
         }
     }
 
-    public void promotionPopup(boolean isWhite){
-        PromotionModal promotionView = new PromotionModal(listener, isWhite);
-        promotionView.show();
+    /**
+     * Show the promotion popup
+     *
+     * @param isWhite is the promoted piece White
+     */
+    public void promotionPopup(boolean isWhite) {
+        PromotionModal promotionView = new PromotionModal(this.listener, isWhite);
+        promotionView.showAndWait();
     }
 
-    public void gameOverPopup(boolean isStaleMate, boolean isWhite){
-        GameOverModal gameOverModal = new GameOverModal(isStaleMate,isWhite);
-        gameOverModal.show();
-        if (gameOverModal.isNewGame()){
+    /**
+     * Show the Game Over popup
+     *
+     * @param isADraw Was it a draw
+     * @param string String to be displayed
+     */
+    public void gameOverPopup(boolean isADraw, String string) {
+        GameOverModal gameOverModal = new GameOverModal(isADraw,string);
+        gameOverModal.showAndWait();
+        if (gameOverModal.isNewGame()) {
             showMainMenu();
         }
     }
 
     private SquareNode getSquareView(PositionView position) {
-        return boardView.getSquareView(position);
+        return this.boardView.getSquareView(position);
     }
 }

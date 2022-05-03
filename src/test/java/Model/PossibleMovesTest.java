@@ -1,6 +1,6 @@
 package Model;
 
-import Model.Utilities.Fen;
+import Model.Utilities.Position;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -14,7 +14,7 @@ public class PossibleMovesTest {
 
     @Test
     public void queenMovesTest(){
-        Game game = Fen.convertFenToBoard("8/5P2/2q5/3Q3n/8/3B4/8/8 w - - 0 1",null);
+        Game game = Fen.convertFenToBoard("8/5P2/2q5/3Q3n/8/3B4/8/k5K1 w - - 0 1",null);
         int[][] expectedMoves = new int[][] {{2,2},{4,2},{2,4},{1,5},{0,6},{4,4},{5,5},{6,6},{7,7},{3,2},{3,1},{3,0},{2,3},{1,3},{0,3},{3,4},{4,3},{5,3},{6,3},{7,3}};
         ArrayList<Position> actualMoves = game.getLegalMoves(new Position(3,3));
         checkForCorrectPositions(actualMoves, expectedMoves);
@@ -22,7 +22,7 @@ public class PossibleMovesTest {
 
     @Test
     public void rookMovesTest(){
-        Game game = Fen.convertFenToBoard("8/8/8/8/k3r3/4P3/8/8 b - - 0 1",null);
+        Game game = Fen.convertFenToBoard("8/8/8/8/k3r3/4P3/8/K7 b - - 0 1",null);
         int[][] expectedMoves = new int[][] {{4,3},{4,2},{4,1},{4,0},{3,4},{2,4},{1,4},{4,5},{5,4},{6,4},{7,4}};
         ArrayList<Position> actualMoves = game.getLegalMoves(new Position(4,4));
         checkForCorrectPositions(actualMoves, expectedMoves);
@@ -30,7 +30,7 @@ public class PossibleMovesTest {
 
     @Test
     public void bishopMovesTest(){
-        Game game = Fen.convertFenToBoard("8/6n1/8/8/3B4/8/8/6N1 w - - 0 1",null);
+        Game game = Fen.convertFenToBoard("K6k/6n1/8/8/3B4/8/8/6N1 w - - 0 1",null);
         int[][] expectedMoves = new int[][] {{2,3},{1,2},{0,1},{4,3},{5,2},{6,1},{2,5},{1,6},{0,7},{4,5},{5,6}};
         ArrayList<Position> actualMoves = game.getLegalMoves(new Position(3,4));
         checkForCorrectPositions(actualMoves, expectedMoves);
@@ -38,7 +38,7 @@ public class PossibleMovesTest {
 
     @Test
     public void knightMovesTest(){
-        Game game = Fen.convertFenToBoard("8/3P4/8/4n3/6N1/3B4/8/8 b - - 0 1",null);
+        Game game = Fen.convertFenToBoard("K6k/3P4/8/4n3/6N1/3B4/8/8 b - - 0 1",null);
         int[][] expectedMoves = new int[][] {{3,1},{5,1},{2,2},{6,2},{2,4},{6,4},{3,5},{5,5}};
         ArrayList<Position> actualMoves = game.getLegalMoves(new Position(4,3));
         checkForCorrectPositions(actualMoves, expectedMoves);
@@ -46,7 +46,7 @@ public class PossibleMovesTest {
 
     @Test
     public void kingMovesTest(){
-        Game game = Fen.convertFenToBoard("8/8/8/2p1p3/3K4/2ppp3/8/8 w - - 0 1",null);
+        Game game = Fen.convertFenToBoard("k7/8/8/2p1p3/3K4/2ppp3/8/8 w - - 0 1",null);
         int[][] expectedMoves = new int[][] {{2,3},{3,3},{4,3},{2,4},{4,4},{2,5},{3,5},{4,5}};
         ArrayList<Position> actualMoves = game.getLegalMoves(new Position(3,4));
         checkForCorrectPositions(actualMoves, expectedMoves);
@@ -54,7 +54,7 @@ public class PossibleMovesTest {
 
     @Test
     public void pawnMovesCaptureTest(){
-        Game game = Fen.convertFenToBoard("8/8/8/4p3/3NNB2/8/8/8 b - - 0 1",null);
+        Game game = Fen.convertFenToBoard("K6k/8/8/4p3/3NNB2/8/8/8 b - - 0 1",null);
         int[][] expectedMoves = new int[][] {{3,4},{5,4}};
         ArrayList<Position> actualMoves = game.getLegalMoves(new Position(4,3));
         checkForCorrectPositions(actualMoves, expectedMoves);
@@ -101,7 +101,7 @@ public class PossibleMovesTest {
     @DisplayName("Black pieces unable to move as King in Check")
     @ValueSource(ints= {0,1,2,3,4,5,6,7})
     public void kingInCheckTest1(int file){
-        Game game = Fen.convertFenToBoard("8/8/8/rnnrqbbp/8/8/8/4k2R b - - 0 1",null);
+        Game game = Fen.convertFenToBoard("5K2/8/8/rnnrqbbp/8/8/8/4k2R b - - 0 1",null);
         int[][] expectedMoves = new int[][] {};
         ArrayList<Position> actualMoves = game.getLegalMoves(new Position(file,3));
         checkForCorrectPositions(actualMoves, expectedMoves);
@@ -110,7 +110,7 @@ public class PossibleMovesTest {
     @Test
     @DisplayName("King only has one spot not in Check")
     public void kingLimitedMovesTest1(){
-        Game game = Fen.convertFenToBoard("2b5/5q2/8/4K3/r7/8/8/8 w - - 0 1",null);
+        Game game = Fen.convertFenToBoard("2b5/5q2/8/4K3/r7/8/8/k7 w - - 0 1",null);
         int[][] expectedMoves = new int[][] {{3,2}};
         ArrayList<Position> actualMoves = game.getLegalMoves(new Position(4,3));
         checkForCorrectPositions(actualMoves, expectedMoves);
@@ -119,7 +119,7 @@ public class PossibleMovesTest {
     @Test
     @DisplayName("King must capture to not be in Check")
     public void kingLimitedMovesTest2(){
-        Game game = Fen.convertFenToBoard("6qK/6pp/8/8/8/8/8/8 w - - 0 1",null);
+        Game game = Fen.convertFenToBoard("6qK/6pp/8/8/8/8/8/k7 w - - 0 1",null);
         int[][] expectedMoves = new int[][] {{6,0}};
         ArrayList<Position> actualMoves = game.getLegalMoves(new Position(7,0));
         checkForCorrectPositions(actualMoves, expectedMoves);
@@ -128,7 +128,7 @@ public class PossibleMovesTest {
     @Test
     @DisplayName("King must cover behind piece to not be in Check")
     public void kingLimitedMovesTest3(){
-        Game game = Fen.convertFenToBoard("8/8/8/2pk4/8/8/8/2RRR3 b - - 0 1",null);
+        Game game = Fen.convertFenToBoard("K7/8/8/2pk4/8/8/8/2RRR3 b - - 0 1",null);
         int[][] expectedMoves = new int[][] {{2,2}};
         ArrayList<Position> actualMoves = game.getLegalMoves(new Position(3,3));
         checkForCorrectPositions(actualMoves, expectedMoves);
@@ -137,7 +137,7 @@ public class PossibleMovesTest {
     @Test
     @DisplayName("Queen must take or get in way to stop Check")
     public void queenStopCheckMovesTest1(){
-        Game game = Fen.convertFenToBoard("8/5q2/8/k6R/8/8/8/8 b - - 0 1",null);
+        Game game = Fen.convertFenToBoard("8/5q2/8/k6R/8/8/8/K7 b - - 0 1",null);
         int[][] expectedMoves = new int[][] {{7,3},{5,3},{3,3}};
         ArrayList<Position> actualMoves = game.getLegalMoves(new Position(5,1));
         checkForCorrectPositions(actualMoves, expectedMoves);
@@ -146,7 +146,7 @@ public class PossibleMovesTest {
     @Test
     @DisplayName("Bishop must take or get in way to stop Check")
     public void bishopStopCheckMovesTest1(){
-        Game game = Fen.convertFenToBoard("8/5b2/8/k6R/8/8/8/8 b - - 0 1",null);
+        Game game = Fen.convertFenToBoard("8/5b2/8/k6R/8/8/8/K7 b - - 0 1",null);
         int[][] expectedMoves = new int[][] {{7,3},{3,3}};
         ArrayList<Position> actualMoves = game.getLegalMoves(new Position(5,1));
         checkForCorrectPositions(actualMoves, expectedMoves);
@@ -155,7 +155,7 @@ public class PossibleMovesTest {
     @Test
     @DisplayName("Knight must take or get in way to stop Check")
     public void knightStopCheckMovesTest1(){
-        Game game = Fen.convertFenToBoard("8/8/5n2/k6R/8/8/8/8 b - - 0 1",null);
+        Game game = Fen.convertFenToBoard("8/8/5n2/k6R/8/8/8/K7 b - - 0 1",null);
         int[][] expectedMoves = new int[][] {{7,3},{3,3}};
         ArrayList<Position> actualMoves = game.getLegalMoves(new Position(5,2));
         checkForCorrectPositions(actualMoves, expectedMoves);
@@ -164,7 +164,7 @@ public class PossibleMovesTest {
     @Test
     @DisplayName("Pawn must take or get in way to stop Check")
     public void pawnStopCheckMovesTest1(){
-        Game game = Fen.convertFenToBoard("8/6p1/k6R/8/8/8/8/8 b - - 0 1",null);
+        Game game = Fen.convertFenToBoard("8/6p1/k6R/8/8/8/8/K7 b - - 0 1",null);
         int[][] expectedMoves = new int[][] {{7,2},{6,2}};
         ArrayList<Position> actualMoves = game.getLegalMoves(new Position(6,1));
         checkForCorrectPositions(actualMoves, expectedMoves);
@@ -173,7 +173,7 @@ public class PossibleMovesTest {
     @Test
     @DisplayName("Rook must take or get in way to stop Check")
     public void rookStopCheckMovesTest1(){
-        Game game = Fen.convertFenToBoard("3B4/8/3r4/k7/8/8/8/8 b - - 0 1",null);
+        Game game = Fen.convertFenToBoard("3B4/8/3r4/k7/8/8/8/K7 b - - 0 1",null);
         int[][] expectedMoves = new int[][] {{3,0},{1,2}};
         ArrayList<Position> actualMoves = game.getLegalMoves(new Position(3,2));
         checkForCorrectPositions(actualMoves, expectedMoves);
@@ -182,7 +182,7 @@ public class PossibleMovesTest {
     @Test
     @DisplayName("Queen is Pinned")
     public void queenPinnedMovesTest1(){
-        Game game = Fen.convertFenToBoard("3q4/8/8/8/8/8/3Q4/3K4 w - - 0 1",null);
+        Game game = Fen.convertFenToBoard("2kq4/8/8/8/8/8/3Q4/3K4 w - - 0 1",null);
         int[][] expectedMoves = new int[][] {{3,0},{3,1},{3,2},{3,3},{3,4},{3,5}};
         ArrayList<Position> actualMoves = game.getLegalMoves(new Position(3,6));
         checkForCorrectPositions(actualMoves, expectedMoves);
@@ -191,7 +191,7 @@ public class PossibleMovesTest {
     @Test
     @DisplayName("Bishop is Pinned")
     public void bishopPinnedMovesTest1(){
-        Game game = Fen.convertFenToBoard("3q4/8/8/8/3B4/8/8/3K4 w - - 0 1",null);
+        Game game = Fen.convertFenToBoard("2kq4/8/8/8/3B4/8/8/3K4 w - - 0 1",null);
         int[][] expectedMoves = new int[][] {};
         ArrayList<Position> actualMoves = game.getLegalMoves(new Position(3,4));
         checkForCorrectPositions(actualMoves, expectedMoves);
@@ -200,7 +200,7 @@ public class PossibleMovesTest {
     @Test
     @DisplayName("Knight is Pinned")
     public void knightPinnedMovesTest1(){
-        Game game = Fen.convertFenToBoard("3q4/8/3N4/8/8/8/8/3K4 w - - 0 1",null);
+        Game game = Fen.convertFenToBoard("1k1q4/8/3N4/8/8/8/8/3K4 w - - 0 1",null);
         int[][] expectedMoves = new int[][] {};
         ArrayList<Position> actualMoves = game.getLegalMoves(new Position(3,2));
         checkForCorrectPositions(actualMoves, expectedMoves);
@@ -209,7 +209,7 @@ public class PossibleMovesTest {
     @Test
     @DisplayName("Pawn is Pinned")
     public void pawnPinnedMovesTest1(){
-        Game game = Fen.convertFenToBoard("8/8/8/7b/8/8/4P3/3K4 w - - 0 1",null);
+        Game game = Fen.convertFenToBoard("7k/8/8/7b/8/8/4P3/3K4 w - - 0 1",null);
         int[][] expectedMoves = new int[][] {};
         ArrayList<Position> actualMoves = game.getLegalMoves(new Position(4,6));
         checkForCorrectPositions(actualMoves, expectedMoves);
@@ -218,7 +218,7 @@ public class PossibleMovesTest {
     @Test
     @DisplayName("Rook is Pinned")
     public void rookPinnedMovesTest1(){
-        Game game = Fen.convertFenToBoard("8/8/8/7b/8/8/4R3/3K4 w - - 0 1",null);
+        Game game = Fen.convertFenToBoard("7k/8/8/7b/8/8/4R3/3K4 w - - 0 1",null);
         int[][] expectedMoves = new int[][] {};
         ArrayList<Position> actualMoves = game.getLegalMoves(new Position(4,6));
         checkForCorrectPositions(actualMoves, expectedMoves);

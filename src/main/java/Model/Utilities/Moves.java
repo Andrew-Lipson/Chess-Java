@@ -1,7 +1,6 @@
 package Model.Utilities;
 
 import Model.Game;
-import Model.Position;
 import Model.Pieces.Piece;
 import Model.Pieces.PieceType;
 
@@ -53,10 +52,10 @@ public final class Moves {
     private static ArrayList<Position> diagonal(Position position, Game game, boolean isWhite) {
         ArrayList<Position> possibleMoves = new ArrayList<>();
         for (int iRank = -1; iRank < 2; iRank += 2) {
-            for (int iFile = -1; iFile < 2; iFile += 2){
+            for (int iFile = -1; iFile < 2; iFile += 2) {
                 int tempRank = position.getRank() + iRank;
                 int tempFile = position.getFile() + iFile;
-                while (tempRank >= 0 && tempRank < 8 && tempFile >= 0 && tempFile < 8){
+                while (tempRank >= 0 && tempRank < 8 && tempFile >= 0 && tempFile < 8) {
                     if(addPossibleMoveStraightAndDiagonal(new Position(tempFile, tempRank), game,isWhite,possibleMoves)) {
                         break;
                     }
@@ -122,7 +121,7 @@ public final class Moves {
     private static ArrayList<Position> knight(Position position, Game game, boolean isWhite) {
         ArrayList<Position> possibleMoves = new ArrayList<>();
         for (int iRank = -2; iRank < 3; iRank++) {
-            for (int iFile = -2; iFile < 3; iFile++){
+            for (int iFile = -2; iFile < 3; iFile++) {
                 int tempRank = position.getRank() + iRank;
                 int tempFile = position.getFile() + iFile;
                 if(iRank != 0 && iFile != 0 && ((iFile + iRank) % 2 != 0) && tempRank >= 0 && tempRank < 8 && tempFile >= 0 && tempFile < 8) {
@@ -145,7 +144,7 @@ public final class Moves {
         ArrayList<Position> possibleMoves = new ArrayList<>();
         for (int iRank = -1; iRank < 2; iRank++) {
             for (int iFile = -1; iFile < 2; iFile++) {
-                if(iRank != 0 || iFile != 0){
+                if(iRank != 0 || iFile != 0) {
                     int tempRank = position.getRank() + iRank;
                     int tempFile = position.getFile() + iFile;
                     if(tempRank >= 0 && tempRank < 8 && tempFile >= 0 && tempFile < 8) {
@@ -167,14 +166,14 @@ public final class Moves {
      * @param isWhite is the piece white or black
      * @param possibleMoves ArrayList of the possible moves already created
      */
-    private static void addCastlingIfPossible(Position position, Game game, boolean isWhite, ArrayList<Position> possibleMoves){
+    private static void addCastlingIfPossible(Position position, Game game, boolean isWhite, ArrayList<Position> possibleMoves) {
         if (game.getColouredCastling(isWhite)[0]) { // Kingside
             if (isNull(game.getPiece(new Position(5, position.getRank()))) && isNull(game.getPiece(new Position(6, position.getRank())))) {
                 possibleMoves.add(new Position(6, position.getRank()));
             }
         }
-        if (game.getColouredCastling(isWhite)[1]){ // Queenside
-            if (isNull(game.getPiece(new Position(1,position.getRank()))) && isNull(game.getPiece(new Position(2,position.getRank()))) && isNull(game.getPiece(new Position(3,position.getRank())))){
+        if (game.getColouredCastling(isWhite)[1]) { // Queenside
+            if (isNull(game.getPiece(new Position(1,position.getRank()))) && isNull(game.getPiece(new Position(2,position.getRank()))) && isNull(game.getPiece(new Position(3,position.getRank())))) {
                 possibleMoves.add(new Position(2,position.getRank()));
             }
         }
@@ -194,10 +193,10 @@ public final class Moves {
         int rank = position.getRank();
         int startingRank;
         int movementDirection;
-        if(isWhite){
+        if(isWhite) {
             startingRank = 6;
             movementDirection = -1;
-        } else{
+        } else {
             startingRank = 1;
             movementDirection = 1;
         }
@@ -208,7 +207,7 @@ public final class Moves {
         Piece piece = game.getPiece(new Position(tempFile, tempRank));
         if(tempFile >= 0 && tempFile < 8 && isNull(piece)) {
             possibleMoves.add(new Position(tempFile, tempRank));
-            if(rank == startingRank){
+            if(rank == startingRank) {
                 tempRank += movementDirection;
                 if(isNull(game.getPiece(new Position(tempFile, tempRank)))) {
                         possibleMoves.add(new Position(tempFile, tempRank));
@@ -220,9 +219,9 @@ public final class Moves {
         for (int iFile = -1; iFile < 2; iFile += 2) {
             tempRank = rank + movementDirection;
             tempFile = file + iFile;
-            if (tempFile >= 0 && tempFile < 8){
+            if (tempFile >= 0 && tempFile < 8) {
                 piece = game.getPiece(new Position(tempFile, tempRank));
-                if(nonNull(piece) && piece.getIsWhite() != isWhite){
+                if(nonNull(piece) && piece.getIsWhite() != isWhite) {
                     possibleMoves.add(new Position(tempFile, tempRank));
                 }
             }
@@ -272,7 +271,7 @@ public final class Moves {
      */
     private static void addPossibleMoves(Position position, Game game, boolean isWhite, ArrayList<Position> possibleMoves) {
         Piece piece = game.getPiece(position);
-        if(isNull(piece) || piece.getIsWhite() != isWhite){
+        if(isNull(piece) || piece.getIsWhite() != isWhite) {
             possibleMoves.add(position);
         }
     }

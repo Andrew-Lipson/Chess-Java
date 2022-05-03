@@ -11,28 +11,26 @@ public class ChooseColourRoot extends Group {
 
     private final Contract.Listener listener;
 
-    public ChooseColourRoot(Contract.Listener listener){
+    public ChooseColourRoot(Contract.Listener listener) {
         this.listener = listener;
-        populateScene();
-    }
-
-    public void populateScene() {
         Button blackButton = new Button();
         Button whiteButton = new Button();
         blackButton.setGraphic(getPawnIcon(false));
         whiteButton.setGraphic(getPawnIcon(true));
-        blackButton.setOnMouseClicked(__ -> {
-            this.listener.newGame(true, true);
-        });
-        whiteButton.setOnMouseClicked(__ -> {
-            this.listener.newGame(true,false);
-        });
+        blackButton.setOnMouseClicked(__ -> this.listener.newGame(true, true));
+        whiteButton.setOnMouseClicked(__ -> this.listener.newGame(true,false));
 
         placeButton(blackButton, 0);
         placeButton(whiteButton, 1);
     }
 
-    private ImageView getPawnIcon(boolean isWhite){
+    /**
+     * Return the correct coloured Pawn icon
+     *
+     * @param isWhite is the colour white
+     * @return the correct coloured ImageView of a Pawn
+     */
+    private ImageView getPawnIcon(boolean isWhite) {
         String string = "Pawn-";
         string+=isWhite?"White":"Black";
         string+=".png";
@@ -43,7 +41,13 @@ public class ChooseColourRoot extends Group {
         return imageView;
     }
 
-    private void placeButton(Button button, int placement){
+    /**
+     * Place the button in the correct spot
+     *
+     * @param button button to be placed
+     * @param placement the placement spot of the button
+     */
+    private void placeButton(Button button, int placement) {
         button.setLayoutX(150+placement*200);
         button.setLayoutY(300);
         button.setFont(new Font(24));

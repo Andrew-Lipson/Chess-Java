@@ -24,14 +24,6 @@ public class SquareNode extends Group {
     private Character FENPiece = 'x';
     private SquareColour color;
 
-    /**
-     * Intilising the SquareView for X & Y coordinates, the colour, the shape (rectangle) and size
-     * seeting the ImageView and the Circle
-     * 
-     * @param file
-     * @param rank
-     * @param listener
-     */
     public SquareNode(int file, int rank, Contract.Listener listener, boolean inverted) {
 
         this.file = file;
@@ -41,7 +33,7 @@ public class SquareNode extends Group {
         this.rectangle = new Rectangle();
 
         int startingCoordinate = inverted?570:10;
-        double changingCoordinate = inverted?(-heightWidth):heightWidth;
+        double changingCoordinate = inverted?(-this.heightWidth):this.heightWidth;
 
         this.xCoordinate = (startingCoordinate + changingCoordinate * file);
         this.yCoordinate = (startingCoordinate + changingCoordinate * rank);
@@ -51,45 +43,46 @@ public class SquareNode extends Group {
         initialiseCircle();
     }
 
+    /**
+     * Sets the Rectangle's colour, X & Y coordinates, and it's height and width
+     */
     public void initialiseRectangle() {
-        color =
+        this.color =
             (this.rank + this.file) % 2 == 0
                 ? SquareColour.EVEN
                 : SquareColour.ODD;
-        changeSquareColour(color);
-        this.rectangle.setWidth(heightWidth);
-        this.rectangle.setHeight(heightWidth);
-        this.rectangle.setX(xCoordinate);
-        this.rectangle.setY(yCoordinate);
+        changeSquareColour(this.color);
+        this.rectangle.setWidth(this.heightWidth);
+        this.rectangle.setHeight(this.heightWidth);
+        this.rectangle.setX(this.xCoordinate);
+        this.rectangle.setY(this.yCoordinate);
         getChildren().add(this.rectangle);
     }
 
 
     /**
-     * Sets the ImageView's X & Y coordinates and it's height and width
+     * Sets the ImageView's X & Y coordinates, and it's height and width
      */
-    public void initialiseImageView(){
-        this.imageview.setX(xCoordinate);
-        this.imageview.setY(yCoordinate);
-        this.imageview.setFitHeight(heightWidth);
-        this.imageview.setFitWidth(heightWidth);
-        imageview.setPickOnBounds(true);
-        imageview.setOnMouseClicked(__ -> {
-        this.listener.handlePieceClicked(this.positionView);
-        });
+    public void initialiseImageView() {
+        this.imageview.setX(this.xCoordinate);
+        this.imageview.setY(this.yCoordinate);
+        this.imageview.setFitHeight(this.heightWidth);
+        this.imageview.setFitWidth(this.heightWidth);
+        this.imageview.setPickOnBounds(true);
+        this.imageview.setOnMouseClicked(__ -> this.listener.handlePieceClicked(this.positionView));
     }
 
     /**
      * Sets the Circle's X & Y coordinates, it's radius and colour
      */
     public void initialiseCircle() {
-        circle.setRadius(20);
-        circle.setCenterX(xCoordinate+40);
-        circle.setCenterY(yCoordinate+40);
-        circle.setFill(Color.DARKBLUE);
-        circle.setOpacity(0.5);
-        circle.setPickOnBounds(true);
-        circle.setOnMouseClicked(__ -> this.listener.handleCircleClicked(this.positionView));
+        this.circle.setRadius(20);
+        this.circle.setCenterX(this.xCoordinate+40);
+        this.circle.setCenterY(this.yCoordinate+40);
+        this.circle.setFill(Color.DARKBLUE);
+        this.circle.setOpacity(0.5);
+        this.circle.setPickOnBounds(true);
+        this.circle.setOnMouseClicked(__ -> this.listener.handleCircleClicked(this.positionView));
     }
 
     /**
@@ -97,49 +90,46 @@ public class SquareNode extends Group {
      *
      * @param squareColour is the colour the Square will change to
      */
-    public void changeSquareColour(SquareColour squareColour){
+    public void changeSquareColour(SquareColour squareColour) {
         this.rectangle.setFill(squareColour.getSquareColor());
     }
 
     /**
      * Change the colour of the square to the Square's normal colour
      */
-    public void changeSquareColour(){
-        if(this.rectangle.getFill()==SquareColour.CLICKED.getSquareColor()){
-            this.rectangle.setFill(color.getSquareColor());
+    public void changeSquareColour() {
+        if(this.rectangle.getFill()==SquareColour.CLICKED.getSquareColor()) {
+            this.rectangle.setFill(this.color.getSquareColor());
         }
     }
 
     /**
      * Update the FENPiece and then get the correct image from the resouces and add/remove the imageview from the Group.
      * 
-     * @param charactor
+     * @param character fen character that represents the piece going onto the square
      */
-    public void addPiece(Character charactor) {
-        // check if the charactor is the same. If it is then return
-        if(charactor == this.FENPiece) {
-            changeSquareColour(color);
+    public void addPiece(Character character) {
+        // check if the character is the same. If it is then return
+        if(character == this.FENPiece) {
+            changeSquareColour(this.color);
             return;
         }
         // check if there was no piece previous on the spot. If so then add imageview to the Group
         if (this.FENPiece == 'x') {
             changeSquareColour(SquareColour.MOVED);
-            getChildren().add(imageview);
+            getChildren().add(this.imageview);
         }
-        this.FENPiece = charactor;
+        this.FENPiece = character;
         // if there is no longer a piece on this square, remove the imageview and return
-        if (charactor == 'x') {
-            getChildren().remove(imageview);
+        if (character == 'x') {
+            getChildren().remove(this.imageview);
             changeSquareColour(SquareColour.MOVED);
             return;
         }
-        boolean isWhite = true;
-        if(Character.isLowerCase(charactor)) {
-            isWhite = false;
-        }
+        boolean isWhite = !Character.isLowerCase(character);
 
         changeSquareColour(SquareColour.MOVED);
-        Image image = new Image(getPNGString(Character.toLowerCase(charactor), isWhite));
+        Image image = new Image(getPNGString(Character.toLowerCase(character), isWhite));
         this.imageview.setImage(image);
     }
 
@@ -147,8 +137,8 @@ public class SquareNode extends Group {
     /**
      * Returns the correct uri (String) that the piece requires
      * 
-     * @param character
-     * @param isWhite
+     * @param character fen character that represents the piece going onto the square
+     * @param isWhite true if the piece is white
      * @return uri of the filename
      */
     public static String getPNGString(Character character, boolean isWhite) {
@@ -183,15 +173,15 @@ public class SquareNode extends Group {
     /**
      * Add Circle to the Group
      */
-    public void addCircle(){
-        this.getChildren().add(circle);
+    public void addCircle() {
+        this.getChildren().add(this.circle);
     }
 
     /**
      * Remove Circle from the Group
      */
-    public void removeCircle(){
-        this.getChildren().remove(circle);
+    public void removeCircle() {
+        this.getChildren().remove(this.circle);
     }
 }
 
