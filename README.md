@@ -8,7 +8,11 @@ You can play 2 player with both the White and Black Pieces being controlled by t
 Setting up the code:
   
   You must configure your IDE for use Java 11 and JavaFX. The program also uses a Stockfish commandline application which I have removed from the github.
+  
+  - Windows:
   To add stockfish you must download the necessary file from here (https://stockfishchess.org/download/), then move the application (.exe) into a new folder in your project called 'Stockfish'. Then rename the application file to 'stockfish.exe'  
+
+  - Mac: To add stockfish you must download the necessary file from here (https://stockfishchess.org/download/) and install it. Then go to src/main/java/Controller/Engine/Stockfish.java and comment out line 27 and uncomment line 28.
 
 
 START GAME:
